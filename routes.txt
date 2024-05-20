@@ -1,0 +1,11 @@
+/
+
+
+
+cms
+/admin/
+/admin/blog/
+/admin/blog/new
+/admin/blog/slug
+/admin/project/
+/admin/project/slug
