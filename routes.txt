@@ -3,9 +3,10 @@
 
 
 cms
-/admin/
-/admin/blog/
-/admin/blog/new
-/admin/blog/slug
-/admin/project/
+/admin/ - Overview statistics data, list blog, list projects, create new list button, create new project button 
+/admin/blog/ - POST route for creating route
+/admin/blog/create - GET new blog form
+/admin/blog/slug - 
+/admin/projects/
+/admin/projects/create -
 /admin/project/slug
