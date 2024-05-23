@@ -15,7 +15,7 @@ export default function Home() {
           <ul>
             {
               blogPosts.map(b =>
-                <li>
+                <li key={b.slug}>
                   <Link
                     href={`/blog/${b.slug}`}
                   >
@@ -31,7 +31,7 @@ export default function Home() {
           <ul>
             {
               projects.map(p =>
-                <li>
+                <li key={p.slug}>
                   <Link
                     href={`/blog/${p.slug}`}
                   >
