@@ -1,0 +1,67 @@
+CREATE TABLE Post (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    author VARCHAR(255),
+  	type VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE TextContent (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    postId INT,
+    content TEXT,
+	position INT,
+    FOREIGN KEY (postId) REFERENCES Post(id)
+);
+
+CREATE TABLE ImageContent (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    postId INT,
+    url VARCHAR(255),
+  	position INT,
+    FOREIGN KEY (postId) REFERENCES Post(id)
+);
+
+INSERT INTO Post (title, slug, author, type) VALUES ('title1', 'title-1', 'Some Person', 'blog');
+INSERT INTO Post (title, slug, author, type) VALUES ('title2', 'title-2', 'Some Person', 'blog');
+INSERT INTO Post (title, slug, author, type) VALUES ('projectTitke1', 'prf-title-1', 'Some Another Person', 'project');
+
+INSERT INTO TextContent (postId, content, position) VALUES ('1', 'asd', '1');
+INSERT INTO TextContent (postId, content, position) VALUES ('1', 'sdf', '3');
+INSERT INTO TextContent (postId, content, position) VALUES ('2', 'dfg', '1');
+
+INSERT INTO ImageContent (postId, url, position) VALUES ('1', 'url1', '2');
+INSERT INTO ImageContent (postId, url, position) VALUES ('1', 'url2', '4');
+INSERT INTO ImageContent (postId, url, position) VALUES ('2', 'url3', '2');
+
+
+
+SELECT
+*
+FROM (
+  SELECT *
+  FROM Post p
+  JOIN (
+      SELECT 
+      postId,
+      position,
+      'text' as contentType,
+      JSON_OBJECT('content', content)
+      FROM TextContent
+  ) tc ON p.id = tc.postId
+
+  UNION ALL
+
+  SELECT *
+  FROM Post p
+  JOIN (
+      SELECT 
+      postId,
+      position,
+      'image' as contentType,
+      JSON_OBJECT('url', url)
+      FROM ImageContent
+  ) ic ON p.id = ic.postId
+) myTable
+WHERE myTable.id = 1
+ORDER BY myTable.position ASC

@@ -1,0 +1,111 @@
+CREATE TABLE Post (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    author VARCHAR(255),
+  	type VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE TextContent (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    postId INT,
+    content TEXT,
+    FOREIGN KEY (postId) REFERENCES Post(id)
+);
+
+CREATE TABLE ImageContent (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    postId INT,
+    url VARCHAR(255),
+    FOREIGN KEY (postId) REFERENCES Post(id)
+);
+
+CREATE TABLE Image_Order (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+  	postId INT,
+  	imageContentId INT,
+  	position INT,
+    FOREIGN KEY (postId) REFERENCES Post(id),
+  	FOREIGN KEY (imageContentId) REFERENCES ImageContent(id)
+);
+
+CREATE TABLE Text_Order (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+  	postId INT,
+  	textContentId INT,
+  	position INT,
+    FOREIGN KEY (postId) REFERENCES Post(id),
+  	FOREIGN KEY (textContentId) REFERENCES TextContent(id)
+);
+
+
+INSERT INTO Post (title, slug, author, type) VALUES ('title1', 'title-1', 'Some Person', 'blog');
+INSERT INTO Post (title, slug, author, type) VALUES ('title2', 'title-2', 'Some Person', 'blog');
+INSERT INTO Post (title, slug, author, type) VALUES ('projectTitke1', 'prf-title-1', 'Some Another Person', 'project');
+
+INSERT INTO TextContent (postId, content) VALUES ('1', 'asd');
+INSERT INTO TextContent (postId, content) VALUES ('1', 'sdf');
+INSERT INTO TextContent (postId, content) VALUES ('2', 'dfg');
+
+INSERT INTO ImageContent (postId, url) VALUES ('1', 'url1');
+INSERT INTO ImageContent (postId, url) VALUES ('1', 'url2');
+INSERT INTO ImageContent (postId, url) VALUES ('2', 'url3');
+
+
+INSERT INTO Image_Order (postId, imageContentId, position)
+VALUES (
+    1, 
+    1,
+    1
+);
+
+INSERT INTO Image_Order (postId, imageContentId, position)
+VALUES (
+    1, 
+    2,
+    3
+);
+
+INSERT INTO Text_Order (postId, textContentId, position)
+VALUES (
+    1, 
+    1,
+    2
+);
+
+INSERT INTO Text_Order (postId, textContentId, position)
+VALUES (
+    1, 
+    2,
+    4
+);
+
+
+
+
+
+CREATE VIEW test_view AS 
+SELECT
+*
+FROM Post
+WHERE id = 1;
+
+SELECT * FROM test_view;
+
+CREATE VIEW unified_position_order AS
+
+SELECT ic.postId, "image" as contentType, io.position, JSON_OBJECT('url', ic.url) /* use json_build_object in POSTGRES */ as specific_attribute FROM ImageContent ic
+JOIN Image_Order io ON io.imageContentId = ic.id
+
+UNION ALL
+
+SELECT tc.postId, "text" as contentType, tOr.position, JSON_OBJECT('content', tc.content) /* use json_build_object in POSTGRES */ as specific_attribute FROM TextContent tc
+JOIN Text_Order tOr ON tOr.textContentId = tc.id
+
+ORDER BY position ASC;    
+
+
+SELECT * FROM unified_position_order WHERE postId = 1;
+
+
+
