@@ -32,7 +32,6 @@ export default function CreateBlogForm() {
     */
 
     function addEmptyContent(contentType: string) {
-
         const typeMap: { [key: string]: ContentType } = {
             "image": { type: "image", url: "", caption: "", size: "" },
             "text": { type: "text", content: "", formatting: "" },
@@ -56,12 +55,6 @@ export default function CreateBlogForm() {
                     return sC;
                 })
             });
-            // +++++ DEBUG +++++ 
-            setContent(prevState => {
-                console.log("create-form-blog-content-state:", prevState);
-                return prevState;
-            });
-            // +++++ DEBUG +++++ 
         } else if (type === "text") {
             const [content, formatting] = args;
 
@@ -72,12 +65,6 @@ export default function CreateBlogForm() {
                     return sC;
                 })
             });
-            // +++++ DEBUG +++++ 
-            setContent(prevState => {
-                console.log("create-form-blog-content-state:", prevState);
-                return prevState;
-            });
-            // +++++ DEBUG +++++ 
         } else if (type === "code") {
             const [code, language] = args;
 
@@ -88,12 +75,6 @@ export default function CreateBlogForm() {
                     return sC;
                 })
             });
-            // +++++ DEBUG +++++ 
-            setContent(prevState => {
-                console.log("create-form-blog-content-state:", prevState);
-                return prevState;
-            });
-            // +++++ DEBUG +++++ 
         }
     }
 
@@ -101,14 +82,15 @@ export default function CreateBlogForm() {
         <form action={dispatch}>
             {/* Blog title */}
             <label htmlFor="title">Title</label>
-            <input type="text" id="title" />
+            <input type="text" id="title" name="blog-title"/>
+
             {/* Summary */}
             <label htmlFor="summary">Summary</label>
-            <textarea id="summary" />
+            <textarea id="summary" name="blog-summary"/>
 
             <hr />
-            {/* Content */}
 
+            {/* Content */}
             {/* 
                 Iterate content array and show them in their format.
                 Each should have option to be deleted.
@@ -133,7 +115,7 @@ export default function CreateBlogForm() {
                         }}>{c_type}</button>;
                 })
             }
-
+            <button>Save</button>
         </form>
     );
 }

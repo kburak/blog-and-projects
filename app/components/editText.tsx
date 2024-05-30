@@ -13,10 +13,10 @@ export default function editText({ type, index, content, formatting, update }: {
     return (
         <div>
             <label htmlFor="content">Content</label>
-            <input type="text" id="content" value={content} onChange={handleContentUpdate} />
+            <input type="text" id="content" name={`${index}-${type}-content`} value={content} onChange={handleContentUpdate} />
 
             <label htmlFor="formatting">Formatting</label>
-            <select id="formatting" onChange={handleFormattingUpdate}>
+            <select id="formatting" name={`${index}-${type}-formatting`} value={formatting} onChange={handleFormattingUpdate}>
                 <option>h1</option>
                 <option>h2</option>
                 <option>h3</option>

@@ -18,13 +18,13 @@ export default function editImage({ type, index, url, caption, size, update }: {
     return (
         <div>
             <label htmlFor="url">Url</label>
-            <input type="text" id="url" value={url} onChange={handleUrlUpdate} />
+            <input type="text" id="url" name={`${index}-${type}-url`} value={url} onChange={handleUrlUpdate} />
 
             <label htmlFor="caption">Caption</label>
-            <input type="text" id="caption" onChange={handleCaptionUpdate} />
+            <input type="text" id="caption" name={`${index}-${type}-caption`} value={caption} onChange={handleCaptionUpdate} />
 
             <label htmlFor="size">Size</label>
-            <select id="size" onChange={handleSizeUpdate}>
+            <select id="size" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
                 <option>small</option>
                 <option>medium</option>
                 <option>large</option>

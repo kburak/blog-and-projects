@@ -13,10 +13,10 @@ export default function editCode({ type, index, code, language, update }: { type
     return (
         <div>
             <label htmlFor="code">Code</label>
-            <input type="text" id="code" value={code} onChange={handleCodeUpdate} />
+            <input type="text" id="code" name={`${index}-${type}-code`} value={code} onChange={handleCodeUpdate} />
 
             <label htmlFor="size">Size</label>
-            <select id="size" onChange={handleLanguageUpdate}>
+            <select id="size" name={`${index}-${type}-language`}  value={language} onChange={handleLanguageUpdate}>
                 <option>Javascript</option>
                 <option>Json</option>
                 <option>Java</option>

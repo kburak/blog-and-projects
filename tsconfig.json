@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "es2015", // To be able to iterate over formData.entries()
+    "downlevelIteration": true, // To be able to iterate over formData.entries()
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
