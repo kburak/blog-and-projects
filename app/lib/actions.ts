@@ -1,51 +1,190 @@
 'use server';
+import { z } from 'zod';
 
-export async function createBlog(prevState: any, formData: FormData) {
+const ImageSchema = z.object({
+    type: z.literal('image'),
+    url: z.string().min(1, { message: 'Please provide a valid URL!' }),
+    caption: z.string().min(1, { message: 'Please provide a valid Caption!' }),
+    size: z.enum(['small', 'medium', 'large'], {
+        invalid_type_error: 'Please select a image size!.'
+    })
+});
+
+const TextSchema = z.object({
+    type: z.literal('text'),
+    content: z.string().min(1, { message: 'Content cannot be empty!' }),
+    formatting: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'p']).optional()
+});
+
+const CodeSchema = z.object({
+    type: z.literal('code'),
+    code: z.string().min(1, { message: 'Code cannot be empty!' }),
+    language: z.enum(['Javascript', 'python', 'sql', 'java', 'json', 'csharp'])
+});
+
+const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema]);
+
+const FormSchema = z.object({
+    title: z.string().min(1, { message: 'Please enter a title!' }),
+    summary: z.string().min(1, { message: 'Please enter a summary!' }),
+    content: z.array(ContentSchema)
+});
+
+// This is temporary until @types/react-dom is updated
+export type State = {
+    errors?: {
+        [key: string]: any
+    };
+    message?: string | null;
+};
+
+interface ContentObject {
+    [key: string]: string | File
+}
+
+function makeSlug(str: string, maxLength: number = 40): string {
+    // str is valid and no empty space then return (return not more than maxLength)
+    if (str.length === str.toLowerCase().match(/[a-z0-9]/g)?.length) return str.slice(0, maxLength).toLowerCase();
+
+    // Reduce empty spaces to one empty space, replace empty space with -
+    let prevEmpty = false;
+    let slug = "";
+    for (let i = 0; i < str.length; i++) {
+        if (prevEmpty && str[i] === " ") {
+            continue;
+        } else if (str[i] === " ") {
+            prevEmpty = true;
+            // If not at beginning or end of str then replace " " with "-"
+            if (i !== 0 && i !== str.length - 1) {
+                slug += "-"
+            }
+        } else {
+            prevEmpty = false;
+            slug += str[i].toLowerCase();
+        }
+    }
+
+    // Replace everyting that's not A-Z0-9 or -> /(?![a-z0-9-])./
+    slug = slug.replace(/(?![a-z0-9-])./g, '');
+
+    // Return max 40 chars length
+    return slug.slice(0, maxLength);
+}
+
+export async function createBlog(prevState: State | undefined, formData: FormData) {
     console.log(prevState, formData);
+
+    // Normalize form data, Group content data
+    const normalizedFormData: { [key: string]: string | ContentObject[] | null } = {};
+    const groupedContent: ContentObject[] = [];
+
+    // Add blog title and summary
+    normalizedFormData['title'] = formData.get('blog-title')?.toString() || null;
+    normalizedFormData['summary'] = formData.get('blog-summary')?.toString() || null;
+
+    // Add groupedContent to normalizedFormData
+    normalizedFormData['content'] = groupedContent;
+
+    for (let data of formData.entries()) {
+        const [key, value] = data;
+
+        // Does key contain image, text or code? (name attribute of element)
+        if (["image", "text", "code"].includes(key.split('-')[1])) {
+            // Extract index, type, field
+            const index: number = parseInt(key.split('-')[0]);
+            const typeName: string = key.split('-')[1];
+            const fieldName: string = key.split('-')[2];
+
+            // Is there already ContentObject at this index of the grouped data?
+            if (groupedContent[index] && groupedContent[index].type === typeName) {
+                // If yes, Push the current field and its value to the existing ContentObject
+                groupedContent[index][fieldName] = value;
+            } else {
+                // If no, Create new ContentObject and push current field and its value into it.
+                groupedContent.push({
+                    type: typeName,
+                    [fieldName]: value
+                });
+            }
+        }
+    }
+
+    console.log(normalizedFormData);
+
+    // Validate the form data using safeParse
+    const validationResult = FormSchema.safeParse(normalizedFormData);
+
+    if (!validationResult.success) {
+
+        // Iterate the errors and build an error object for the state
+        const pResult: { [key: string]: any } = {};
+        for (let err of validationResult?.error.errors) {
+
+            const [type, idx, field] = err.path;
+
+            // Check type and create key accordingly
+            switch (type) {
+                case 'title':
+                    if (pResult['title']) {
+                        pResult['title'].push(err.message)
+                    } else {
+                        pResult['title'] = [err.message]
+                    }
+                    break;
+                case 'summary':
+                    if (pResult['summary']) {
+                        pResult['summary'].push(err.message)
+                    } else {
+                        pResult['summary'] = [err.message]
+                    }
+                    break;
+                case 'content':
+                    // If content array is not defined yet, define it.
+                    if (!pResult['content']) pResult['content'] = [];
+
+                    // Is there error messages array for the item at this idx?
+                    if (pResult['content'][idx]) {
+                        // Push the err message inside
+                        pResult['content'][idx].push(err.message);
+                    } else {
+                        // Create the array
+                        pResult['content'][idx] = [err.message];
+                    }
+                    break;
+            }
+
+        }
+
+        return {
+            errors: pResult,
+            message: 'Missing Fields. Failed to Create Blog.'
+        }
+    }
+
     try {
-        // Do some DB Action
 
         // Build slug out of the blog title
+        const { title } = validationResult.data;
+
+        console.log("Slug:", makeSlug(title, 40));
 
         // Insert Post and get the id
 
-        // Group content data
-        interface ContentObject {
-            [key: string]: string | File
-        }
-        const groupedContent: ContentObject[] = [];
-        for (let data of formData.entries()) {
-            const [key, value] = data;
-
-            // Does key contain image, text or code? (name attribute of element)
-            if (["image", "text", "code"].includes(key.split('-')[1])) {
-                // Extract index, type, field
-                const index: number = parseInt(key.split('-')[0]);
-                const typeName: string = key.split('-')[1];
-                const fieldName: string = key.split('-')[2];
-
-                // Is there already ContentObject at this index of the grouped data?
-                if (groupedContent[index] && groupedContent[index].type === typeName) {
-                    // If yes, Push the current field and its value to the existing ContentObject
-                    groupedContent[index][fieldName] = value;
-                } else {
-                    // If no, Create new ContentObject and push current field and its value into it.
-                    groupedContent.push({
-                        type: typeName,
-                        [fieldName]: value
-                    });
-                }
-            }
-        }
-
-        console.log(groupedContent);
+        // Send data to DB
 
         const dbUpdates: Promise<any>[] = [];
         // Iterate grouped data 
+        for (let data of groupedContent) {
 
-            // Directly send update to DB (without await), store returned promise into an array.
+            // Extract type
+            const { type } = data;
 
-        
+            // Depending on type, Send directly update to DB (without await), store returned promise into an array.
+            // switch ()
+            // dbUpdates.push()
+
+        }
+
         // Wait for all promises to resolve Promise.all(dbUpdates)
 
         // Revalidate path / Clear cache

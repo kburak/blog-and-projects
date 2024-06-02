@@ -8,7 +8,7 @@ import EditText from "./editText";
 import EditCode from "./editCode";
 import { ContentType } from "../lib/definitions";
 
-export default function CreateBlogForm() {
+export default function EditBlogForm(/*{blog} */) {
     const initialState: State = { message: "", errors: {} };
     const contentInitialState: ContentType[] = [];
     const [state, dispatch] = useFormState(createBlog, initialState);
@@ -20,6 +20,10 @@ export default function CreateBlogForm() {
             {imageContent}
         ]
     */
+
+    function populateContentState(){
+        // Populate content arr with already existing content elements
+    }
 
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
@@ -40,16 +44,9 @@ export default function CreateBlogForm() {
     }
 
     function removeContent(type: string, index: number) {
-        console.log("removeContent", type, index);
-        setContent(prevState => {
-            return prevState.filter((c, idx) => (idx !== index));
-        });
-        // +++++ DEBUG +++++
-        console.log(setContent(prevState => {
-            console.log(prevState);
-            return prevState;
-        }));
-        // +++++ DEBUG +++++
+        // Set dbDelete to true
+
+
     }
 
     function editContent(type: string, index: number, ...args: string[]) {
@@ -60,7 +57,7 @@ export default function CreateBlogForm() {
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, url, caption, size };
+                    if (sIdx === index && sC.type === type) return { ...sC, url, caption, size }; // ADD !!!! Set dbUpdate to true
                     return sC;
                 })
             });
@@ -76,7 +73,7 @@ export default function CreateBlogForm() {
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, content, formatting };
+                    if (sIdx === index && sC.type === type) return { ...sC, content, formatting }; // ADD !!!! Set dbUpdate to true
                     return sC;
                 })
             });
@@ -86,7 +83,7 @@ export default function CreateBlogForm() {
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, code, language };
+                    if (sIdx === index && sC.type === type) return { ...sC, code, language }; // ADD !!!! Set dbUpdate to true
                     return sC;
                 })
             });
@@ -126,7 +123,7 @@ export default function CreateBlogForm() {
             {
                 content.map((c, idx) => {
                     if (c.type === "image") return (
-                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
+                        <div key={`content-${idx}`}>
                             <EditImage key={`emptyImage-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} url={c.url} caption={c.caption} size={"small"} update={editContent} remove={removeContent} />
                             <ul>
                                 {
@@ -142,8 +139,8 @@ export default function CreateBlogForm() {
                         </div>
                     );
                     if (c.type === "text") return (
-                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                            <EditText key={`emptyText-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} content={c.content} formatting={c.formatting} update={editContent} remove={removeContent} />
+                        <div key={`content-${idx}`}>
+                            <EditText key={`emptyText-${idx}`} type={c.type} index={idx} content={c.content} formatting={c.formatting} update={editContent} />
                             <ul>
                                 {
                                     state?.errors?.content && state.errors.content[idx] &&
@@ -158,8 +155,8 @@ export default function CreateBlogForm() {
                         </div>
                     );
                     if (c.type === "code") return (
-                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                            <EditCode key={`emptyCode-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} code={c.code} language={c.language} update={editContent} remove={removeContent} />
+                        <div key={`content-${idx}`}>
+                            <EditCode key={`emptyCode-${idx}`} type={c.type} index={idx} code={c.code} language={c.language} update={editContent} />
                             <ul>
                                 {
                                     state?.errors?.content && state.errors.content[idx] &&
@@ -181,16 +178,13 @@ export default function CreateBlogForm() {
                 ["image", "text", "code"].map(c_type => {
                     return <button
                         key={`button-${c_type}`}
-                        className="h-10 rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
                         type="button" // This will override/prevent its natural behaviour(submitting the form it's in.)
                         onClick={(e) => {
                             addEmptyContent(c_type)
                         }}>{c_type}</button>;
                 })
             }
-            <button
-                className="h-10 rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-            >Save</button>
+            <button>Save</button>
             <p>{JSON.stringify(state)}</p>
         </form>
     );
