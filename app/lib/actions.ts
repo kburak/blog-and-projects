@@ -1,5 +1,6 @@
 'use server';
 import { z } from 'zod';
+import sql from './db';
 
 const ImageSchema = z.object({
     type: z.literal('image'),
@@ -164,14 +165,23 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     try {
 
         // Build slug out of the blog title
-        const { title } = validationResult.data;
-
-        console.log("Slug:", makeSlug(title, 40));
+        const { title, summary } = validationResult.data;
+        const slug =  makeSlug(title, 40);
+        const createdAt = new Date(Date.now()).toISOString();
+        const updatedAt = new Date(Date.now()).toISOString();
+        const userid = "c74de708-5937-41c2-9600-6286993866b3";
+        const posttype = "Blog";
 
         // Insert Post and get the id
+        const res = await sql`
+        INSERT INTO post (slug, title, summary, userid, createdat, updatedat, posttype)
+        VALUES (${slug}, ${title}, ${summary}, ${userid}, ${createdAt}, ${updatedAt}, ${posttype})
+        RETURNING *
+        `;
 
-        // Send data to DB
+        console.log("Inserted Blog data:", res[0]);
 
+        
         const dbUpdates: Promise<any>[] = [];
         // Iterate grouped data 
         for (let data of groupedContent) {
