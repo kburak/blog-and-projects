@@ -14,7 +14,10 @@ const ImageSchema = z.object({
 const TextSchema = z.object({
     type: z.literal('text'),
     content: z.string().min(1, { message: 'Content cannot be empty!' }),
-    formatting: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'p']).optional()
+    size: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'p']).optional().default('p'),
+    style: z.enum(['normal', 'bold', 'italic'], {
+        invalid_type_error: 'Please select a text style!.'
+    }).optional().default('normal')
 });
 
 const CodeSchema = z.object({
@@ -110,10 +113,12 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
         }
     }
 
-    console.log(normalizedFormData);
+    console.log("normalizedFormData", normalizedFormData);
 
     // Validate the form data using safeParse
     const validationResult = FormSchema.safeParse(normalizedFormData);
+
+    console.log(validationResult.error);
 
     if (!validationResult.success) {
 
@@ -156,17 +161,21 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
         }
 
+        console.log("pResult", pResult)
+
         return {
             errors: pResult,
             message: 'Missing Fields. Failed to Create Blog.'
         }
     }
 
+    console.log("validatedData", validationResult.data);
+
     try {
 
         // Build slug out of the blog title
         const { title, summary } = validationResult.data;
-        const slug =  makeSlug(title, 40);
+        const slug = makeSlug(title, 40);
         const createdAt = new Date(Date.now()).toISOString();
         const updatedAt = new Date(Date.now()).toISOString();
         const userid = "c74de708-5937-41c2-9600-6286993866b3";
@@ -181,21 +190,50 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
         console.log("Inserted Blog data:", res[0]);
 
-        
+        const { id } = res[0];
+
         const dbUpdates: Promise<any>[] = [];
         // Iterate grouped data 
-        for (let data of groupedContent) {
+        for (let i = 0; i < validationResult.data.content.length; i++) {
+
+            const cur = validationResult.data.content[i];
 
             // Extract type
-            const { type } = data;
+            const { type } = cur;
 
             // Depending on type, Send directly update to DB (without await), store returned promise into an array.
-            // switch ()
-            // dbUpdates.push()
+            if (type === "image") {
+                const { url, caption, size: imageSize } = cur;
+
+                const insertImage = sql`
+                INSERT INTO image (postid, url, caption, size, position)
+                VALUES (${id}, ${url}, ${caption}, ${imageSize}, ${i})`;
+
+                dbUpdates.push(insertImage);
+            } else if (type === "text") {
+                const { content: textContent, size: textSize, style: textStyle } = cur;
+
+                const insertText = sql`
+                    INSERT INTO text (postid, size, style, word_count, content, position )
+                    VALUES (${id}, ${textSize}, ${textStyle}, ${textContent.length}, ${textContent}, ${i})
+                    `;
+
+                dbUpdates.push(insertText);
+            } else if(type === "code"){
+                const { code, language } = cur;
+
+                const insertCode = sql`
+                    INSERT INTO codesnippet (postid, language, code, position )
+                    VALUES (${id}, ${language}, ${code}, ${i})
+                    `;
+
+                dbUpdates.push(insertCode);
+            }
 
         }
 
         // Wait for all promises to resolve Promise.all(dbUpdates)
+        await Promise.all(dbUpdates);
 
         // Revalidate path / Clear cache
 
@@ -204,6 +242,7 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
     } catch (e) {
         // return message and errors to update the state
+        console.error("Create Blog Failed", e);
         return {
             message: "Some Error Hint!", errors: {}
         };

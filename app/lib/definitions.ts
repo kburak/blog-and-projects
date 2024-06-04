@@ -3,7 +3,7 @@ export type ContentType = {
     url?: string;
     caption?: string;
     content?: string;
-    formatting?: string;
+    style?: string;
     code?: string;
     language?: string;
     size?: string;

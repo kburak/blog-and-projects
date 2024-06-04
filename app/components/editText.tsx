@@ -4,7 +4,8 @@ export default function editText({
     dbUpdate,
     dbDelete,
     content,
-    formatting,
+    size,
+    style,
     update,
     remove
 }: {
@@ -13,7 +14,8 @@ export default function editText({
     dbUpdate: boolean | undefined,
     dbDelete: boolean | undefined,
     content: string | undefined,
-    formatting: string | undefined,
+    size: string | undefined,
+    style: string | undefined,
     update: (...args: any) => void,
     remove: (...args: any) => void
 }) {
@@ -25,12 +27,17 @@ export default function editText({
 
     function handleContentUpdate(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
-        update("text", index, e.target?.value, formatting);
+        update("text", index, e.target?.value, size, style);
     }
 
-    function handleFormattingUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
+    function handleSizeUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
         e.preventDefault();
-        update("text", index, content, e.target?.value);
+        update("text", index, content, e.target?.value, style);
+    }
+
+    function handleStyleUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
+        e.preventDefault();
+        update("text", index, content, size, e.target?.value);
     }
 
     return (
@@ -41,11 +48,17 @@ export default function editText({
             <label htmlFor="content">Content</label>
             <input type="text" id="content" className="bg-gray-100" name={`${index}-${type}-content`} value={content} onChange={handleContentUpdate} />
 
-            <label htmlFor="formatting">Formatting</label>
-            <select id="formatting" className="bg-gray-100" name={`${index}-${type}-formatting`} value={formatting} onChange={handleFormattingUpdate}>
+            <label htmlFor="formatting">Size</label>
+            <select id="formatting" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
                 <option>h1</option>
                 <option>h2</option>
                 <option>h3</option>
+            </select>
+            <label htmlFor="formatting">Style</label>
+            <select id="formatting" className="bg-gray-100" name={`${index}-${type}-style`} value={style} onChange={handleStyleUpdate}>
+                <option>normal</option>
+                <option>italic</option>
+                <option>bold</option>
             </select>
             <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
         </div>

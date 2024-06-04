@@ -24,7 +24,7 @@ export default function CreateBlogForm() {
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
             "image": { type: "image", url: "", caption: "", size: "", dbUpdate: false, dbDelete: false },
-            "text": { type: "text", content: "", formatting: "", dbUpdate: false, dbDelete: false },
+            "text": { type: "text", content: "", size: "", style: "", dbUpdate: false, dbDelete: false },
             "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false }
         }
 
@@ -71,12 +71,12 @@ export default function CreateBlogForm() {
             }));
             // +++++ DEBUG +++++
         } else if (type === "text") {
-            const [content, formatting] = args;
+            const [content, size, style] = args;
 
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, content, formatting };
+                    if (sIdx === index && sC.type === type) return { ...sC, content, size, style };
                     return sC;
                 })
             });
@@ -143,7 +143,7 @@ export default function CreateBlogForm() {
                     );
                     if (c.type === "text") return (
                         <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                            <EditText key={`emptyText-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} content={c.content} formatting={c.formatting} update={editContent} remove={removeContent} />
+                            <EditText key={`emptyText-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} content={c.content} size={c.size} style={c.style} update={editContent} remove={removeContent} />
                             <ul>
                                 {
                                     state?.errors?.content && state.errors.content[idx] &&
