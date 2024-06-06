@@ -53,6 +53,9 @@ export default function editText({
                 <option>h1</option>
                 <option>h2</option>
                 <option>h3</option>
+                <option>h4</option>
+                <option>h5</option>
+                <option>p</option>
             </select>
             <label htmlFor="formatting">Style</label>
             <select id="formatting" className="bg-gray-100" name={`${index}-${type}-style`} value={style} onChange={handleStyleUpdate}>

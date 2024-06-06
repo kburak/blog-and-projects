@@ -1,6 +1,8 @@
 'use server';
 import { z } from 'zod';
 import sql from './db';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 const ImageSchema = z.object({
     type: z.literal('image'),
@@ -23,7 +25,7 @@ const TextSchema = z.object({
 const CodeSchema = z.object({
     type: z.literal('code'),
     code: z.string().min(1, { message: 'Code cannot be empty!' }),
-    language: z.enum(['Javascript', 'python', 'sql', 'java', 'json', 'csharp'])
+    language: z.enum(['javascript', 'python', 'sql', 'java', 'json', 'csharp'])
 });
 
 const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema]);
@@ -171,11 +173,13 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
     console.log("validatedData", validationResult.data);
 
+    // Make slug
+    const slug = makeSlug(validationResult.data.title, 40);
+
     try {
 
         // Build slug out of the blog title
         const { title, summary } = validationResult.data;
-        const slug = makeSlug(title, 40);
         const createdAt = new Date(Date.now()).toISOString();
         const updatedAt = new Date(Date.now()).toISOString();
         const userid = "c74de708-5937-41c2-9600-6286993866b3";
@@ -219,7 +223,7 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
                     `;
 
                 dbUpdates.push(insertText);
-            } else if(type === "code"){
+            } else if (type === "code") {
                 const { code, language } = cur;
 
                 const insertCode = sql`
@@ -235,11 +239,6 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
         // Wait for all promises to resolve Promise.all(dbUpdates)
         await Promise.all(dbUpdates);
 
-        // Revalidate path / Clear cache
-
-        // Redirect user to the new blog page
-
-
     } catch (e) {
         // return message and errors to update the state
         console.error("Create Blog Failed", e);
@@ -247,5 +246,12 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
             message: "Some Error Hint!", errors: {}
         };
     }
+
+    // No need to Revalidate path / Clear cache because the blog is newly created!!!
+    // revalidatePath(`/blog/${slug}`);
+
+    // Redirect user to the new blog page
+    // redirect internally throws an error so it should be called outside of try/catch blocks.
+    redirect(`/blog/${slug}`);
 
 }

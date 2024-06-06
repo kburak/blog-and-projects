@@ -43,9 +43,9 @@ export default function editCode({
 
             <label htmlFor="size">Size</label>
             <select id="size" className="bg-gray-100" name={`${index}-${type}-language`} value={language} onChange={handleLanguageUpdate}>
-                <option>Javascript</option>
-                <option>Json</option>
-                <option>Java</option>
+                <option>javascript</option>
+                <option>json</option>
+                <option>java</option>
             </select>
             <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
         </div>

@@ -1,4 +1,16 @@
-export default function Page({ params }: { params: { slug: string } }) {
+import { getBlog } from "@/app/lib/data";
+
+export default async function Page({ params }: { params: { slug: string } }) {
     const { slug } = params;
-    return <h1>{slug} page</h1>
+
+    // Get post data with content
+    const blogData = await getBlog(slug);
+
+    return (
+        <>
+            <h1>{slug} page</h1>
+            <p>{JSON.stringify(blogData)}</p>
+        </>
+
+    )
 }
