@@ -252,6 +252,7 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
     // Redirect user to the new blog page
     // redirect internally throws an error so it should be called outside of try/catch blocks.
+    console.log("Redirect to:", `/blog/${slug}`);
     redirect(`/blog/${slug}`);
 
 }

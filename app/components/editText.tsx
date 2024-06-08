@@ -25,7 +25,7 @@ export default function editText({
         remove("text", index);
     }
 
-    function handleContentUpdate(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleContentUpdate(e: React.ChangeEvent<HTMLTextAreaElement>) {
         e.preventDefault();
         update("text", index, e.target?.value, size, style);
     }
@@ -46,7 +46,7 @@ export default function editText({
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <label htmlFor="content">Content</label>
-            <input type="text" id="content" className="bg-gray-100" name={`${index}-${type}-content`} value={content} onChange={handleContentUpdate} />
+            <textarea id="content" className="bg-gray-100" name={`${index}-${type}-content`} value={content} onChange={handleContentUpdate} />
 
             <label htmlFor="formatting">Size</label>
             <select id="formatting" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>

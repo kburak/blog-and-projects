@@ -46,18 +46,16 @@ export default async function Page({ params }: { params: { slug: string } }) {
                             alt={caption}
                         />
                     } else if (c.contenttype === "text") {
-                        const { size, style, word_count, content } = c.custom_attr;
-                        return <p className={
-                            `
-                            ${size === 'h1' && 'text-xl'}
-                            ${size === 'p' && 'text-base'}
-                            ${style === 'bold' && 'font-bold'}
-                            ${style === 'italic' && 'italic'}
-                            ${style === 'normal' && 'font-normal'}
-                            `
-                        }>
-                            {content}
-                        </p>
+                        const { size, style, word_count, content: textContent } = c.custom_attr;
+                        // Split the text content with \n (empty space) and show each in a <p> element
+                        return textContent.split("\r").map((tc: string) => {
+                            return <p className={
+                                `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'}`
+                            }>
+                                {tc}
+                            </p>;
+                        });
+
                     } else if (c.contenttype === "code") {
                         const { language, code } = c.custom_attr;
                         return <SyntaxHighlighter language={language} style={docco /* dark atomOneDark github */}>
@@ -66,9 +64,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
                     }
                 })
             }
-
-
-            <p>{JSON.stringify(blogData)}</p>
         </>
 
     )
