@@ -8,7 +8,7 @@ export default function RootLayout({
 }>) {
     return (
         <div>
-            <div className='bg-blue-700 flex justify-between items-center fixed w-full h-12 top-0 left-0'>
+            <div className='bg-blue-700 bg-opacity-95 flex justify-between items-center fixed w-full h-12 top-0 left-0'>
                 <div className='flex p-2'>
                     <Link
                         href="/blog"
@@ -32,9 +32,7 @@ export default function RootLayout({
                     </Link>
                 </div>
             </div>
-            <div className='mt-12'>
-                {children}
-            </div>
+            {children}
         </div>
     );
 }

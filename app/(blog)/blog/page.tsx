@@ -1,3 +1,12 @@
+import { Suspense } from "react";
+import { CardSkeleton } from "@/app/components/skeletons";
+import BlogList from "@/app/components/blogList";
+
 export default async function Page(){
-    return <h1>Blog Overview page</h1>;
+
+    return (
+        <Suspense fallback={<CardSkeleton />}>
+            <BlogList />
+        </Suspense>
+    );
 }

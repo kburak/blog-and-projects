@@ -8,6 +8,8 @@ export async function getAllBlogs(userId: string | undefined = "c74de708-5937-41
 
     try {
 
+        await new Promise((resolve) => { setTimeout(resolve, 2000) });
+
         const blogs = await sql`
         SELECT
         *
@@ -30,6 +32,8 @@ export async function getAllBlogs(userId: string | undefined = "c74de708-5937-41
 export async function getBlog(slug: string) {
 
     try {
+
+        await new Promise((resolve) => { setTimeout(resolve, 5000) });
 
         // Get blog data
         const blog = await sql`SELECT * FROM post WHERE slug = ${slug}`;
@@ -66,7 +70,7 @@ export async function getBlog(slug: string) {
             FROM codesnippet
             WHERE postId = ${id}
             ORDER BY position ASC`
-            ;
+                ;
 
             return {
                 title: blog[0].title,
@@ -81,6 +85,32 @@ export async function getBlog(slug: string) {
             // No blog found with the id, return null
             return null;
 
+        }
+
+    } catch (e) {
+        console.error("Couldn't get blog", e);
+    }
+
+
+}
+
+export async function getBlogMetadata(slug: string) {
+
+    try {
+
+        // Get blog data
+        const blog = await sql`SELECT * FROM post WHERE slug = ${slug}`;
+
+        // Is there blog data? 
+        if (blog.length > 0) {
+            // Return title
+            const { title, summary } = blog[0];
+
+            return { title, summary };
+
+        } else {
+            // No blog found with the id, return null
+            return null;
         }
 
     } catch (e) {
