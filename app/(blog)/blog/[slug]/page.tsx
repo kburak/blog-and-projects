@@ -2,7 +2,7 @@ import { getBlogMetadata } from "@/app/lib/data";
 import Blog from "@/app/components/blog";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from 'react';
-import { CardSkeleton } from "@/app/components/skeletons";
+import { CardSkeleton, BlogSkeleton } from "@/app/components/skeletons";
 
 
 export async function generateMetadata(
@@ -23,7 +23,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
     return (
         <main>
-            <Suspense fallback={<CardSkeleton />}>
+            {/* <BlogSkeleton /> */}
+            <Suspense fallback={<BlogSkeleton />}>
                 <Blog slug={slug} />
             </Suspense>
         </main>

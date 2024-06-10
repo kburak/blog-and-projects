@@ -2,6 +2,46 @@
 const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
+export function BlogSkeleton() {
+  return <div>
+
+    <div className={`${shimmer} relative overflow-hidden bg-gray-100 p-2 shadow-sm pt-12 pb-10 md:pt-12 md:pb-5 mt-12`}>
+      <div className="flex flex-col w-full items-center mb-8">
+        <div className="bg-white w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-12 bg-gray-200 mb-4"></div>
+        <div className="bg-white w-64 h-12 rounded-md bg-gray-200 mb-4"></div>
+      </div>
+      <div className="flex flex-col w-full items-center mb-8">
+        <div className="bg-white w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-5/12 h-12 h-6 bg-gray-200 pb-6 mb-4"></div>
+        <div className="bg-white w-64 h-6 rounded-md bg-gray-200 mb-4"></div>
+        <div className="bg-white w-48 h-6 rounded-md bg-gray-200 mb-4"></div>
+      </div>
+      <div className="flex flex-col w-full items-center h-12">
+        <div className="bg-white w-64 md:w-4/12 h-6 rounded-md bg-gray-200"></div>
+      </div>
+    </div>
+
+    <div className={`${shimmer} flex flex-col items-center relative overflow-hidden p-2 shadow-sm pt-12 pb-10 md:pt-12 md:pb-5`}>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-64 h-6 rounded-md bg-gray-100 mb-4"></div>
+
+      <div className="mt-12 mb-12"></div>
+
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-48 bg-gray-100 mb-4"></div>
+
+      <div className="mt-12 mb-12"></div>
+
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-64 h-6 rounded-md bg-gray-100 mb-4"></div>
+    </div>
+  </div>
+}
+
 export function CardSkeleton() {
   return (
     <>

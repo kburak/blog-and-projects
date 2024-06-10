@@ -17,7 +17,14 @@ const config: Config = {
         "customBlue": "#1350ff"
       }
     },
+    keyframes: {
+      shimmer: {
+        '100%': {
+          transform: 'translateX(50%)',
+        },
+      },
+    },
   },
-  plugins: [],
+
 };
 export default config;
