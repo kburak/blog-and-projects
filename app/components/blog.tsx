@@ -47,16 +47,18 @@ export default async function Blog(props: { slug: string }) {
     return (
         <div>
             {/* Header section */}
-            <div className="bg-blue-700 text-center text-white pt-24 pb-10 md:pt-12 md:pb-5" >
-                <h1 className="font-bold text-4xl pb-6">{title}</h1>
-                <p className="pb-5">{summary}</p>
-                <p className="text-sm">{new Intl.DateTimeFormat('de-DE', options).format(createdAt)}</p>
+            <div className="bg-blue-700 text-center text-white pt-24 pb-10 md:pt-12 md:pb-5">
+                <div className='md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
+                    <h1 className="font-bold text-4xl pb-6">{title}</h1>
+                    <p className="pb-5">{summary}</p>
+                    <p className="text-sm">{new Intl.DateTimeFormat('de-DE', options).format(createdAt)}</p>
+                </div>
             </div >
 
             <hr />
 
             {/* Content Section */}
-            <div className="p-6">
+            <div className="p-6 md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
                 {
                     content?.map(c => {
                         if (c.contenttype === "image") {
