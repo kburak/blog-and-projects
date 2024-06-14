@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormState } from 'react-dom';
 import { State, createBlog } from "../lib/actions";
 import EditImage from "./editImage";
 import EditText from "./editText";
 import EditCode from "./editCode";
 import { ContentType } from "../lib/definitions";
+import FlexTextArea from "./flexTextArea";
 
 export default function CreateBlogForm() {
     const initialState: State = { message: "", errors: {} };
@@ -94,104 +95,114 @@ export default function CreateBlogForm() {
     }
 
     return (
-        <form action={dispatch}>
-            {/* Blog title */}
-            <label htmlFor="title">Title</label>
-            <input type="text" id="title" name="blog-title" />
-            {state?.errors?.title &&
-                state.errors.title.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
-                        {error}
-                    </p>
-                ))}
+        <form action={dispatch} className="flex flex-col p-2">
+            <FlexTextArea
+                id='title'
+                name='blog-title'
+                showLabel={true}
+                visualName='Title'
+                minLength={10}
+                maxLength={255}
+                allowEnter={false}
+                errors={state?.errors?.title}
+            />
+            <div id='blog-summary' className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
+                {/* Summary */}
+                <label htmlFor="summary">Summary</label>
+                <textarea id="summary" name="blog-summary" />
+                {state?.errors?.summary &&
+                    state.errors.summary.map((error: string) => (
+                        <p className="mt-2 text-sm text-red-500" key={error}>
+                            {error}
+                        </p>
+                    ))}
 
-            {/* Summary */}
-            <label htmlFor="summary">Summary</label>
-            <textarea id="summary" name="blog-summary" />
-            {state?.errors?.summary &&
-                state.errors.summary.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
-                        {error}
-                    </p>
-                ))}
+                <hr />
 
-            <hr />
+            </div>
+            <div id='blog-content'>
 
-            {/* Content */}
-            {/* 
+
+                {/* Content */}
+                {/* 
                 Iterate content array and show them in their format.
                 Each should have option to be deleted.
                 Show always in edit mode.
             */}
-            {
-                content.map((c, idx) => {
-                    if (c.type === "image") return (
-                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                            <EditImage key={`emptyImage-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} url={c.url} caption={c.caption} size={"small"} update={editContent} remove={removeContent} />
-                            <ul>
-                                {
-                                    state?.errors?.content && state.errors.content[idx] &&
-                                    state.errors.content[idx].map((err: string) => (
-                                        <li className="mt-2 text-sm text-red-500" key={err}>
-                                            {err}
-                                        </li>
-                                    ))
+                {
+                    content.map((c, idx) => {
+                        if (c.type === "image") return (
+                            <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
+                                <EditImage key={`emptyImage-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} url={c.url} caption={c.caption} size={"small"} update={editContent} remove={removeContent} />
+                                <ul>
+                                    {
+                                        state?.errors?.content && state.errors.content[idx] &&
+                                        state.errors.content[idx].map((err: string) => (
+                                            <li className="mt-2 text-sm text-red-500" key={err}>
+                                                {err}
+                                            </li>
+                                        ))
 
-                                }
-                            </ul>
-                        </div>
-                    );
-                    if (c.type === "text") return (
-                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                            <EditText key={`emptyText-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} content={c.content} size={c.size} style={c.style} update={editContent} remove={removeContent} />
-                            <ul>
-                                {
-                                    state?.errors?.content && state.errors.content[idx] &&
-                                    state.errors.content[idx].map((err: string) => (
-                                        <li className="mt-2 text-sm text-red-500" key={err}>
-                                            {err}
-                                        </li>
-                                    ))
+                                    }
+                                </ul>
+                            </div>
+                        );
+                        if (c.type === "text") return (
+                            <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
+                                <EditText key={`emptyText-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} content={c.content} size={c.size} style={c.style} update={editContent} remove={removeContent} />
+                                <ul>
+                                    {
+                                        state?.errors?.content && state.errors.content[idx] &&
+                                        state.errors.content[idx].map((err: string) => (
+                                            <li className="mt-2 text-sm text-red-500" key={err}>
+                                                {err}
+                                            </li>
+                                        ))
 
-                                }
-                            </ul>
-                        </div>
-                    );
-                    if (c.type === "code") return (
-                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                            <EditCode key={`emptyCode-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} code={c.code} language={c.language} update={editContent} remove={removeContent} />
-                            <ul>
-                                {
-                                    state?.errors?.content && state.errors.content[idx] &&
-                                    state.errors.content[idx].map((err: string) => (
-                                        <li className="mt-2 text-sm text-red-500" key={err}>
-                                            {err}
-                                        </li>
-                                    ))
+                                    }
+                                </ul>
+                            </div>
+                        );
+                        if (c.type === "code") return (
+                            <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
+                                <EditCode key={`emptyCode-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} code={c.code} language={c.language} update={editContent} remove={removeContent} />
+                                <ul>
+                                    {
+                                        state?.errors?.content && state.errors.content[idx] &&
+                                        state.errors.content[idx].map((err: string) => (
+                                            <li className="mt-2 text-sm text-red-500" key={err}>
+                                                {err}
+                                            </li>
+                                        ))
 
-                                }
-                            </ul>
-                        </div>
-                    );
-                })
-            }
+                                    }
+                                </ul>
+                            </div>
+                        );
+                    })
+                }
+            </div>
+            <div id='add-new-content'>
 
-            {/* Helper for Selecting content type*/}
-            {
-                ["image", "text", "code"].map(c_type => {
-                    return <button
-                        key={`button-${c_type}`}
-                        className="h-10 rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-                        type="button" // This will override/prevent its natural behaviour(submitting the form it's in.)
-                        onClick={(e) => {
-                            addEmptyContent(c_type)
-                        }}>{c_type}</button>;
-                })
-            }
-            <button
-                className="h-10 rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-            >Save</button>
-            <p>{JSON.stringify(state)}</p>
+                {/* Helper for Selecting content type*/}
+                {
+                    ["image", "text", "code"].map(c_type => {
+                        return <button
+                            key={`button-${c_type}`}
+                            className="h-10 rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                            type="button" // This will override/prevent its natural behaviour(submitting the form it's in.)
+                            onClick={(e) => {
+                                addEmptyContent(c_type)
+                            }}>{c_type}</button>;
+                    })
+                }
+                <button
+                    className="h-10 rounded-lg bg-green-500 px-4 text-sm font-medium text-white transition-colors hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 active:bg-green-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                >
+                    Save
+                </button>
+                <p>{JSON.stringify(state)}</p>
+            </div>
         </form>
     );
 }
