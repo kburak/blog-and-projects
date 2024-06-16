@@ -1,3 +1,5 @@
+import FlexTextArea from "./flexTextArea";
+
 export default function editText({
     type,
     index,
@@ -7,7 +9,8 @@ export default function editText({
     size,
     style,
     update,
-    remove
+    remove,
+    errors
 }: {
     type: string | undefined,
     index: number,
@@ -17,7 +20,8 @@ export default function editText({
     size: string | undefined,
     style: string | undefined,
     update: (...args: any) => void,
-    remove: (...args: any) => void
+    remove: (...args: any) => void,
+    errors: []
 }) {
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
@@ -46,8 +50,19 @@ export default function editText({
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <label htmlFor="content">Content</label>
-            <textarea id="content" className="bg-gray-100" name={`${index}-${type}-content`} value={content} onChange={handleContentUpdate} />
-
+            <FlexTextArea
+                id='content'
+                name={`${index}-${type}-content`}
+                value={content ?? ""}
+                changeHandler={handleContentUpdate}
+                showLabel={false}
+                visualName=''
+                minLength={10}
+                maxLength={9999999}
+                allowEnter={true}
+                textSize="text-base"
+                errors={errors}
+            />
             <label htmlFor="formatting">Size</label>
             <select id="formatting" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
                 <option>h1</option>

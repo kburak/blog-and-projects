@@ -1,15 +1,12 @@
 /*
-    FlexTextArea WITHOUT its own state. 
-    It takes value and update func. as prop and uses them.
+    FlexTextArea with its own state.
 */
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
-export default function FlexTextArea({
+export default function FlexTextAreaStateful({
     id,
     name,
-    value,
-    changeHandler,
     showLabel,
     visualName,
     minLength,
@@ -20,8 +17,6 @@ export default function FlexTextArea({
 }: {
     id: string,
     name: string,
-    value: string,
-    changeHandler: (...args: any) => void,
     showLabel: Boolean,
     visualName: string,
     minLength: number,
@@ -31,6 +26,7 @@ export default function FlexTextArea({
     errors: []
 }) {
 
+    const [value, setValue] = useState("");
     const mirrorElm = useRef<HTMLTextAreaElement>(null);
 
     return (
@@ -46,7 +42,6 @@ export default function FlexTextArea({
                     autoComplete="off"
                     minLength={minLength}
                     maxLength={maxLength}
-                    value={value}
                     style={{
                         height: mirrorElm.current ? mirrorElm.current.scrollHeight + "px" : "2.5rem"
                     }}
@@ -57,7 +52,9 @@ export default function FlexTextArea({
                         }
                     }}
                     onChange={(e) => {
-                        changeHandler(e);
+                        setValue(e.target.value);
+
+                        // console.log("onChange",mirrorElm.current && mirrorElm.current.scrollHeight);
                     }}
                 />
                 <textarea

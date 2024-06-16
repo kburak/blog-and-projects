@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useFormState } from 'react-dom';
 import { State, createBlog } from "../lib/actions";
 import EditImage from "./editImage";
 import EditText from "./editText";
 import EditCode from "./editCode";
 import { ContentType } from "../lib/definitions";
-import FlexTextArea from "./flexTextArea";
+import FlexTextAreaStateful from "./flexTextAreaStateful";
 
 export default function CreateBlogForm() {
     const initialState: State = { message: "", errors: {} };
@@ -96,7 +96,7 @@ export default function CreateBlogForm() {
 
     return (
         <form action={dispatch} className="flex flex-col p-2">
-            <FlexTextArea
+            <FlexTextAreaStateful
                 id='title'
                 name='blog-title'
                 showLabel={true}
@@ -104,22 +104,21 @@ export default function CreateBlogForm() {
                 minLength={10}
                 maxLength={255}
                 allowEnter={false}
+                textSize="text-3xl"
                 errors={state?.errors?.title}
             />
-            <div id='blog-summary' className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
-                {/* Summary */}
-                <label htmlFor="summary">Summary</label>
-                <textarea id="summary" name="blog-summary" />
-                {state?.errors?.summary &&
-                    state.errors.summary.map((error: string) => (
-                        <p className="mt-2 text-sm text-red-500" key={error}>
-                            {error}
-                        </p>
-                    ))}
-
-                <hr />
-
-            </div>
+            <FlexTextAreaStateful
+                id='summary'
+                name='blog-summary'
+                showLabel={true}
+                visualName='Summary'
+                minLength={10}
+                maxLength={255}
+                allowEnter={false}
+                textSize="text-base"
+                errors={state?.errors?.summary}
+            />
+            
             <div id='blog-content'>
 
 
@@ -133,7 +132,18 @@ export default function CreateBlogForm() {
                     content.map((c, idx) => {
                         if (c.type === "image") return (
                             <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                                <EditImage key={`emptyImage-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} url={c.url} caption={c.caption} size={"small"} update={editContent} remove={removeContent} />
+                                <EditImage
+                                    key={`emptyImage-${idx}`}
+                                    type={c.type}
+                                    index={idx}
+                                    dbUpdate={c.dbUpdate}
+                                    dbDelete={c.dbDelete}
+                                    url={c.url}
+                                    caption={c.caption}
+                                    size={"small"}
+                                    update={editContent}
+                                    remove={removeContent}
+                                />
                                 <ul>
                                     {
                                         state?.errors?.content && state.errors.content[idx] &&
@@ -149,7 +159,19 @@ export default function CreateBlogForm() {
                         );
                         if (c.type === "text") return (
                             <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                                <EditText key={`emptyText-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} content={c.content} size={c.size} style={c.style} update={editContent} remove={removeContent} />
+                                <EditText
+                                    key={`emptyText-${idx}`}
+                                    type={c.type}
+                                    index={idx}
+                                    dbUpdate={c.dbUpdate}
+                                    dbDelete={c.dbDelete}
+                                    content={c.content}
+                                    size={c.size}
+                                    style={c.style}
+                                    update={editContent}
+                                    remove={removeContent}
+                                    errors={state?.errors?.content && state.errors.content[idx] && state.errors.content[idx]}
+                                />
                                 <ul>
                                     {
                                         state?.errors?.content && state.errors.content[idx] &&
