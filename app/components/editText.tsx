@@ -49,7 +49,28 @@ export default function editText({
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
-            <label htmlFor="content">Content</label>
+            <div className="w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto mb-2">
+                <div className="inline mr-2">
+                    <label htmlFor="formatting">Size</label>
+                    <select id="formatting" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
+                        <option>h1</option>
+                        <option>h2</option>
+                        <option>h3</option>
+                        <option>h4</option>
+                        <option>h5</option>
+                        <option>p</option>
+                    </select>
+                </div>
+                <div className="inline">
+                    <label htmlFor="formatting">Style</label>
+                    <select id="formatting" className="bg-gray-100" name={`${index}-${type}-style`} value={style} onChange={handleStyleUpdate}>
+                        <option>normal</option>
+                        <option>italic</option>
+                        <option>bold</option>
+                    </select>
+                </div>
+            </div>
+            {/* <label htmlFor="content">Content</label> */}
             <FlexTextArea
                 id='content'
                 name={`${index}-${type}-content`}
@@ -60,25 +81,13 @@ export default function editText({
                 minLength={10}
                 maxLength={9999999}
                 allowEnter={true}
-                textSize="text-base"
+                textSize={size ?? "p"}
+                textStyle={style ?? "normal"}
                 errors={errors}
             />
-            <label htmlFor="formatting">Size</label>
-            <select id="formatting" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
-                <option>h1</option>
-                <option>h2</option>
-                <option>h3</option>
-                <option>h4</option>
-                <option>h5</option>
-                <option>p</option>
-            </select>
-            <label htmlFor="formatting">Style</label>
-            <select id="formatting" className="bg-gray-100" name={`${index}-${type}-style`} value={style} onChange={handleStyleUpdate}>
-                <option>normal</option>
-                <option>italic</option>
-                <option>bold</option>
-            </select>
-            <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
+            <div className="w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
+                <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
+            </div>
         </div>
     );
 }

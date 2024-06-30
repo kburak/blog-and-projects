@@ -25,7 +25,7 @@ export default function CreateBlogForm() {
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
             "image": { type: "image", url: "", caption: "", size: "", dbUpdate: false, dbDelete: false },
-            "text": { type: "text", content: "", size: "", style: "", dbUpdate: false, dbDelete: false },
+            "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false },
             "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false }
         }
 
@@ -104,7 +104,8 @@ export default function CreateBlogForm() {
                 minLength={10}
                 maxLength={255}
                 allowEnter={false}
-                textSize="text-3xl"
+                textSize="h1"
+                textStyle="normal"
                 errors={state?.errors?.title}
             />
             <FlexTextAreaStateful
@@ -115,7 +116,8 @@ export default function CreateBlogForm() {
                 minLength={10}
                 maxLength={255}
                 allowEnter={false}
-                textSize="text-base"
+                textSize="p"
+                textStyle="normal"
                 errors={state?.errors?.summary}
             />
             
@@ -172,17 +174,6 @@ export default function CreateBlogForm() {
                                     remove={removeContent}
                                     errors={state?.errors?.content && state.errors.content[idx] && state.errors.content[idx]}
                                 />
-                                <ul>
-                                    {
-                                        state?.errors?.content && state.errors.content[idx] &&
-                                        state.errors.content[idx].map((err: string) => (
-                                            <li className="mt-2 text-sm text-red-500" key={err}>
-                                                {err}
-                                            </li>
-                                        ))
-
-                                    }
-                                </ul>
                             </div>
                         );
                         if (c.type === "code") return (

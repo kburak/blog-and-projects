@@ -13,6 +13,7 @@ export default function FlexTextAreaStateful({
     maxLength,
     allowEnter,
     textSize,
+    textStyle,
     errors
 }: {
     id: string,
@@ -23,11 +24,27 @@ export default function FlexTextAreaStateful({
     maxLength: number,
     allowEnter: Boolean,
     textSize: string,
+    textStyle: string
     errors: []
 }) {
 
     const [value, setValue] = useState("");
     const mirrorElm = useRef<HTMLTextAreaElement>(null);
+
+    const textSizeMap: { [key: string]: string } = {
+        "h1": "text-4xl",
+        "h2": "text-3xl",
+        "h3": "text-2xl",
+        "h4": "text-xl",
+        "h5": "text-lg",
+        "p": "text-base"
+    };
+
+    const textStyleMap: { [key: string]: string } = {
+        "normal": "normal",
+        "italic": "italic",
+        "bold": "font-bold"
+    }
 
     return (
         <div id={id} className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
@@ -37,7 +54,7 @@ export default function FlexTextAreaStateful({
                 <textarea
                     id={id}
                     name={name}
-                    className={`${textSize} bg-green-100 resize-none w-full`}
+                    className={`${textSizeMap[textSize]} ${textStyleMap[textStyle]} bg-green-100 resize-none w-full`}
                     autoFocus={true}
                     autoComplete="off"
                     minLength={minLength}
