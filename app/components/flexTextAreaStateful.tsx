@@ -14,7 +14,7 @@ export default function FlexTextAreaStateful({
     allowEnter,
     textSize,
     textStyle,
-    errors
+    error
 }: {
     id: string,
     name: string,
@@ -25,7 +25,7 @@ export default function FlexTextAreaStateful({
     allowEnter: Boolean,
     textSize: string,
     textStyle: string
-    errors: []
+    error: string | []
 }) {
 
     const [value, setValue] = useState("");
@@ -81,13 +81,17 @@ export default function FlexTextAreaStateful({
                     readOnly
                 ></textarea>
             </div>
-            {errors &&
-                errors.map((error: string) => (
+            {error && typeof error !== "string" ?
+                error.map((error: string) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                         {error}
                     </p>
-                ))}
-
+                ))
+                :
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                </p>
+            }
         </div>
     );
 }

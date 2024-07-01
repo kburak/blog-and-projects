@@ -24,7 +24,7 @@ export default function CreateBlogForm() {
 
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
-            "image": { type: "image", url: "", caption: "", size: "", dbUpdate: false, dbDelete: false },
+            "image": { type: "image", url: "", caption: "", size: "large", dbUpdate: false, dbDelete: false },
             "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false },
             "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false }
         }
@@ -93,7 +93,7 @@ export default function CreateBlogForm() {
             });
         }
     }
-
+    console.log(state?.errors)
     return (
         <form action={dispatch} className="flex flex-col p-2">
             <FlexTextAreaStateful
@@ -106,7 +106,7 @@ export default function CreateBlogForm() {
                 allowEnter={false}
                 textSize="h1"
                 textStyle="normal"
-                errors={state?.errors?.title}
+                error={state?.errors?.title}
             />
             <FlexTextAreaStateful
                 id='summary'
@@ -118,7 +118,7 @@ export default function CreateBlogForm() {
                 allowEnter={false}
                 textSize="p"
                 textStyle="normal"
-                errors={state?.errors?.summary}
+                error={state?.errors?.summary}
             />
             
             <div id='blog-content'>
@@ -142,21 +142,11 @@ export default function CreateBlogForm() {
                                     dbDelete={c.dbDelete}
                                     url={c.url}
                                     caption={c.caption}
-                                    size={"small"}
+                                    size={c.size}
                                     update={editContent}
                                     remove={removeContent}
+                                    errors={state?.errors?.content && state.errors.content[idx] && state.errors.content[idx]}
                                 />
-                                <ul>
-                                    {
-                                        state?.errors?.content && state.errors.content[idx] &&
-                                        state.errors.content[idx].map((err: string) => (
-                                            <li className="mt-2 text-sm text-red-500" key={err}>
-                                                {err}
-                                            </li>
-                                        ))
-
-                                    }
-                                </ul>
                             </div>
                         );
                         if (c.type === "text") return (
@@ -178,7 +168,18 @@ export default function CreateBlogForm() {
                         );
                         if (c.type === "code") return (
                             <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
-                                <EditCode key={`emptyCode-${idx}`} type={c.type} index={idx} dbUpdate={c.dbUpdate} dbDelete={c.dbDelete} code={c.code} language={c.language} update={editContent} remove={removeContent} />
+                                <EditCode 
+                                key={`emptyCode-${idx}`}
+                                type={c.type} 
+                                index={idx} 
+                                dbUpdate={c.dbUpdate} 
+                                dbDelete={c.dbDelete} 
+                                code={c.code} 
+                                language={c.language} 
+                                update={editContent} 
+                                remove={removeContent} 
+                                errors={state?.errors?.content && state.errors.content[idx] && state.errors.content[idx] }
+                                />
                                 <ul>
                                     {
                                         state?.errors?.content && state.errors.content[idx] &&

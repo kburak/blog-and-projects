@@ -153,14 +153,25 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
                     // Is there error messages array for the item at this idx?
                     if (pResult['content'][idx]) {
                         // Push the err message inside
-                        pResult['content'][idx].push(err.message);
+                        pResult['content'][idx] = { ...pResult['content'][idx], [field]: err.message };
                     } else {
                         // Create the array
-                        pResult['content'][idx] = [err.message];
+                        pResult['content'][idx] = { [field]: err.message };
                     }
                     break;
             }
+            /*
+            [
+                {
+                    content: 
+                },
+                {
+                    url:
+                    caption:
+                }
+            ]
 
+            */
         }
 
         console.log("pResult", pResult)

@@ -21,7 +21,7 @@ export default function editText({
     style: string | undefined,
     update: (...args: any) => void,
     remove: (...args: any) => void,
-    errors: []
+    errors: {[key: string]: string}
 }) {
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
@@ -83,7 +83,7 @@ export default function editText({
                 allowEnter={true}
                 textSize={size ?? "p"}
                 textStyle={style ?? "normal"}
-                errors={errors}
+                error={errors?.content}
             />
             <div className="w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
                 <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>

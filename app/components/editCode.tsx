@@ -1,3 +1,5 @@
+import FlexTextArea from "./flexTextArea";
+
 export default function editCode({
     type,
     index,
@@ -6,7 +8,8 @@ export default function editCode({
     code,
     language,
     update,
-    remove
+    remove,
+    errors,
 }: {
     type: string | undefined,
     index: number,
@@ -15,7 +18,8 @@ export default function editCode({
     code: string | undefined,
     language: string | undefined,
     update: (...args: any) => void,
-    remove: (...args: any) => void
+    remove: (...args: any) => void,
+    errors: { [key: string]: string }
 }) {
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
@@ -38,9 +42,20 @@ export default function editCode({
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
-            <label htmlFor="code">Code</label>
-            <input type="text" id="code" className="bg-gray-100" name={`${index}-${type}-code`} value={code} onChange={handleCodeUpdate} />
-
+            <FlexTextArea
+                id="code"
+                name={`${index}-${type}-code`}
+                value={code ?? ""}
+                changeHandler={handleCodeUpdate}
+                showLabel={true}
+                visualName="Code"
+                minLength={1}
+                maxLength={99999}
+                allowEnter={false}
+                textSize="p"
+                textStyle="normal"
+                error={errors?.caption}
+            />
             <label htmlFor="size">Size</label>
             <select id="size" className="bg-gray-100" name={`${index}-${type}-language`} value={language} onChange={handleLanguageUpdate}>
                 <option>javascript</option>

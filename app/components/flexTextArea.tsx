@@ -17,7 +17,7 @@ export default function FlexTextArea({
     allowEnter,
     textSize,
     textStyle,
-    errors
+    error
 }: {
     id: string,
     name: string,
@@ -30,7 +30,7 @@ export default function FlexTextArea({
     allowEnter: Boolean,
     textSize: string,
     textStyle: string,
-    errors: []
+    error: string | []
 }) {
 
     const mirrorElm = useRef<HTMLTextAreaElement>(null);
@@ -84,12 +84,17 @@ export default function FlexTextArea({
                     readOnly
                 ></textarea>
             </div>
-            {errors &&
-                errors.map((error: string) => (
+            {error && typeof error !== "string" ?
+                error.map((error: string) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                         {error}
                     </p>
-                ))}
+                ))
+                :
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                </p>
+            }
         </div>
     );
 }
