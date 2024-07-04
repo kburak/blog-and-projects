@@ -93,7 +93,7 @@ export default function CreateBlogForm() {
             });
         }
     }
-    console.log(state?.errors)
+    console.log(state?.errors);
     return (
         <form action={dispatch} className="flex flex-col p-2">
             <FlexTextAreaStateful
@@ -180,24 +180,12 @@ export default function CreateBlogForm() {
                                 remove={removeContent} 
                                 errors={state?.errors?.content && state.errors.content[idx] && state.errors.content[idx] }
                                 />
-                                <ul>
-                                    {
-                                        state?.errors?.content && state.errors.content[idx] &&
-                                        state.errors.content[idx].map((err: string) => (
-                                            <li className="mt-2 text-sm text-red-500" key={err}>
-                                                {err}
-                                            </li>
-                                        ))
-
-                                    }
-                                </ul>
                             </div>
                         );
                     })
                 }
             </div>
             <div id='add-new-content'>
-
                 {/* Helper for Selecting content type*/}
                 {
                     ["image", "text", "code"].map(c_type => {

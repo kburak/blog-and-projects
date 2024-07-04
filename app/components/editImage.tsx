@@ -45,7 +45,7 @@ export default function editImage({
         e.preventDefault();
         update("image", index, url, caption, e.target?.value);
     }
-    
+
     return (
         <div className="p-4 relative">{/* // If to be deleted hide content. */}
             <p>{type?.toUpperCase()}</p>
@@ -88,13 +88,24 @@ export default function editImage({
                 textStyle="normal"
                 error={errors?.caption}
             />
-            <label htmlFor="size">Size</label>
-            <select id="size" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
-                <option>small</option>
-                <option>medium</option>
-                <option>large</option>
-            </select>
-            <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
+            <div className="mr-2">
+                <label htmlFor="size">Size</label>
+                <select id="size" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
+                    <option>small</option>
+                    <option>medium</option>
+                    <option>large</option>
+                </select>
+            </div>
+            <div className="absolute right-0 top-0 p-4">
+                <button
+                    type="button"
+                    className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                    name={`${index}-${type}-dbDelete`}
+                    onClick={handleRemove}
+                >
+                    Delete
+                </button>
+            </div>
             {dbDelete &&
                 <div className="flex flex-col items-center justify-center absolute bg-black bg-opacity-50 absolute inset-0">
                     <p className="text-white">Mark to be deleted.</p>

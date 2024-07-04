@@ -3,7 +3,7 @@
     It takes value and update func. as prop and uses them.
 */
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 export default function FlexTextArea({
     id,
@@ -34,6 +34,7 @@ export default function FlexTextArea({
 }) {
 
     const mirrorElm = useRef<HTMLTextAreaElement>(null);
+    const mainElm = useRef<HTMLTextAreaElement>(null);
 
     const textSizeMap: { [key: string]: string } = {
         "h1": "text-4xl",
@@ -50,12 +51,20 @@ export default function FlexTextArea({
         "bold": "font-bold"
     }
 
+    // Set the height of mainElm(textarea) to be the scrollHeight of the mirrorElm. Do this at first render.
+    useEffect(() => {
+        if (mirrorElm.current && mainElm.current) {
+            mainElm.current.style.height = `${mirrorElm.current.scrollHeight}px`;
+        }
+    }, []);
+
     return (
-        <div id={id} className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
+        <div id={id} className="flex flex-col">
             {/* Blog title */}
             {showLabel && <label htmlFor={id}>{visualName}</label>}
             <div className='relative'> {/* Relative position creates a new positioning context for its absolute position children. */}
                 <textarea
+                    ref={mainElm}
                     id={id}
                     name={name}
                     className={`${textSizeMap[textSize]} ${textStyleMap[textStyle]} bg-green-100 resize-none w-full`}
@@ -86,12 +95,12 @@ export default function FlexTextArea({
             </div>
             {error && typeof error !== "string" ?
                 error.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
+                    <p className="text-sm text-red-500" key={error}>
                         {error}
                     </p>
                 ))
                 :
-                <p className="mt-2 text-sm text-red-500" key={error}>
+                <p className="mb-2 text-sm text-red-500" key={error}>
                     {error}
                 </p>
             }

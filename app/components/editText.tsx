@@ -21,12 +21,17 @@ export default function editText({
     style: string | undefined,
     update: (...args: any) => void,
     remove: (...args: any) => void,
-    errors: {[key: string]: string}
+    errors: { [key: string]: string }
 }) {
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         remove("text", index);
+    }
+
+    function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        // tbd
     }
 
     function handleContentUpdate(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -49,7 +54,7 @@ export default function editText({
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
-            <div className="w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto mb-2">
+            <div className="ml-auto mr-auto mb-2">
                 <div className="inline mr-2">
                     <label htmlFor="formatting">Size</label>
                     <select id="formatting" className="bg-gray-100" name={`${index}-${type}-size`} value={size} onChange={handleSizeUpdate}>
@@ -85,9 +90,28 @@ export default function editText({
                 textStyle={style ?? "normal"}
                 error={errors?.content}
             />
-            <div className="w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
-                <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
+            <div className="absolute right-0 top-0 p-4">
+                <button
+                    type="button"
+                    className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                    name={`${index}-${type}-dbDelete`}
+                    onClick={handleRemove}
+                >
+                    Delete
+                </button>
             </div>
+            {dbDelete &&
+                <div className="flex flex-col items-center justify-center absolute bg-black bg-opacity-50 absolute inset-0">
+                    <p className="text-white">Mark to be deleted.</p>
+                    <button
+                        className="text-white h-5 rounded-lg bg-red-500 px-4"
+                        type="button"
+                        onClick={handleRemoveRevert}
+                    >
+                        Revert
+                    </button>
+                </div>
+            }
         </div>
     );
 }

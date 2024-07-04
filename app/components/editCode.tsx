@@ -51,10 +51,10 @@ export default function editCode({
                 visualName="Code"
                 minLength={1}
                 maxLength={99999}
-                allowEnter={false}
+                allowEnter={true}
                 textSize="p"
                 textStyle="normal"
-                error={errors?.caption}
+                error={errors?.code}
             />
             <label htmlFor="size">Size</label>
             <select id="size" className="bg-gray-100" name={`${index}-${type}-language`} value={language} onChange={handleLanguageUpdate}>
@@ -62,7 +62,22 @@ export default function editCode({
                 <option>json</option>
                 <option>java</option>
             </select>
-            <button type="button" className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50" name={`${index}-${type}-dbDelete`} onClick={handleRemove}>Delete</button>
+            <div className="absolute right-0 top-0 p-4">
+                <button
+                    type="button"
+                    className="h-5 rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                    name={`${index}-${type}-dbDelete`}
+                    onClick={handleRemove}
+                >
+                    Delete
+                </button>
+            </div>
+            {dbDelete &&
+                <div className="flex flex-col items-center justify-center absolute bg-black bg-opacity-50 absolute inset-0">
+                    <p className="text-white">Mark to be deleted.</p>
+                    <button className="text-white h-5 rounded-lg bg-red-500 px-4" type="button">Revert</button>
+                </div>
+            }
         </div>
     );
 }

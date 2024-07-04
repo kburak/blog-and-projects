@@ -2,11 +2,12 @@
     FlexTextArea with its own state.
 */
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function FlexTextAreaStateful({
     id,
     name,
+    initValue,
     showLabel,
     visualName,
     minLength,
@@ -18,6 +19,7 @@ export default function FlexTextAreaStateful({
 }: {
     id: string,
     name: string,
+    initValue?: string,
     showLabel: Boolean,
     visualName: string,
     minLength: number,
@@ -28,8 +30,9 @@ export default function FlexTextAreaStateful({
     error: string | []
 }) {
 
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(initValue ?? "");
     const mirrorElm = useRef<HTMLTextAreaElement>(null);
+    const mainElm = useRef<HTMLTextAreaElement>(null);
 
     const textSizeMap: { [key: string]: string } = {
         "h1": "text-4xl",
@@ -46,12 +49,21 @@ export default function FlexTextAreaStateful({
         "bold": "font-bold"
     }
 
+    // Set the height of mainElm(textarea) to be the scrollHeight of the mirrorElm. Do this at first render.
+    useEffect(() => {
+        if (mirrorElm.current && mainElm.current) {
+            mainElm.current.style.height = `${mirrorElm.current.scrollHeight}px`;
+        }
+    }, []);
+
+
     return (
-        <div id={id} className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
+        <div id={id} className="flex flex-col">
             {/* Blog title */}
             {showLabel && <label htmlFor={id}>{visualName}</label>}
             <div className='relative'> {/* Relative position creates a new positioning context for its absolute position children. */}
                 <textarea
+                    ref={mainElm}
                     id={id}
                     name={name}
                     className={`${textSizeMap[textSize]} ${textStyleMap[textStyle]} bg-green-100 resize-none w-full`}
@@ -59,6 +71,7 @@ export default function FlexTextAreaStateful({
                     autoComplete="off"
                     minLength={minLength}
                     maxLength={maxLength}
+                    value={value}
                     style={{
                         height: mirrorElm.current ? mirrorElm.current.scrollHeight + "px" : "2.5rem"
                     }}
@@ -83,12 +96,12 @@ export default function FlexTextAreaStateful({
             </div>
             {error && typeof error !== "string" ?
                 error.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
+                    <p className="mb-2 text-sm text-red-500" key={error}>
                         {error}
                     </p>
                 ))
                 :
-                <p className="mt-2 text-sm text-red-500" key={error}>
+                <p className="mb-2 text-sm text-red-500" key={error}>
                     {error}
                 </p>
             }

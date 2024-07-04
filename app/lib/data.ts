@@ -33,7 +33,7 @@ export async function getBlog(slug: string) {
 
     try {
 
-        await new Promise((resolve) => { setTimeout(resolve, 5000) });
+        // await new Promise((resolve) => { setTimeout(resolve, 5000) });
 
         // Get blog data
         const blog = await sql`SELECT * FROM post WHERE slug = ${slug}`;
