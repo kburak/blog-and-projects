@@ -91,18 +91,16 @@ export default function EditBlogForm(props: any) {
         // +++++ DEBUG +++++
     }
 
-    function removeContent(type: string, index: number, revert: boolean) {
-        
+    function removeContent(type: string, index: number, revert: boolean = false) {
         // Find the content element with index and set its dbDelete to true
         setContent((prevState) => {
             return prevState.map((sC, sIdx) => {
-                if(sIdx === index){
-                    sC.dbDelete = true;
+                if(sIdx === index && sC.type === type){
+                    sC.dbDelete = revert ? false : true; // Set to false if revert is requested.
                 }
                 return sC;
-            })
+            });
         });
-
     }
 
     function editContent(type: string, index: number, ...args: string[]) {

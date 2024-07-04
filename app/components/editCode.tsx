@@ -24,7 +24,12 @@ export default function editCode({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("code", index);
+        remove("code", index, false);
+    }
+
+    function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
+        e.preventDefault();
+        remove("code", index, true);
     }
 
     function handleCodeUpdate(e: React.ChangeEvent<HTMLInputElement>) {
@@ -75,7 +80,13 @@ export default function editCode({
             {dbDelete &&
                 <div className="flex flex-col items-center justify-center absolute bg-black bg-opacity-50 absolute inset-0">
                     <p className="text-white">Mark to be deleted.</p>
-                    <button className="text-white h-5 rounded-lg bg-red-500 px-4" type="button">Revert</button>
+                    <button
+                        className="text-white h-5 rounded-lg bg-red-500 px-5 pb-7"
+                        type="button"
+                        onClick={handleRemoveRevert}
+                    >
+                        Revert
+                    </button>
                 </div>
             }
         </div>
