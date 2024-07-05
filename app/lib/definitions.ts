@@ -8,5 +8,6 @@ export type ContentType = {
     language?: string;
     size?: string;
     dbUpdate?: boolean,
-    dbDelete?: boolean
+    dbDelete?: boolean,
+    dbInsert?: boolean
 };

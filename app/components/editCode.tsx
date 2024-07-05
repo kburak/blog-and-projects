@@ -5,6 +5,7 @@ export default function editCode({
     index,
     dbUpdate,
     dbDelete,
+    dbInsert,
     code,
     language,
     update,
@@ -15,6 +16,7 @@ export default function editCode({
     index: number,
     dbUpdate: boolean | undefined,
     dbDelete: boolean | undefined,
+    dbInsert: boolean | undefined,
     code: string | undefined,
     language: string | undefined,
     update: (...args: any) => void,
@@ -24,7 +26,7 @@ export default function editCode({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("code", index, false);
+        remove("code", index, false, dbInsert);
     }
 
     function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
@@ -47,6 +49,7 @@ export default function editCode({
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
+            <input type="checkbox" name={`${index}-${type}-dbInsert`} checked={dbInsert} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <FlexTextArea
                 id="code"
                 name={`${index}-${type}-code`}

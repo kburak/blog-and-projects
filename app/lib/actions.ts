@@ -3,6 +3,8 @@ import { z } from 'zod';
 import sql from './db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import makeSlug from './makeSlug';
+import normalizeFormData from './normalizeFormData';
 
 const ImageSchema = z.object({
     type: z.literal('image'),
@@ -44,79 +46,14 @@ export type State = {
     message?: string | null;
 };
 
-interface ContentObject {
-    [key: string]: string | File
-}
 
-function makeSlug(str: string, maxLength: number = 40): string {
-    // str is valid and no empty space then return (return not more than maxLength)
-    if (str.length === str.toLowerCase().match(/[a-z0-9]/g)?.length) return str.slice(0, maxLength).toLowerCase();
-
-    // Reduce empty spaces to one empty space, replace empty space with -
-    let prevEmpty = false;
-    let slug = "";
-    for (let i = 0; i < str.length; i++) {
-        if (prevEmpty && str[i] === " ") {
-            continue;
-        } else if (str[i] === " ") {
-            prevEmpty = true;
-            // If not at beginning or end of str then replace " " with "-"
-            if (i !== 0 && i !== str.length - 1) {
-                slug += "-"
-            }
-        } else {
-            prevEmpty = false;
-            slug += str[i].toLowerCase();
-        }
-    }
-
-    // Replace everyting that's not A-Z0-9 or -> /(?![a-z0-9-])./
-    slug = slug.replace(/(?![a-z0-9-])./g, '');
-
-    // Return max 40 chars length
-    return slug.slice(0, maxLength);
-}
 
 export async function createBlog(prevState: State | undefined, formData: FormData) {
     console.log(prevState, formData);
 
-    // Normalize form data, Group content data
-    const normalizedFormData: { [key: string]: string | ContentObject[] | null } = {};
-    const groupedContent: ContentObject[] = [];
-
-    // Add blog title and summary
-    normalizedFormData['title'] = formData.get('blog-title')?.toString() || null;
-    normalizedFormData['summary'] = formData.get('blog-summary')?.toString() || null;
-
-    // Add groupedContent to normalizedFormData
-    normalizedFormData['content'] = groupedContent;
-
-    for (let data of formData.entries()) {
-        const [key, value] = data;
-
-        // Does key contain image, text or code? (name attribute of element)
-        if (["image", "text", "code"].includes(key.split('-')[1])) {
-            // Extract index, type, field
-            const index: number = parseInt(key.split('-')[0]);
-            const typeName: string = key.split('-')[1];
-            const fieldName: string = key.split('-')[2];
-
-            // Is there already ContentObject at this index of the grouped data?
-            if (groupedContent[index] && groupedContent[index].type === typeName) {
-                // If yes, Push the current field and its value to the existing ContentObject
-                groupedContent[index][fieldName] = value;
-            } else {
-                // If no, Create new ContentObject and push current field and its value into it.
-                groupedContent.push({
-                    type: typeName,
-                    [fieldName]: value
-                });
-            }
-        }
-    }
-
-    console.log("normalizedFormData", normalizedFormData);
-
+    // Normalize form data
+    const normalizedFormData = normalizeFormData(formData);
+    
     // Validate the form data using safeParse
     const validationResult = FormSchema.safeParse(normalizedFormData);
 
@@ -266,4 +203,10 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     console.log("Redirect to:", `/blog/${slug}`);
     redirect(`/blog/${slug}`);
 
+}
+
+export async function editBlog(prevState: State | undefined, formData: FormData) {
+    console.log(prevState, formData);
+
+    return prevState;
 }

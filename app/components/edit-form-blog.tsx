@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useFormState } from 'react-dom';
-import { State, createBlog } from "../lib/actions";
+import { State, editBlog } from "../lib/actions";
 import EditImage from "./editImage";
 import EditText from "./editText";
 import EditCode from "./editCode";
@@ -12,7 +12,7 @@ import FlexTextAreaStateful from "./flexTextAreaStateful";
 export default function EditBlogForm(props: any) {
     const { blogData } = props;
     const initialState: State = { message: "", errors: {} };
-    const [state, dispatch] = useFormState(createBlog, initialState);
+    const [state, dispatch] = useFormState(editBlog, initialState);
     const [content, setContent] = useState<ContentType[]>(populateContentState);
     /*
         Content State
@@ -45,7 +45,8 @@ export default function EditBlogForm(props: any) {
                         caption: c.custom_attr.caption,
                         size: c.custom_attr.size,
                         dbUpdate: false,
-                        dbDelete: false
+                        dbDelete: false,
+                        dbInsert: false
                     });
                     break;
                 case 'text':
@@ -55,7 +56,8 @@ export default function EditBlogForm(props: any) {
                         size: c.custom_attr.size,
                         style: c.custom_attr.style,
                         dbUpdate: false,
-                        dbDelete: false
+                        dbDelete: false,
+                        dbInsert: false
                     });
                     break;
                 case 'code':
@@ -64,20 +66,21 @@ export default function EditBlogForm(props: any) {
                         code: c.custom_attr.code,
                         language: c.custom_attr.language,
                         dbUpdate: false,
-                        dbDelete: false
+                        dbDelete: false,
+                        dbInsert: false
                     });
                     break;
             }
         }
-        
+
         return populatedState;
     }
 
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
-            "image": { type: "image", url: "", caption: "", size: "large", dbUpdate: false, dbDelete: false },
-            "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false },
-            "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false }
+            "image": { type: "image", url: "", caption: "", size: "large", dbUpdate: false, dbDelete: false, dbInsert: true },
+            "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false, dbInsert: true },
+            "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false, dbInsert: true }
         }
 
         setContent((prevState) => {
@@ -91,16 +94,25 @@ export default function EditBlogForm(props: any) {
         // +++++ DEBUG +++++
     }
 
-    function removeContent(type: string, index: number, revert: boolean = false) {
-        // Find the content element with index and set its dbDelete to true
-        setContent((prevState) => {
-            return prevState.map((sC, sIdx) => {
-                if(sIdx === index && sC.type === type){
-                    sC.dbDelete = revert ? false : true; // Set to false if revert is requested.
-                }
-                return sC;
+    function removeContent(type: string, index: number, revert: boolean = false, dbInsert: boolean) {
+
+        // Is the new content to be added? It was not existing! (dbInsert: true)
+        if (dbInsert) {
+            // Just remove it from state
+            setContent((prevState) => {
+                return prevState.filter((sC, sIdx) => sIdx !== index);
             });
-        });
+        } else {
+            // Find the content element with index and set its dbDelete to true
+            setContent((prevState) => {
+                return prevState.map((sC, sIdx) => {
+                    if (sIdx === index && sC.type === type) {
+                        sC.dbDelete = revert ? false : true; // Set to false if revert is requested.
+                    }
+                    return sC;
+                });
+            });
+        }
     }
 
     function editContent(type: string, index: number, ...args: string[]) {
@@ -111,7 +123,7 @@ export default function EditBlogForm(props: any) {
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, url, caption, size, dbUpdate: true }; // ADD !!!! Set dbUpdate to true
+                    if (sIdx === index && sC.type === type) return { ...sC, url, caption, size, dbUpdate: !sC.dbInsert && true }; // Set dbUpdate to true only if item existed already.
                     return sC;
                 })
             });
@@ -127,7 +139,7 @@ export default function EditBlogForm(props: any) {
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, content, size, style, dbUpdate: true }; // ADD !!!! Set dbUpdate to true
+                    if (sIdx === index && sC.type === type) return { ...sC, content, size, style, dbUpdate: !sC.dbInsert && true }; // Set dbUpdate to true only if item existed already.
                     return sC;
                 })
             });
@@ -137,7 +149,7 @@ export default function EditBlogForm(props: any) {
             // Update contentState with new parameters
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
-                    if (sIdx === index && sC.type === type) return { ...sC, code, language, dbUpdate: true }; // ADD !!!! Set dbUpdate to true
+                    if (sIdx === index && sC.type === type) return { ...sC, code, language, dbUpdate: !sC.dbInsert && true }; // Set dbUpdate to true only if item existed already.
                     return sC;
                 })
             });
@@ -190,6 +202,7 @@ export default function EditBlogForm(props: any) {
                                 index={idx}
                                 dbUpdate={c.dbUpdate}
                                 dbDelete={c.dbDelete}
+                                dbInsert={c.dbInsert}
                                 url={c.url}
                                 caption={c.caption}
                                 size={c.size}
@@ -207,6 +220,7 @@ export default function EditBlogForm(props: any) {
                                 index={idx}
                                 dbUpdate={c.dbUpdate}
                                 dbDelete={c.dbDelete}
+                                dbInsert={c.dbInsert}
                                 content={c.content}
                                 size={c.size}
                                 style={c.style}
@@ -224,6 +238,7 @@ export default function EditBlogForm(props: any) {
                                 index={idx}
                                 dbUpdate={c.dbUpdate}
                                 dbDelete={c.dbDelete}
+                                dbInsert={c.dbInsert}
                                 code={c.code}
                                 language={c.language}
                                 update={editContent}

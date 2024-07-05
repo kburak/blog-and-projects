@@ -5,6 +5,7 @@ export default function editText({
     index,
     dbUpdate,
     dbDelete,
+    dbInsert,
     content,
     size,
     style,
@@ -16,6 +17,7 @@ export default function editText({
     index: number,
     dbUpdate: boolean | undefined,
     dbDelete: boolean | undefined,
+    dbInsert: boolean | undefined,
     content: string | undefined,
     size: string | undefined,
     style: string | undefined,
@@ -26,7 +28,7 @@ export default function editText({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("text", index, false);
+        remove("text", index, false, dbInsert);
     }
 
     function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
@@ -54,6 +56,7 @@ export default function editText({
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
+            <input type="checkbox" name={`${index}-${type}-dbInsert`} checked={dbInsert} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <div className="ml-auto mr-auto mb-2">
                 <div className="inline mr-2">
                     <label htmlFor="formatting">Size</label>

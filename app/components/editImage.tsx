@@ -7,6 +7,7 @@ export default function editImage({
     index,
     dbUpdate,
     dbDelete,
+    dbInsert,
     url,
     caption,
     size,
@@ -18,6 +19,7 @@ export default function editImage({
     index: number,
     dbUpdate: boolean | undefined,
     dbDelete: boolean | undefined,
+    dbInsert: boolean | undefined,
     url: string | undefined,
     caption: string | undefined,
     size: string | undefined,
@@ -28,7 +30,7 @@ export default function editImage({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("image", index, false);
+        remove("image", index, false, dbInsert);
     }
 
     function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
@@ -56,6 +58,7 @@ export default function editImage({
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
+            <input type="checkbox" name={`${index}-${type}-dbInsert`} checked={dbInsert} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             {url &&
                 <Image
                     src={url}

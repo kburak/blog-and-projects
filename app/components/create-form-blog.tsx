@@ -24,9 +24,9 @@ export default function CreateBlogForm() {
 
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
-            "image": { type: "image", url: "", caption: "", size: "large", dbUpdate: false, dbDelete: false },
-            "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false },
-            "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false }
+            "image": { type: "image", url: "", caption: "", size: "large", dbUpdate: false, dbDelete: false, dbInsert: true },
+            "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false, dbInsert: true },
+            "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false, dbInsert: true }
         }
 
         setContent((prevState) => {
@@ -140,6 +140,7 @@ export default function CreateBlogForm() {
                                     index={idx}
                                     dbUpdate={c.dbUpdate}
                                     dbDelete={c.dbDelete}
+                                    dbInsert={c.dbInsert}
                                     url={c.url}
                                     caption={c.caption}
                                     size={c.size}
@@ -157,6 +158,7 @@ export default function CreateBlogForm() {
                                     index={idx}
                                     dbUpdate={c.dbUpdate}
                                     dbDelete={c.dbDelete}
+                                    dbInsert={c.dbInsert}
                                     content={c.content}
                                     size={c.size}
                                     style={c.style}
@@ -173,7 +175,8 @@ export default function CreateBlogForm() {
                                 type={c.type} 
                                 index={idx} 
                                 dbUpdate={c.dbUpdate} 
-                                dbDelete={c.dbDelete} 
+                                dbDelete={c.dbDelete}
+                                dbInsert={c.dbInsert}
                                 code={c.code} 
                                 language={c.language} 
                                 update={editContent} 
