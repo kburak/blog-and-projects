@@ -4,15 +4,15 @@ interface ContentObject {
 
 export default function normalizeFormData(formData: FormData) {
     // Normalize form data, Group content data
-    const normalizedFormData: { [key: string]: string | ContentObject[] | null } = {};
+    const res: { [key: string]: string | ContentObject[] | null } = {};
     const groupedContent: ContentObject[] = [];
 
     // Add blog title and summary
-    normalizedFormData['title'] = formData.get('blog-title')?.toString() || null;
-    normalizedFormData['summary'] = formData.get('blog-summary')?.toString() || null;
+    res['title'] = formData.get('blog-title')?.toString() || null;
+    res['summary'] = formData.get('blog-summary')?.toString() || null;
 
     // Add groupedContent to normalizedFormData
-    normalizedFormData['content'] = groupedContent;
+    res['content'] = groupedContent;
 
     for (let data of formData.entries()) {
         const [key, value] = data;
@@ -38,5 +38,5 @@ export default function normalizeFormData(formData: FormData) {
         }
     }
 
-    return normalizeFormData;
+    return res;
 }

@@ -4,6 +4,7 @@ import imageSizeMap from "../lib/imageSizeMap";
 
 export default function editImage({
     type,
+    id,
     index,
     dbUpdate,
     dbDelete,
@@ -16,6 +17,7 @@ export default function editImage({
     errors
 }: {
     type: string | undefined,
+    id?: string,
     index: number,
     dbUpdate: boolean | undefined,
     dbDelete: boolean | undefined,
@@ -59,6 +61,7 @@ export default function editImage({
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbInsert`} checked={dbInsert} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
+            <input type="text" name={`${index}-${type}-id`} value={id} readOnly /* hidden *//>
             {url &&
                 <Image
                     src={url}

@@ -46,6 +46,7 @@ export async function getBlog(slug: string) {
 
             // Get content data with blog id
             const content = await sql`SELECT 
+            id,
             position,
             'text' as contentType,
             json_build_object('size', size, 'style', style, 'word_count', word_count, 'content', content) as custom_attr
@@ -55,6 +56,7 @@ export async function getBlog(slug: string) {
             UNION ALL
             
             SELECT 
+            id,
             position,
             'image' as contentType,
             json_build_object('url', url, 'caption', caption, 'size', size) as custom_attr
@@ -64,6 +66,7 @@ export async function getBlog(slug: string) {
             UNION ALL
             
             SELECT 
+            id,
             position,
             'code' as contentType,
             json_build_object('language', language, 'code', code) as custom_attr
@@ -73,6 +76,8 @@ export async function getBlog(slug: string) {
                 ;
 
             return {
+                id: blog[0].id,
+                slug: blog[0].slug,
                 title: blog[0].title,
                 summary: blog[0].summary,
                 createdAt: blog[0].createdat,

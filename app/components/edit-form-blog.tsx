@@ -12,7 +12,8 @@ import FlexTextAreaStateful from "./flexTextAreaStateful";
 export default function EditBlogForm(props: any) {
     const { blogData } = props;
     const initialState: State = { message: "", errors: {} };
-    const [state, dispatch] = useFormState(editBlog, initialState);
+    const editBlogWithData = editBlog.bind(null, [blogData.id, blogData.slug]);
+    const [state, dispatch] = useFormState(editBlogWithData, initialState);
     const [content, setContent] = useState<ContentType[]>(populateContentState);
     /*
         Content State
@@ -40,6 +41,7 @@ export default function EditBlogForm(props: any) {
             switch (type) {
                 case 'image':
                     populatedState.push({
+                        id: c.id,
                         type: "image",
                         url: c.custom_attr.url,
                         caption: c.custom_attr.caption,
@@ -51,6 +53,7 @@ export default function EditBlogForm(props: any) {
                     break;
                 case 'text':
                     populatedState.push({
+                        id: c.id,
                         type: "text",
                         content: c.custom_attr.content,
                         size: c.custom_attr.size,
@@ -62,6 +65,7 @@ export default function EditBlogForm(props: any) {
                     break;
                 case 'code':
                     populatedState.push({
+                        id: c.id,
                         type: "code",
                         code: c.custom_attr.code,
                         language: c.custom_attr.language,
@@ -199,6 +203,7 @@ export default function EditBlogForm(props: any) {
                             <EditImage
                                 key={`emptyImage-${idx}`}
                                 type={c.type}
+                                id={c.id}
                                 index={idx}
                                 dbUpdate={c.dbUpdate}
                                 dbDelete={c.dbDelete}
@@ -217,6 +222,7 @@ export default function EditBlogForm(props: any) {
                             <EditText
                                 key={`emptyText-${idx}`}
                                 type={c.type}
+                                id={c.id}
                                 index={idx}
                                 dbUpdate={c.dbUpdate}
                                 dbDelete={c.dbDelete}
@@ -235,6 +241,7 @@ export default function EditBlogForm(props: any) {
                             <EditCode
                                 key={`emptyCode-${idx}`}
                                 type={c.type}
+                                id={c.id}
                                 index={idx}
                                 dbUpdate={c.dbUpdate}
                                 dbDelete={c.dbDelete}

@@ -5,29 +5,44 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import makeSlug from './makeSlug';
 import normalizeFormData from './normalizeFormData';
+import normalizeValidationErrors from './normalizeValidationErrors';
+import { deleteImage } from './imageMethods';
+import { deleteText, updateText, insertText } from './textMethods';
 
 const ImageSchema = z.object({
+    id: z.string().optional(),
     type: z.literal('image'),
     url: z.string().min(1, { message: 'Please provide a valid URL!' }),
     caption: z.string().min(1, { message: 'Please provide a valid Caption!' }),
     size: z.enum(['small', 'medium', 'large'], {
         invalid_type_error: 'Please select a image size!.'
-    })
+    }),
+    dbUpdate: z.string().optional(),
+    dbDelete: z.string().optional(),
+    dbInsert: z.string().optional()
 });
 
 const TextSchema = z.object({
+    id: z.string().optional(),
     type: z.literal('text'),
     content: z.string().min(1, { message: 'Content cannot be empty!' }),
     size: z.enum(['h1', 'h2', 'h3', 'h4', 'h5', 'p']).optional().default('p'),
     style: z.enum(['normal', 'bold', 'italic'], {
         invalid_type_error: 'Please select a text style!.'
-    }).optional().default('normal')
+    }).optional().default('normal'),
+    dbUpdate: z.string().optional(),
+    dbDelete: z.string().optional(),
+    dbInsert: z.string().optional()
 });
 
 const CodeSchema = z.object({
+    id: z.string().optional(),
     type: z.literal('code'),
     code: z.string().min(1, { message: 'Code cannot be empty!' }),
-    language: z.enum(['javascript', 'python', 'sql', 'java', 'json', 'csharp'])
+    language: z.enum(['javascript', 'python', 'sql', 'java', 'json', 'csharp']),
+    dbUpdate: z.string().optional(),
+    dbDelete: z.string().optional(),
+    dbInsert: z.string().optional()
 });
 
 const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema]);
@@ -53,63 +68,14 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
     // Normalize form data
     const normalizedFormData = normalizeFormData(formData);
-    
+
     // Validate the form data using safeParse
     const validationResult = FormSchema.safeParse(normalizedFormData);
 
-    console.log(validationResult.error);
-
+    // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
 
-        // Iterate the errors and build an error object for the state
-        const pResult: { [key: string]: any } = {};
-        for (let err of validationResult?.error.errors) {
-
-            const [type, idx, field] = err.path;
-
-            // Check type and create key accordingly
-            switch (type) {
-                case 'title':
-                    if (pResult['title']) {
-                        pResult['title'].push(err.message)
-                    } else {
-                        pResult['title'] = [err.message]
-                    }
-                    break;
-                case 'summary':
-                    if (pResult['summary']) {
-                        pResult['summary'].push(err.message)
-                    } else {
-                        pResult['summary'] = [err.message]
-                    }
-                    break;
-                case 'content':
-                    // If content array is not defined yet, define it.
-                    if (!pResult['content']) pResult['content'] = [];
-
-                    // Is there error messages array for the item at this idx?
-                    if (pResult['content'][idx]) {
-                        // Push the err message inside
-                        pResult['content'][idx] = { ...pResult['content'][idx], [field]: err.message };
-                    } else {
-                        // Create the array
-                        pResult['content'][idx] = { [field]: err.message };
-                    }
-                    break;
-            }
-            /*
-            [
-                {
-                    content: 
-                },
-                {
-                    url:
-                    caption:
-                }
-            ]
-
-            */
-        }
+        const pResult = normalizeValidationErrors(validationResult?.error.errors, "blog");
 
         console.log("pResult", pResult)
 
@@ -205,8 +171,117 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
 }
 
-export async function editBlog(prevState: State | undefined, formData: FormData) {
+export async function editBlog(postData: string[], prevState: State | undefined, formData: FormData) {
     console.log(prevState, formData);
+
+    const [postId, postSlug] = postData;
+
+    // Normalize form data
+    const normalizedFormData = normalizeFormData(formData);
+
+    // Validate data
+    const validationResult = FormSchema.safeParse(normalizedFormData);
+
+    // Validation failed, normalize error data and return errors in state.
+    if (!validationResult.success) {
+
+        const pResult = normalizeValidationErrors(validationResult?.error.errors, "blog");
+
+        console.log("pResult", pResult)
+
+        return {
+            errors: pResult,
+            message: 'Missing Fields. Failed to Create Blog.'
+        }
+    }
+
+    console.log("validatedData", validationResult.data);
+
+    const dbUpdates: Promise<any>[] = [];
+
+    // Iterate content objs
+    for (let i = 0; i < validationResult.data.content.length; i++) {
+
+        const cur = validationResult.data.content[i];
+
+        if (cur?.dbDelete === "on") { // Is dbDelete provided for item?
+
+            try {
+                // Delete content
+                const { type, id } = cur;
+
+                if (!id) throw Error(`Missing blog content id`);
+
+                if (type === "image") {
+                    // The method returns sql Promise immediately, we're not waiting to resolve here.
+                    const p = deleteImage(id);
+                    dbUpdates.push(p);
+                } else if (type === "text") {
+                    // The method returns sql Promise immediately, we're not waiting to resolve here.
+                    const p = deleteText(id);
+                    dbUpdates.push(p);
+                } else if(type === "code"){
+                    // TBD
+                }
+
+            } catch (e) {
+                // return message and errors to update the state
+                console.error("Delete Content Failed", e);
+                return {
+                    message: "Delete Content Failed!", errors: {}
+                };
+            }
+
+        } else if (cur?.dbUpdate === "on" && (!cur.dbDelete || cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+            // Update content
+            // TBD
+
+        } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
+            // Insert content depending on type
+            const { type } = cur;
+
+            if (type === "image") {
+                // TBD
+
+            } else if (type === "text") {
+                try {
+                    const { content: textContent, size: textSize, style: textStyle } = cur;
+                    const p = insertText(postId, textSize, textStyle, textContent.length, textContent, i);
+                    dbUpdates.push(p);
+                } catch (e) {
+                    // return message and errors to update the state
+                    console.error("Insert Text Failed", e);
+                    return {
+                        message: "Insert Text Failed", errors: {}
+                    };
+                }
+            } else if (type === "code") {
+                // TBD
+            }
+
+
+        }
+
+        // Update blogPost data (title, summary, updatedAt, etc.)
+        // TBD
+
+        // Wait for all promises to resolve
+        await Promise.all(dbUpdates);
+
+
+
+
+    }
+
+    
+
+    // Revalidate path / Clear cache because the blog is newly created!!!
+    revalidatePath(`/blog/${postSlug}`);
+
+    // Redirect user to the new blog page
+    // redirect internally throws an error so it should be called outside of try/catch blocks.
+    console.log("Redirect to:", `/blog/${postSlug}`);
+    redirect(`/blog/${postSlug}`);
 
     return prevState;
 }

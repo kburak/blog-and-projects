@@ -1,5 +1,6 @@
 export type ContentType = {
     type: string;
+    id?: string;
     url?: string;
     caption?: string;
     content?: string;
