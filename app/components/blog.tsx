@@ -37,7 +37,8 @@ export default async function Blog(props: { slug: string }) {
                 <div className='md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
                     <h1 className="font-bold text-4xl pb-6">{title}</h1>
                     <p className="pb-5">{summary}</p>
-                    <p className="text-sm">{new Intl.DateTimeFormat('de-DE', options).format(createdAt)}</p>
+                    <p className="text-sm">Created: {new Intl.DateTimeFormat('de-DE', options).format(createdAt)}</p>
+                    <p className="text-sm">Last Updated: {new Intl.DateTimeFormat('de-DE', options).format(updatedAt)}</p>
                 </div>
             </div >
 
@@ -55,7 +56,7 @@ export default async function Blog(props: { slug: string }) {
                                     width={imageSizeMap[size].width}
                                     height={imageSizeMap[size].height}
                                     className="pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
-                                    alt="Screenshots of the dashboard project showing desktop version"
+                                    alt={caption}
                                 />
                             </div>;
                         } else if (c.contenttype === "text") {

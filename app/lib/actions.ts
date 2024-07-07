@@ -6,8 +6,6 @@ import { redirect } from 'next/navigation';
 import makeSlug from './makeSlug';
 import normalizeFormData from './normalizeFormData';
 import normalizeValidationErrors from './normalizeValidationErrors';
-import { deleteImage } from './imageMethods';
-import { deleteText, updateText, insertText } from './textMethods';
 
 const ImageSchema = z.object({
     id: z.string().optional(),
@@ -203,25 +201,25 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     for (let i = 0; i < validationResult.data.content.length; i++) {
 
         const cur = validationResult.data.content[i];
+        const { type, id } = cur;
 
         if (cur?.dbDelete === "on") { // Is dbDelete provided for item?
 
+            // Throw error if id is missing
+            if (!id) throw Error(`Missing blog content id`);
+
             try {
+
                 // Delete content
-                const { type, id } = cur;
-
-                if (!id) throw Error(`Missing blog content id`);
-
                 if (type === "image") {
-                    // The method returns sql Promise immediately, we're not waiting to resolve here.
-                    const p = deleteImage(id);
+                    const p = sql`DELETE FROM image WHERE id = ${id}`;
                     dbUpdates.push(p);
                 } else if (type === "text") {
-                    // The method returns sql Promise immediately, we're not waiting to resolve here.
-                    const p = deleteText(id);
+                    const p = sql`DELETE FROM text WHERE id = ${id}`;
                     dbUpdates.push(p);
-                } else if(type === "code"){
-                    // TBD
+                } else if (type === "code") {
+                    const p = sql`DELETE FROM codesnippet WHERE id = ${id}`;
+                    dbUpdates.push(p);
                 }
 
             } catch (e) {
@@ -233,47 +231,103 @@ export async function editBlog(postData: string[], prevState: State | undefined,
             }
 
         } else if (cur?.dbUpdate === "on" && (!cur.dbDelete || cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+
+            // Throw error if id is missing
+            if (!id) throw Error(`Missing blog content id`);
+
             // Update content
-            // TBD
+            try {
+
+                if (type === "image") {
+                    const updateImage = sql`
+                    UPDATE image set ${sql(cur, 'url', 'caption', 'size')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateImage);
+                } else if (type === "text") {
+                    const updateText = sql`
+                    UPDATE text set ${sql(cur, 'content', 'size', 'style')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateText);
+                } else if (type === "code") {
+                    const updateCode = sql`
+                    UPDATE codesnippet set ${sql(cur, 'code', 'language')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateCode);
+                }
+
+            } catch (e) {
+                // return message and errors to update the state
+                console.error("Update Content Failed", e);
+                return {
+                    message: "Update Content Failed", errors: {}
+                };
+            }
 
         } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
-            // Insert content depending on type
-            const { type } = cur;
 
-            if (type === "image") {
-                // TBD
+            // Insert content
+            try {
 
-            } else if (type === "text") {
-                try {
+                if (type === "image") {
+                    const { url, caption, size: imageSize } = cur;
+                    const insertImage = sql`
+                    INSERT INTO image (postid, url, caption, size, position)
+                    VALUES (${postId}, ${url}, ${caption}, ${imageSize}, ${i})
+                    `;
+                    dbUpdates.push(insertImage);
+                } else if (type === "text") {
                     const { content: textContent, size: textSize, style: textStyle } = cur;
-                    const p = insertText(postId, textSize, textStyle, textContent.length, textContent, i);
-                    dbUpdates.push(p);
-                } catch (e) {
-                    // return message and errors to update the state
-                    console.error("Insert Text Failed", e);
-                    return {
-                        message: "Insert Text Failed", errors: {}
-                    };
+                    const insertText = sql`
+                    INSERT INTO text (postid, size, style, word_count, content, position)
+                    VALUES (${postId}, ${textSize}, ${textStyle}, ${textContent.length}, ${textContent}, ${i})
+                    `;
+                    dbUpdates.push(insertText);
+                } else if (type === "code") {
+                    const { code, language } = cur;
+                    const insertCode = sql`
+                    INSERT INTO codesnippet (postid, language, code, position )
+                    VALUES (${postId}, ${language}, ${code}, ${i})
+                    `;
+                    dbUpdates.push(insertCode);
                 }
-            } else if (type === "code") {
-                // TBD
+
+            } catch (e) {
+                // return message and errors to update the state
+                console.error("Insert Content Failed", e);
+                return {
+                    message: "Insert Content Failed", errors: {}
+                };
             }
+
 
 
         }
 
-        // Update blogPost data (title, summary, updatedAt, etc.)
-        // TBD
-
-        // Wait for all promises to resolve
-        await Promise.all(dbUpdates);
-
-
-
-
     }
 
+    // Update blogPost data (title, summary, updatedAt, etc.)
+    const { title, summary } = validationResult.data;
+    const updatedat = new Date(Date.now()).toISOString();
+    const updateBlog = sql`
+    UPDATE post set ${sql({
+        title,
+        summary,
+        updatedat
+    }, 'title', 'summary', 'updatedat')}
+    WHERE id = ${postId}
+    `;
+    dbUpdates.push(updateBlog);
+
     
+    // Wait for all promises to resolve
+    await Promise.all(dbUpdates);
+
 
     // Revalidate path / Clear cache because the blog is newly created!!!
     revalidatePath(`/blog/${postSlug}`);
