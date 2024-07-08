@@ -24,16 +24,16 @@ export default async function Blog(props: { slug: string }) {
     // Get post data with content
     const blogData = await getBlog(slug);
 
-    const { title, summary, createdAt, updatedAt, content, postType } = blogData ?? {};
-
     if (!blogData) {
         notFound();
     }
 
+    const { title, summary, createdAt, updatedAt, content } = blogData;
+
     return (
         <div>
             {/* Header section */}
-            <div className="bg-blue-700 text-center text-white pt-24 pb-10 md:pt-12 md:pb-5">
+            <div className="bg-blue-700 text-center text-white pt-24 pb-10 md:pt-16 md:pb-8">
                 <div className='md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
                     <h1 className="font-bold text-4xl pb-6">{title}</h1>
                     <p className="pb-5">{summary}</p>

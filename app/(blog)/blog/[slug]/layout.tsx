@@ -19,6 +19,12 @@ export default function RootLayout({
                 </div>
                 <div className='flex space-x-4 p-3'>
                     <Link
+                        href="/blog"
+                        className='inline text-white'
+                    >
+                        Blog
+                    </Link>
+                    <Link
                         href="/projects"
                         className='inline text-white'
                     >
