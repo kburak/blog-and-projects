@@ -59,8 +59,6 @@ export type State = {
     message?: string | null;
 };
 
-
-
 export async function createBlog(prevState: State | undefined, formData: FormData) {
     console.log(prevState, formData);
 
@@ -160,11 +158,9 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     }
 
     // No need to Revalidate path / Clear cache because the blog is newly created!!!
-    // revalidatePath(`/blog/${slug}`);
 
     // Redirect user to the new blog page
     // redirect internally throws an error so it should be called outside of try/catch blocks.
-    console.log("Redirect to:", `/blog/${slug}`);
     redirect(`/blog/${slug}`);
 
 }
@@ -193,23 +189,22 @@ export async function editBlog(postData: string[], prevState: State | undefined,
         }
     }
 
-    console.log("validatedData", validationResult.data);
+    // console.log("validatedData", validationResult.data);
 
     const dbUpdates: Promise<any>[] = [];
 
-    // Iterate content objs
-    for (let i = 0; i < validationResult.data.content.length; i++) {
+    try {
 
-        const cur = validationResult.data.content[i];
-        const { type, id } = cur;
+        // DELETE, UPDATE, INSERT CONTENT DATA
+        for (let i = 0; i < validationResult.data.content.length; i++) {
 
-        if (cur?.dbDelete === "on") { // Is dbDelete provided for item?
+            const cur = validationResult.data.content[i];
+            const { type, id } = cur;
 
-            // Throw error if id is missing
-            if (!id) throw Error(`Missing blog content id`);
+            if (cur?.dbDelete === "on") { // Is dbDelete provided for item?
 
-            try {
-
+                // Throw error if id is missing
+                if (!id) throw Error(`Missing blog content id`);
                 // Delete content
                 if (type === "image") {
                     const p = sql`DELETE FROM image WHERE id = ${id}`;
@@ -222,22 +217,12 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                     dbUpdates.push(p);
                 }
 
-            } catch (e) {
-                // return message and errors to update the state
-                console.error("Delete Content Failed", e);
-                return {
-                    message: "Delete Content Failed!", errors: {}
-                };
-            }
+            } else if (cur?.dbUpdate === "on" && (!cur.dbDelete || cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
 
-        } else if (cur?.dbUpdate === "on" && (!cur.dbDelete || cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+                // Throw error if id is missing
+                if (!id) throw Error(`Missing blog content id`);
 
-            // Throw error if id is missing
-            if (!id) throw Error(`Missing blog content id`);
-
-            // Update content
-            try {
-
+                // Update content
                 if (type === "image") {
                     const updateImage = sql`
                     UPDATE image set ${sql(cur, 'url', 'caption', 'size')
@@ -261,19 +246,9 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                     dbUpdates.push(updateCode);
                 }
 
-            } catch (e) {
-                // return message and errors to update the state
-                console.error("Update Content Failed", e);
-                return {
-                    message: "Update Content Failed", errors: {}
-                };
-            }
+            } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
 
-        } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
-
-            // Insert content
-            try {
-
+                // Insert content
                 if (type === "image") {
                     const { url, caption, size: imageSize } = cur;
                     const insertImage = sql`
@@ -297,37 +272,33 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                     dbUpdates.push(insertCode);
                 }
 
-            } catch (e) {
-                // return message and errors to update the state
-                console.error("Insert Content Failed", e);
-                return {
-                    message: "Insert Content Failed", errors: {}
-                };
             }
-
-
 
         }
 
+        // UPDATE BLOGPOST DATA (title, summary, updatedAt, etc.)
+        const { title, summary } = validationResult.data;
+        const updatedat = new Date(Date.now()).toISOString();
+        const updateBlog = sql`
+        UPDATE post set ${sql({
+            title,
+            summary,
+            updatedat
+        }, 'title', 'summary', 'updatedat')}
+        WHERE id = ${postId}
+        `;
+        dbUpdates.push(updateBlog);
+
+        // WAIT FOR ALL PROMISES to resolve
+        await Promise.all(dbUpdates);
+
+    } catch (e) {
+        console.error("Update blog post failed", e);
+        return {
+            message: "Update blog post failed",
+            errors: {}
+        }
     }
-
-    // Update blogPost data (title, summary, updatedAt, etc.)
-    const { title, summary } = validationResult.data;
-    const updatedat = new Date(Date.now()).toISOString();
-    const updateBlog = sql`
-    UPDATE post set ${sql({
-        title,
-        summary,
-        updatedat
-    }, 'title', 'summary', 'updatedat')}
-    WHERE id = ${postId}
-    `;
-    dbUpdates.push(updateBlog);
-
-    
-    // Wait for all promises to resolve
-    await Promise.all(dbUpdates);
-
 
     // Revalidate path / Clear cache because the blog is newly created!!!
     revalidatePath(`/blog/${postSlug}`);
@@ -337,5 +308,4 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     console.log("Redirect to:", `/blog/${postSlug}`);
     redirect(`/blog/${postSlug}`);
 
-    return prevState;
 }
