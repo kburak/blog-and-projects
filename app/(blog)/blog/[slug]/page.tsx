@@ -13,7 +13,7 @@ export async function generateMetadata(
     const data = await getBlogMetadata(params.slug);
 
     return {
-        title: data?.title,
+        title: "BK - Blog | " + data?.title,
         description: data?.summary
     }
 
