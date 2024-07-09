@@ -1,3 +1,14 @@
+
+/*
+
+THERE WAS A SLUG CREATED LIKE THIS:
+vestibulum-non-
+
+FIX IT!!!!!!
+
+
+*/
+
 export default function makeSlug(str: string, maxLength: number = 40): string {
     // str is valid and no empty space then return (return not more than maxLength)
     if (str.length === str.toLowerCase().match(/[a-z0-9]/g)?.length) return str.slice(0, maxLength).toLowerCase();

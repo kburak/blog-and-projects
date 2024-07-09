@@ -37,6 +37,13 @@ export default function normalizeValidationErrors(validationErrors: ZodIssue[], 
                         pResult['summary'] = [err.message]
                     }
                     break;
+                case 'header':
+                    if (pResult['header']) {
+                        pResult['header'].push(err.message)
+                    } else {
+                        pResult['header'] = [err.message]
+                    }
+                    break;
                 case 'content':
                     // If content array is not defined yet, define it.
                     if (!pResult['content']) pResult['content'] = [];

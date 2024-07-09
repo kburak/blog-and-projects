@@ -48,6 +48,7 @@ const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema]);
 const FormSchema = z.object({
     title: z.string().min(1, { message: 'Please enter a title!' }),
     summary: z.string().min(1, { message: 'Please enter a summary!' }),
+    header: z.string().min(1, {message: 'Please provide a valid URL!'}),
     content: z.array(ContentSchema)
 });
 
@@ -89,7 +90,7 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     try {
 
         // Build slug out of the blog title
-        const { title, summary } = validationResult.data;
+        const { title, summary, header } = validationResult.data;
         const createdAt = new Date(Date.now()).toISOString();
         const updatedAt = new Date(Date.now()).toISOString();
         const userid = "c74de708-5937-41c2-9600-6286993866b3";
@@ -97,8 +98,8 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
         // Insert Post and get the id
         const res = await sql`
-        INSERT INTO post (slug, title, summary, userid, createdat, updatedat, posttype)
-        VALUES (${slug}, ${title}, ${summary}, ${userid}, ${createdAt}, ${updatedAt}, ${posttype})
+        INSERT INTO post (slug, title, summary, userid, createdat, updatedat, posttype, header)
+        VALUES (${slug}, ${title}, ${summary}, ${userid}, ${createdAt}, ${updatedAt}, ${posttype}, ${header})
         RETURNING *
         `;
 
@@ -277,14 +278,15 @@ export async function editBlog(postData: string[], prevState: State | undefined,
         }
 
         // UPDATE BLOGPOST DATA (title, summary, updatedAt, etc.)
-        const { title, summary } = validationResult.data;
+        const { title, summary, header } = validationResult.data;
         const updatedat = new Date(Date.now()).toISOString();
         const updateBlog = sql`
         UPDATE post set ${sql({
             title,
             summary,
-            updatedat
-        }, 'title', 'summary', 'updatedat')}
+            updatedat,
+            header
+        }, 'title', 'summary', 'updatedat', 'header')}
         WHERE id = ${postId}
         `;
         dbUpdates.push(updateBlog);

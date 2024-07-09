@@ -80,6 +80,7 @@ export async function getBlog(slug: string) {
                 slug: blog[0].slug,
                 title: blog[0].title,
                 summary: blog[0].summary,
+                header: blog[0].header,
                 createdAt: blog[0].createdat,
                 updatedAt: blog[0].updatedat,
                 postType: blog[0].posttype,

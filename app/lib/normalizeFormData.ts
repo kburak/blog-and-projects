@@ -10,6 +10,7 @@ export default function normalizeFormData(formData: FormData) {
     // Add blog title and summary
     res['title'] = formData.get('blog-title')?.toString() || null;
     res['summary'] = formData.get('blog-summary')?.toString() || null;
+    res['header'] = formData.get('blog-header')?.toString() || null;
 
     // Add groupedContent to normalizedFormData
     res['content'] = groupedContent;

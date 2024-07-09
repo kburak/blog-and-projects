@@ -189,6 +189,19 @@ export default function EditBlogForm(props: any) {
                 textStyle="normal"
                 error={state?.errors?.summary}
             />
+            <FlexTextAreaStateful
+                id='header'
+                name='blog-header'
+                initValue={blogData.header}
+                showLabel={true}
+                visualName='Header'
+                minLength={10}
+                maxLength={255}
+                allowEnter={false}
+                textSize="p"
+                textStyle="normal"
+                error={state?.errors?.header}
+            />
 
             {/* Content */}
             {/* 

@@ -120,6 +120,18 @@ export default function CreateBlogForm() {
                 textStyle="normal"
                 error={state?.errors?.summary}
             />
+            <FlexTextAreaStateful
+                id='header'
+                name='blog-header'
+                showLabel={true}
+                visualName='Header Image Url'
+                minLength={10}
+                maxLength={255}
+                allowEnter={false}
+                textSize="p"
+                textStyle="normal"
+                error={state?.errors?.header}
+            />
             
             <div id='blog-content'>
 
