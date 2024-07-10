@@ -10,7 +10,7 @@ export default function RootLayout({
         <div>
             <Link
                 href="/blog"
-                className='absolute top-2 left-2 inline text-white w-8 z-10'
+                className='fixed top-2 left-2 inline text-white w-8 z-10'
             >
                 <ArrowLeftIcon />
             </Link>

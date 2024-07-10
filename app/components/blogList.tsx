@@ -16,7 +16,7 @@ export default async function BlogList() {
                         src={b.header}
                         width={100} /* This will be overwrriten by the w-full in classes */
                         height={100} /*This will be overwrriten by the h-auto in classes */
-                        quality={80}
+                        quality={100}
                         alt={b.title}
                     />
                     <div className="flex flex-row mb-5">
