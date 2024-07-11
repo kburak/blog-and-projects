@@ -3,7 +3,7 @@ const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
 export function BlogListSkeleton() {
-  return <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 mt-20 ml-auto mr-auto p-6 shadow-sm relative overflow-hidden`}>
+  /* return <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 mt-20 ml-auto mr-auto p-6 shadow-sm relative overflow-hidden`}>
     <div className="bg-gray-100 rounded-md h-12 bg-gray-100 mb-12"></div>
 
     <div className="flex flex-row mb-5">
@@ -64,7 +64,90 @@ export function BlogListSkeleton() {
       <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
     </div>
 
-  </div>
+  </div>; */
+
+  return <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20 shadow-sm relative overflow-hidden`}>
+    <div className="bg-gray-100 relative h-[300px] content-center"></div>
+    <div className="pl-3 pr-3 md:pl-0 md:pr-0 pt-12">
+      <div className="bg-gray-100 rounded-md w-64 h-12 bg-gray-100 mb-12"></div>
+      <div className="flex flex-wrap justify-between">
+        {/* BlogList Categories */}
+        <div className="w-full h-12 lg:w-1/4 lg:h-64 bg-gray-100"></div>
+        {/* BlogList Content */}
+        <div className="flex flex-wrap justify-center w-full lg:w-3/4 gap-4 mt-2 lg:mt-0 lg:-mr-1">
+          <div className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            {/* Blog Image */}
+            <div className="bg-gray-100 rounded-md h-64 bg-gray-100 mb-4"></div>
+            <div className="flex flex-row">
+              <div className="flex-grow mr-5">
+                <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+              </div>
+              <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="bg-gray-100 rounded-md h-64 bg-gray-100 mb-4"></div>
+            <div className="flex flex-row">
+              <div className="flex-grow mr-5">
+                <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+              </div>
+              <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="bg-gray-100 rounded-md h-64 bg-gray-100 mb-4"></div>
+            <div className="flex flex-row">
+              <div className="flex-grow mr-5">
+                <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+              </div>
+              <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="bg-gray-100 rounded-md h-64 bg-gray-100 mb-4"></div>
+            <div className="flex flex-row">
+              <div className="flex-grow mr-5">
+                <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+              </div>
+              <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="bg-gray-100 rounded-md h-64 bg-gray-100 mb-4"></div>
+            <div className="flex flex-row">
+              <div className="flex-grow mr-5">
+                <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+              </div>
+              <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="bg-gray-100 rounded-md h-64 bg-gray-100 mb-4"></div>
+            <div className="flex flex-row">
+              <div className="flex-grow mr-5">
+                <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+              </div>
+              <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>;
 }
 
 export function BlogSkeleton() {

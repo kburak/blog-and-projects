@@ -48,10 +48,7 @@ export default function makeSlug(str: string, maxLength: number = 40): string {
             continue;
         } else if (str[i] === " ") {
             prevEmpty = true;
-            // If not at beginning or end of str then replace " " with "-"
-            if (i !== 0 && i !== str.length - 1) {
-                slug += "-";
-            }
+            slug += "-";
         } else {
             prevEmpty = false;
             slug += str[i].toLowerCase();
