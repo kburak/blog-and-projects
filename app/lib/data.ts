@@ -1,22 +1,37 @@
 import sql from './db';
+import { getSession } from 'next-auth/react';
 /* import { unstable_noStore as noStore } from 'next/cache'; */
 
-export async function getAllBlogs(userId: string | undefined = "c74de708-5937-41c2-9600-6286993866b3") {
+export async function getAllBlogs(query: string) {
     // Add noStore() here to prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
     // noStore();
 
+    const userId = "c74de708-5937-41c2-9600-6286993866b3";
+
     try {
 
-        await new Promise((resolve) => { setTimeout(resolve, 2000) });
+        // await new Promise((resolve) => { setTimeout(resolve, 2000) });
 
-        const blogs = await sql`
-        SELECT
-        *
-        FROM post
-        WHERE userId = ${userId}
-        AND posttype = 'Blog'
-        `;
+        let blogs;
+        if (query) {
+            blogs = await sql`
+            SELECT
+            *
+            FROM post
+            WHERE userId = ${userId}
+            AND posttype = 'Blog'
+            AND title ILIKE ${`%${query}%`}
+            `;
+        } else {
+            blogs = await sql`
+            SELECT
+            *
+            FROM post
+            WHERE userId = ${userId}
+            AND posttype = 'Blog'
+            `;
+        }
 
         if (!blogs) return [];
         return blogs;

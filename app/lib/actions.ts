@@ -48,7 +48,7 @@ const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema]);
 const FormSchema = z.object({
     title: z.string().min(1, { message: 'Please enter a title!' }),
     summary: z.string().min(1, { message: 'Please enter a summary!' }),
-    header: z.string().min(1, {message: 'Please provide a valid URL!'}),
+    header: z.string().min(1, { message: 'Please provide a valid URL!' }),
     content: z.array(ContentSchema)
 });
 
@@ -310,4 +310,43 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     console.log("Redirect to:", `/blog/${postSlug}`);
     redirect(`/blog/${postSlug}`);
 
+}
+
+export async function deleteBlog(postId: string) {
+    if (!postId) throw new Error("No postId provided");
+
+    try {
+
+        const promises: Promise<any>[] = [];
+        
+        // Remove all content
+        promises.push(sql`
+            DELETE FROM image 
+            WHERE postId = ${postId} 
+        `);
+        promises.push(sql`
+            DELETE FROM text 
+            WHERE postId = ${postId} 
+        `);
+        promises.push(sql`
+            DELETE FROM codesnippet 
+            WHERE postId = ${postId} 
+        `);
+
+        // Remove blog post
+        promises.push(sql`
+            DELETE FROM post 
+            WHERE id = ${postId} 
+        `);
+
+        // Wait for all to resolve
+        await Promise.all(promises);
+
+        // Since this action is being called in the /dashboard/invoices path, you don't need to call redirect. 
+        // Calling revalidatePath will trigger a new server request and re-render the table.
+        revalidatePath('/admin/blog');
+
+    } catch (e) {
+        console.error("Delete Blog Action failed.", e);
+    }
 }

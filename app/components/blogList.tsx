@@ -4,7 +4,7 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
 
 export default async function BlogList() {
-    const blogPosts = await getAllBlogs();
+    const blogPosts = await getAllBlogs('');
 
     return (
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20">
@@ -34,13 +34,15 @@ export default async function BlogList() {
                         {blogPosts?.map((b) => {
                             return <div className="w-full p-2 md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-1rem)] lg:p-0">
                                 <div id="blogList-image-wrap" className="relative w-full h-48 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0">
-                                    <Image
-                                        className="object-cover"
-                                        src={b.header}
-                                        quality={100}
-                                        alt={b.title}
-                                        fill={true}
-                                    />
+                                    <Link href={`/blog/${b.slug}`} className="mb-5">
+                                        <Image
+                                            className="object-cover"
+                                            src={b.header}
+                                            quality={100}
+                                            alt={b.title}
+                                            fill={true}
+                                        />
+                                    </Link>
                                 </div>
                                 <div className="flex flex-row mt-2 mb-5">
                                     <div className="flex-grow">
