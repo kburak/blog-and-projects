@@ -9,6 +9,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <div>{children}</div>
+    <div>
+      <div className="flex items-center justify-center">
+        <p className="absolute top-12 pl-2 text-red-500">Admin Interface</p>
+      </div>
+      {children}
+    </div>
   )
 }

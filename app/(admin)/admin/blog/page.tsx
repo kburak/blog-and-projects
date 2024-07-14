@@ -15,7 +15,7 @@ export default async function Page({ searchParams }:
     const blogPosts = await getAllBlogs(query);
 
     return (
-        <div id="blogList-Posts" className="flex flex-col justify-center ml-auto mr-auto pl-2 pr-2 md:w-3/5 gap-4">
+        <div id="blogList-Posts" className="flex flex-col justify-center ml-auto mr-auto pl-2 pr-2 md:w-3/5 gap-4 mt-20">
             <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8">
                 <Search placeholder="Search blog..." />
                 <Link
