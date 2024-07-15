@@ -2,35 +2,54 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { HomeIcon, PowerIcon, BookOpenIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
+import clsx from 'clsx';
+
+const links = [
+    {
+        href: "/admin/blog",
+        text: "Blog",
+        icon: BookOpenIcon
+    },
+    {
+        href: "/admin/projects",
+        text: "Projects",
+        icon: ClipboardDocumentListIcon
+    },
+    {
+        href: "/admin",
+        text: "Admin Home",
+        icon: HomeIcon
+    },
+    {
+        href: "/",
+        text: "Leave Admin",
+        icon: PowerIcon
+    }
+];
 
 export default function AdminNav() {
-    const path = usePathname();
+    const pathname = usePathname();
     return (
         <div className='flex space-x-4 p-3'>
-            <Link
-                href="/admin/blog"
-                className='inline text-white'
-            >
-                Blog
-            </Link>
-            <Link
-                href="/admin/projects"
-                className='inline text-white'
-            >
-                Projects
-            </Link>
-            <Link
-                href="/admin"
-                className='inline text-white'
-            >
-                Admin Home
-            </Link>
-            <Link
-                href="/"
-                className='inline text-white'
-            >
-                Leave Admin
-            </Link>
+            {
+                links.map(link => {
+                    const LinkIcon = link.icon;
+                    return <Link
+                        key={`link-${link.text}`}
+                        href={link.href}
+                        className={clsx(
+                            'inline text-white hover:bg-gray-100 hover:text-red-600 md:flex-none md:justify-start md:px-3 h-12',
+                            {
+                                'bg-gray-100 text-red-600': pathname === link.href
+                            }
+                        )}
+                    >
+                        <LinkIcon className="w-6 mr-auto ml-auto" />
+                        <p className='hidden md:block'>{link.text}</p>
+                    </Link>
+                })
+            }
         </div>
     );
 }
