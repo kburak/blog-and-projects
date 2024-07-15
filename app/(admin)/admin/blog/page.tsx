@@ -27,7 +27,7 @@ export default async function Page({ searchParams }:
                 </Link>
             </div>
             {blogPosts?.map((b) => {
-                return <div className="flex">
+                return <div className="flex" key={`blogPost-${b.slug}`}>
                     <div className="flex-grow">
                         <h2 className="text-xl">{b.title}</h2>
                     </div>
