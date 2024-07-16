@@ -24,7 +24,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
     return (
         <main>
-            {/* <BlogSkeleton /> */}
             <Suspense fallback={<BlogSkeleton />}>
                 <Blog slug={slug} />
             </Suspense>

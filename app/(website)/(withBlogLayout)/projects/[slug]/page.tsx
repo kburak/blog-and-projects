@@ -1,4 +1,4 @@
 export default function Page({ params } : { params: { slug: string } }) {
     const { slug } = params;
-    return <h1>{slug} page</h1>
+    return <h1 className="text-4xl">{slug} page</h1>
 }

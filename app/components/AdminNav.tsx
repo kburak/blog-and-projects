@@ -39,13 +39,13 @@ export default function AdminNav() {
                         key={`link-${link.text}`}
                         href={link.href}
                         className={clsx(
-                            'inline text-white hover:bg-gray-100 hover:text-red-600 md:flex-none md:justify-start md:px-3 h-12',
+                            'inline text-white hover:bg-gray-100 hover:text-red-600 md:flex-none md:justify-start px-3 md:px-3 h-12',
                             {
                                 'bg-gray-100 text-red-600': pathname === link.href
                             }
                         )}
                     >
-                        <LinkIcon className="w-6 mr-auto ml-auto" />
+                        <LinkIcon className="w-6 mr-auto ml-auto mt-3 md:mt-0" />
                         <p className='hidden md:block'>{link.text}</p>
                     </Link>
                 })

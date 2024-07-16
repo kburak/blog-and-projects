@@ -28,29 +28,29 @@ export default async function Blog(props: { slug: string }) {
         notFound();
     }
 
-    const { title, summary, createdAt, updatedAt, content } = blogData;
+    const { title, summary, header, createdAt, updatedAt, content } = blogData;
 
     return (
-        <div>
+        <div className='p-6 md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
             {/* Header section */}
-            <div className="bg-blue-700 text-center text-white pt-24 pb-10 md:pt-16 md:pb-8">
-                <div className='md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
-                    <h1 className="font-bold text-4xl pb-6">{title}</h1>
-                    <p className="pb-5">{summary}</p>
-                    <p className="text-sm">Created: {new Intl.DateTimeFormat('de-DE', options).format(createdAt)}</p>
-                    <p className="text-sm">Last Updated: {new Intl.DateTimeFormat('de-DE', options).format(updatedAt)}</p>
-                </div>
-            </div >
-
-            <hr />
+            <h1 className="font-bold text-3xl pb-6 pt-16 pb-10 md:pt-16 md:pb-8">{title}</h1>
+            <div id="blog-image-wrap" className="relative w-full h-64 pt-2 pb-2 mt-0 ml-auto mr-auto">
+                <Image
+                    className="object-cover"
+                    src={header}
+                    quality={100}
+                    alt={title}
+                    fill={true}
+                />
+            </div>
 
             {/* Content Section */}
-            <div className="p-6 md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto">
+            <div className='mt-6'>
                 {
-                    content?.map(c => {
+                    content?.map((c, idx) => {
                         if (c.contenttype === "image") {
                             const { url, caption, size } = c.custom_attr;
-                            return <div>
+                            return <div key={`${idx}-image`}>
                                 <Image
                                     src={url}
                                     width={imageSizeMap[size].width}
@@ -62,21 +62,26 @@ export default async function Blog(props: { slug: string }) {
                         } else if (c.contenttype === "text") {
                             const { size, style, word_count, content: textContent } = c.custom_attr;
                             // Split the text content with \n (empty space) and show each in a <p> element
-                            return textContent.split("\r").map((tc: string) => {
-                                return <p className={
-                                    `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} pt-2 pb-2`
-                                }>
+                            return textContent.split("\r").map((tc: string, split_idx: number) => {
+                                return <p
+                                    key={`${idx}-text-${split_idx}`}
+                                    className={
+                                        `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} pt-2 pb-2`
+                                    }
+                                >
                                     {tc}
                                 </p>;
                             });
 
                         } else if (c.contenttype === "code") {
                             const { language, code } = c.custom_attr;
-                            return <div>
+                            return <div className='text-xs md:text-sm' key={`${idx}-code`}>
                                 <SyntaxHighlighter
                                     language={language}
                                     style={docco /* dark atomOneDark github */}
-                                    customStyle={{ margin: "0.5rem 0 0.5rem 0" }}
+                                    customStyle={{
+                                        margin: "0.5rem 0 0.5rem 0"
+                                    }}
                                 >
                                     {code}
                                 </SyntaxHighlighter>
@@ -85,6 +90,8 @@ export default async function Blog(props: { slug: string }) {
                     })
                 }
             </div>
+            <p className="text-sm">Created: {new Intl.DateTimeFormat('de-DE', options).format(createdAt)}</p>
+            <p className="text-sm">Last Updated: {new Intl.DateTimeFormat('de-DE', options).format(updatedAt)}</p>
         </div>
     );
 }
