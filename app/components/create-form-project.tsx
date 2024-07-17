@@ -2,25 +2,18 @@
 
 import { useState } from "react";
 import { useFormState } from 'react-dom';
-import { State, createBlog } from "../lib/actions";
+import { State, createProject } from "../lib/actions";
 import EditImage from "./editImage";
 import EditText from "./editText";
 import EditCode from "./editCode";
 import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
 
-export default function CreateBlogForm() {
+export default function CreateProjectForm() {
     const initialState: State = { message: "", errors: {} };
     const contentInitialState: ContentType[] = [];
-    const [state, dispatch] = useFormState(createBlog, initialState);
+    const [state, dispatch] = useFormState(createProject, initialState);
     const [content, setContent] = useState<ContentType[]>(contentInitialState);
-    /*
-        Content State
-        [
-            {textContent},
-            {imageContent}
-        ]
-    */
 
     function addEmptyContent(contentType: string) {
         const typeMap: { [key: string]: ContentType } = {
@@ -30,7 +23,7 @@ export default function CreateBlogForm() {
         }
 
         setContent((prevState) => {
-            return [...prevState, { ...typeMap[contentType] }]
+            return [...prevState, { ...typeMap[contentType] }];
         });
         // +++++ DEBUG +++++
         console.log(setContent(prevState => {
@@ -98,7 +91,7 @@ export default function CreateBlogForm() {
         <form action={dispatch} className="flex flex-col p-2">
             <FlexTextAreaStateful
                 id='title'
-                name='blog-title'
+                name='project-title'
                 showLabel={true}
                 visualName='Title'
                 minLength={10}
@@ -110,7 +103,7 @@ export default function CreateBlogForm() {
             />
             <FlexTextAreaStateful
                 id='summary'
-                name='blog-summary'
+                name='project-summary'
                 showLabel={true}
                 visualName='Summary'
                 minLength={10}
@@ -122,9 +115,9 @@ export default function CreateBlogForm() {
             />
             <FlexTextAreaStateful
                 id='header'
-                name='blog-header'
+                name='project-projecturl'
                 showLabel={true}
-                visualName='Header Image Url'
+                visualName='Project Url'
                 minLength={10}
                 maxLength={255}
                 allowEnter={false}
@@ -133,7 +126,7 @@ export default function CreateBlogForm() {
                 error={state?.errors?.header}
             />
 
-            <div id='blog-content'>
+            <div id='project-content'>
 
 
                 {/* Content */}

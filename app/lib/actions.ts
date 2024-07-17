@@ -45,10 +45,19 @@ const CodeSchema = z.object({
 
 const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema]);
 
-const FormSchema = z.object({
+const BlogSchema = z.object({
     title: z.string().min(1, { message: 'Please enter a title!' }),
     summary: z.string().min(1, { message: 'Please enter a summary!' }),
-    header: z.string().min(1, { message: 'Please provide a valid URL!' }),
+    header: z.string().min(1, { message: 'Please provide a valid header image URL!' }),
+    projecturl: z.string().nullable().optional(),
+    content: z.array(ContentSchema)
+});
+
+const ProjectSchema = z.object({
+    title: z.string().min(1, { message: 'Please enter a title!' }),
+    summary: z.string().min(1, { message: 'Please enter a summary!' }),
+    header: z.string().nullable().optional(),
+    projecturl: z.string().min(1, { message: 'Please provide a valid project URL!' }),
     content: z.array(ContentSchema)
 });
 
@@ -64,10 +73,10 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     console.log(prevState, formData);
 
     // Normalize form data
-    const normalizedFormData = normalizeFormData(formData);
+    const normalizedFormData = normalizeFormData(formData, 'blog');
 
     // Validate the form data using safeParse
-    const validationResult = FormSchema.safeParse(normalizedFormData);
+    const validationResult = BlogSchema.safeParse(normalizedFormData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
@@ -172,10 +181,10 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     const [postId, postSlug] = postData;
 
     // Normalize form data
-    const normalizedFormData = normalizeFormData(formData);
+    const normalizedFormData = normalizeFormData(formData, 'blog');
 
     // Validate data
-    const validationResult = FormSchema.safeParse(normalizedFormData);
+    const validationResult = BlogSchema.safeParse(normalizedFormData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
@@ -349,4 +358,16 @@ export async function deleteBlog(postId: string) {
     } catch (e) {
         console.error("Delete Blog Action failed.", e);
     }
+}
+
+export async function createProject(prevState: State | undefined, formData: FormData){
+    console.log(prevState, formData);
+
+    // Normalize form data
+    const normalizedFormData = normalizeFormData(formData, 'project');
+
+    // Validate the form data using safeParse
+    const validationResult = ProjectSchema.safeParse(normalizedFormData);
+
+    return prevState;
 }

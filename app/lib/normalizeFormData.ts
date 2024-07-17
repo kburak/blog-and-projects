@@ -2,18 +2,24 @@ interface ContentObject {
     [key: string]: string | File
 }
 
-export default function normalizeFormData(formData: FormData) {
+export default function normalizeFormData(formData: FormData, postType: "blog" | "project") {
+
+    if (!formData || !postType) {
+        throw new Error("normalizeFormData input arguments are missing!");
+    }
+
     // Normalize form data, Group content data
     const res: { [key: string]: string | ContentObject[] | null } = {};
     const groupedContent: ContentObject[] = [];
 
-    // Add blog title and summary
-    res['title'] = formData.get('blog-title')?.toString() || null;
-    res['summary'] = formData.get('blog-summary')?.toString() || null;
-    res['header'] = formData.get('blog-header')?.toString() || null;
-
     // Add groupedContent to normalizedFormData
     res['content'] = groupedContent;
+
+    // Push post data into res
+    res['title'] = formData.get(`${postType}-title`)?.toString() || null;
+    res['summary'] = formData.get(`${postType}-summary`)?.toString() || null;
+    res['header'] = formData.get(`${postType}-header`)?.toString() || null;
+    res['projecturl'] = formData.get(`${postType}-projecturl`)?.toString() || null;
 
     for (let data of formData.entries()) {
         const [key, value] = data;

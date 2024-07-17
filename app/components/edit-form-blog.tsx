@@ -88,7 +88,7 @@ export default function EditBlogForm(props: any) {
         }
 
         setContent((prevState) => {
-            return [...prevState, typeMap[contentType]]
+            return [...prevState, { ...typeMap[contentType] }]
         });
         // +++++ DEBUG +++++
         console.log(setContent(prevState => {

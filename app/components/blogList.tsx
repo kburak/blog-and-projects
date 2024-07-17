@@ -22,7 +22,7 @@ export default async function BlogList() {
                 </div>
 
             </div>
-            <div className="pl-3 pr-3 md:pl-0 md:pr-0 pt-8">
+            <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
                 <h1 className="font-bold text-xl pb-4">Blog Articles</h1>
                 <div id="blogList-Wrap" className="flex flex-wrap justify-between">
                     <div id="blogList-Navigation" className="w-full h-auto lg:w-1/4 lg:h-64 mb-4">

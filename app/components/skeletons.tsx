@@ -3,72 +3,9 @@ const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
 export function BlogListSkeleton() {
-  /* return <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 mt-20 ml-auto mr-auto p-6 shadow-sm relative overflow-hidden`}>
-    <div className="bg-gray-100 rounded-md h-12 bg-gray-100 mb-12"></div>
-
-    <div className="flex flex-row mb-5">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-    <div className="flex flex-row">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-    <div className="flex flex-row">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-    <div className="flex flex-row">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-    <div className="flex flex-row">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-    <div className="flex flex-row">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-    <div className="flex flex-row">
-      <div className="flex-grow mr-5">
-        <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
-        <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
-      </div>
-      <div className="bg-gray-100 self-center w-8 h-8 min-w-8 rounded-md bg-gray-100 mb-4"></div>
-    </div>
-
-  </div>; */
-
   return <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20 shadow-sm relative overflow-hidden`}>
     <div className="bg-gray-100 relative h-[300px] content-center"></div>
-    <div className="pl-3 pr-3 md:pl-0 md:pr-0 pt-8">
+    <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
       <div className="bg-gray-100 rounded-md w-48 h-8 bg-gray-100 mb-4"></div>
       <div className="flex flex-wrap justify-between">
         {/* BlogList Categories */}
