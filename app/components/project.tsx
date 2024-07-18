@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPost } from "@/app/lib/data";
 import imageSizeMap from '../lib/imageSizeMap';
+import { LinkIcon } from '@heroicons/react/24/outline';
 
 
 const options: RTCSetParameterOptions = {
@@ -22,28 +23,41 @@ export default async function Blog(props: { slug: string }) {
     const { slug } = props;
 
     // Get post data with content
-    const blogData = await getPost(slug);
+    const projectData = await getPost(slug);
 
-    if (!blogData) {
+    if (!projectData) {
         notFound();
     }
 
-    const { title, summary, header, createdAt, updatedAt, content } = blogData;
+    const { title, summary, header, createdAt, updatedAt, content, projecturl } = projectData;
 
     return (
         <div className='p-6 md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
             {/* Header section */}
             <h1 className="font-bold text-3xl pb-6 pt-16 pb-10 md:pt-16 md:pb-8">{title}</h1>
-            <div id="blog-image-wrap" className="relative w-full h-64 pt-2 pb-2 mt-0 ml-auto mr-auto">
-                <Image
-                    className="object-cover"
-                    src={header}
-                    quality={100}
-                    alt={title}
-                    fill={true}
-                />
-            </div>
-
+            {header &&
+                <div id="blog-image-wrap" className="relative w-full h-64 pt-2 pb-2 mt-0 ml-auto mr-auto">
+                    <Image
+                        className="object-cover"
+                        src={header}
+                        quality={100}
+                        alt={title}
+                        fill={true}
+                    />
+                </div>
+            }
+            {
+                projecturl &&
+                <a
+                    href={projecturl}
+                    target="_blank"
+                >
+                    <div className='flex'>
+                        <LinkIcon className='w-5' />
+                        <p className='underline ml-2'>{projecturl}</p>
+                    </div>
+                </a>
+            }
             {/* Content Section */}
             <div className='mt-6'>
                 {

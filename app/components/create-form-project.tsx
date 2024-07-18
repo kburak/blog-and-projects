@@ -115,6 +115,18 @@ export default function CreateProjectForm() {
             />
             <FlexTextAreaStateful
                 id='header'
+                name='project-header'
+                showLabel={true}
+                visualName='Header Image Url'
+                minLength={10}
+                maxLength={255}
+                allowEnter={false}
+                textSize="p"
+                textStyle="normal"
+                error={state?.errors?.header}
+            />
+            <FlexTextAreaStateful
+                id='projecturl'
                 name='project-projecturl'
                 showLabel={true}
                 visualName='Project Url'

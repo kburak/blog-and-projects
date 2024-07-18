@@ -57,7 +57,7 @@ const ProjectSchema = z.object({
     title: z.string().min(1, { message: 'Please enter a title!' }),
     summary: z.string().min(1, { message: 'Please enter a summary!' }),
     header: z.string().nullable().optional(),
-    projecturl: z.string().min(1, { message: 'Please provide a valid project URL!' }),
+    projecturl: z.string().nullable().optional(),
     content: z.array(ContentSchema)
 });
 
@@ -81,7 +81,7 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
 
-        const pResult = normalizeValidationErrors(validationResult?.error.errors, "blog");
+        const pResult = normalizeValidationErrors(validationResult?.error.errors);
 
         console.log("pResult", pResult)
 
@@ -98,7 +98,6 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
     try {
 
-        // Build slug out of the blog title
         const { title, summary, header } = validationResult.data;
         const createdAt = new Date(Date.now()).toISOString();
         const updatedAt = new Date(Date.now()).toISOString();
@@ -189,7 +188,7 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
 
-        const pResult = normalizeValidationErrors(validationResult?.error.errors, "blog");
+        const pResult = normalizeValidationErrors(validationResult?.error.errors);
 
         console.log("pResult", pResult)
 
@@ -327,7 +326,7 @@ export async function deleteBlog(postId: string) {
     try {
 
         const promises: Promise<any>[] = [];
-        
+
         // Remove all content
         promises.push(sql`
             DELETE FROM image 
@@ -360,7 +359,7 @@ export async function deleteBlog(postId: string) {
     }
 }
 
-export async function createProject(prevState: State | undefined, formData: FormData){
+export async function createProject(prevState: State | undefined, formData: FormData) {
     console.log(prevState, formData);
 
     // Normalize form data
@@ -369,5 +368,109 @@ export async function createProject(prevState: State | undefined, formData: Form
     // Validate the form data using safeParse
     const validationResult = ProjectSchema.safeParse(normalizedFormData);
 
-    return prevState;
+    // Validation failed, normalize error data and return errors in state.
+    if (!validationResult.success) {
+
+        const pResult = normalizeValidationErrors(validationResult?.error.errors);
+
+        console.log("pResult", pResult)
+
+        return {
+            errors: pResult,
+            message: 'Missing Fields. Failed to Create Project.'
+        }
+    }
+
+    console.log("validatedData", validationResult.data);
+
+    // Make slug
+    const slug = makeSlug(validationResult.data.title, 40);
+
+    try {
+
+        const { title, summary, header, projecturl } = validationResult.data;
+        const createdAt = new Date(Date.now()).toISOString();
+        const updatedAt = new Date(Date.now()).toISOString();
+        const userid = "c74de708-5937-41c2-9600-6286993866b3";
+        const posttype = "Project";
+
+        // Insert Post and get the id
+        const post = {
+            slug: slug,
+            title: title,
+            summary: summary,
+            userid: userid,
+            createdat: createdAt,
+            updatedat: updatedAt,
+            posttype: posttype,
+            header,
+            projecturl
+        }
+
+        const res = await sql`
+            INSERT INTO post ${sql(post, 'slug', 'title', 'summary', 'userid', 'createdat', 'updatedat', 'posttype', 'header', 'projecturl')}
+            RETURNING *
+            `;
+
+        console.log("Inserted Project data:", res[0]);
+
+        const { id } = res[0];
+
+        const dbUpdates: Promise<any>[] = [];
+        // Iterate grouped data 
+        for (let i = 0; i < validationResult.data.content.length; i++) {
+
+            const cur = validationResult.data.content[i];
+
+            // Extract type
+            const { type } = cur;
+
+            // Depending on type, Send directly update to DB (without await), store returned promise into an array.
+            if (type === "image") {
+                const { url, caption, size: imageSize } = cur;
+
+                const insertImage = sql`
+                INSERT INTO image (postid, url, caption, size, position)
+                VALUES (${id}, ${url}, ${caption}, ${imageSize}, ${i})`;
+
+                dbUpdates.push(insertImage);
+            } else if (type === "text") {
+                const { content: textContent, size: textSize, style: textStyle } = cur;
+
+                const insertText = sql`
+                    INSERT INTO text (postid, size, style, word_count, content, position )
+                    VALUES (${id}, ${textSize}, ${textStyle}, ${textContent.length}, ${textContent}, ${i})
+                    `;
+
+                dbUpdates.push(insertText);
+            } else if (type === "code") {
+                const { code, language } = cur;
+
+                const insertCode = sql`
+                    INSERT INTO codesnippet (postid, language, code, position )
+                    VALUES (${id}, ${language}, ${code}, ${i})
+                    `;
+
+                dbUpdates.push(insertCode);
+            }
+
+        }
+
+        // Wait for all promises to resolve Promise.all(dbUpdates)
+        await Promise.all(dbUpdates);
+
+    } catch (e) {
+        // return message and errors to update the state
+        console.error("Create Project Failed", e);
+        return {
+            message: "Some Error Hint!", errors: {}
+        };
+    }
+
+    // No need to Revalidate path / Clear cache because the blog is newly created!!!
+
+    // Redirect user to the new blog page
+    // redirect internally throws an error so it should be called outside of try/catch blocks.
+    redirect(`/project/${slug}`);
+
 }

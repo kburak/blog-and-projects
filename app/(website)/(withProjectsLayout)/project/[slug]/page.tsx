@@ -1,8 +1,8 @@
 import { getPostMetadata } from "@/app/lib/data";
-import Blog from "@/app/components/blog";
+import Project from "@/app/components/project";
 import type { Metadata, ResolvingMetadata } from "next";
 import { Suspense } from 'react';
-import { BlogSkeleton } from "@/app/components/skeletons";
+import { ProjectSkeleton } from "@/app/components/skeletons";
 
 
 export async function generateMetadata(
@@ -13,7 +13,7 @@ export async function generateMetadata(
     const data = await getPostMetadata(params.slug);
 
     return {
-        title: "BK - Blog | " + data?.title,
+        title: "BK - Project | " + data?.title,
         description: data?.summary
     }
 
@@ -24,8 +24,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
     return (
         <main>
-            <Suspense fallback={<BlogSkeleton />}>
-                <Blog slug={slug} />
+            <Suspense fallback={<ProjectSkeleton />}>
+                <Project slug={slug} />
             </Suspense>
         </main>
     );

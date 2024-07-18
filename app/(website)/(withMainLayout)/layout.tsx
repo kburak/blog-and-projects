@@ -1,6 +1,6 @@
 import WebNav from '../../components/WebNav';
 
-export default function BlogListLayout({
+export default function MainLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;

@@ -44,22 +44,22 @@ export async function getAllBlogs(query: string) {
 
 }
 
-export async function getBlog(slug: string) {
+export async function getPost(slug: string) {
 
     try {
 
-        // await new Promise((resolve) => { setTimeout(resolve, 5000) });
+        await new Promise((resolve) => { setTimeout(resolve, 5000) });
 
-        // Get blog data
-        const blog = await sql`SELECT * FROM post WHERE slug = ${slug}`;
+        // Get Post data
+        const post = await sql`SELECT * FROM post WHERE slug = ${slug}`;
 
-        // Is there blog data?
-        if (blog.length > 0) {
+        // Is there post data?
+        if (post.length > 0) {
 
             // Extract id
-            const { id } = blog[0];
+            const { id } = post[0];
 
-            // Get content data with blog id
+            // Get content data with post id
             const content = await sql`SELECT 
             id,
             position,
@@ -91,51 +91,52 @@ export async function getBlog(slug: string) {
                 ;
 
             return {
-                id: blog[0].id,
-                slug: blog[0].slug,
-                title: blog[0].title,
-                summary: blog[0].summary,
-                header: blog[0].header,
-                createdAt: blog[0].createdat,
-                updatedAt: blog[0].updatedat,
-                postType: blog[0].posttype,
+                id: post[0].id,
+                slug: post[0].slug,
+                title: post[0].title,
+                summary: post[0].summary,
+                header: post[0].header,
+                projecturl: post[0].projecturl,
+                createdAt: post[0].createdat,
+                updatedAt: post[0].updatedat,
+                postType: post[0].posttype,
                 content
             };
 
         } else {
-            // No blog found with the id, return null
+            // No post found with the id, return null
             return null;
 
         }
 
     } catch (e) {
-        console.error("Couldn't get blog", e);
+        console.error("Couldn't get post", e);
     }
 
 
 }
 
-export async function getBlogMetadata(slug: string) {
+export async function getPostMetadata(slug: string) {
 
     try {
 
         // Get blog data
-        const blog = await sql`SELECT * FROM post WHERE slug = ${slug}`;
+        const post = await sql`SELECT * FROM post WHERE slug = ${slug}`;
 
         // Is there blog data? 
-        if (blog.length > 0) {
+        if (post.length > 0) {
             // Return title
-            const { title, summary } = blog[0];
+            const { title, summary } = post[0];
 
             return { title, summary };
 
         } else {
-            // No blog found with the id, return null
+            // No post found with the id, return null
             return null;
         }
 
     } catch (e) {
-        console.error("Couldn't get blog", e);
+        console.error("Couldn't get post", e);
     }
 
 
