@@ -1,10 +1,10 @@
-import { getAllBlogs } from "@/app/lib/data";
+import { getAllPosts } from "@/app/lib/data";
 import Link from "next/link";
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
 
 export default async function BlogList() {
-    const blogPosts = await getAllBlogs('');
+    const blogPosts = await getAllPosts('', 'Blog');
 
     return (
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20">

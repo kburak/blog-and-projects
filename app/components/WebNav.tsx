@@ -12,7 +12,7 @@ const links = [
         title: "Blog"
     },
     {
-        href: "/projects",
+        href: "/project",
         title: "Projects"
     },
     {

@@ -1,3 +1,7 @@
-export default function Page(){
-    return <h1>Projects Main page</h1>;
+import ProjectList from "@/app/components/projectList";
+
+export default function Page() {
+    return (
+        <ProjectList />
+    );
 }

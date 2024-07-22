@@ -12,3 +12,6 @@ export type ContentType = {
     dbDelete?: boolean,
     dbInsert?: boolean
 };
+
+export type Post = "Project" | "Blog";
+

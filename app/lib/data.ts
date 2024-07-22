@@ -1,8 +1,9 @@
 import sql from './db';
 import { getSession } from 'next-auth/react';
+import { Post } from './definitions';
 /* import { unstable_noStore as noStore } from 'next/cache'; */
 
-export async function getAllBlogs(query: string) {
+export async function getAllPosts(query: string, postType: Post) {
     // Add noStore() here to prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
     // noStore();
@@ -13,32 +14,32 @@ export async function getAllBlogs(query: string) {
 
         // await new Promise((resolve) => { setTimeout(resolve, 2000) });
 
-        let blogs;
+        let posts;
         if (query) {
-            blogs = await sql`
+            posts = await sql`
             SELECT
             *
             FROM post
             WHERE userId = ${userId}
-            AND posttype = 'Blog'
+            AND posttype = ${postType}
             AND title ILIKE ${`%${query}%`}
             `;
         } else {
-            blogs = await sql`
+            posts = await sql`
             SELECT
             *
             FROM post
             WHERE userId = ${userId}
-            AND posttype = 'Blog'
+            AND posttype = ${postType}
             `;
         }
 
-        if (!blogs) return [];
-        return blogs;
+        if (!posts) return [];
+        return posts;
 
     } catch (e) {
 
-        console.error("Error happened getting Blogs", e);
+        console.error("Error happened getting Posts", e);
 
     }
 
