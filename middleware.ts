@@ -9,8 +9,11 @@ export default function (request: NextRequest) {
     if (encryptedSessionData) {
         const bytes = CryptoJS.AES.decrypt(encryptedSessionData, "My secret blog app secret 1235555!!");
         sessionData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    } else {
+        return Response.redirect(new URL('/admin/login', request.url));
     }
 
+    // Authorization
     const { currentUser, role } = sessionData;
 
     if ((!currentUser || role !== "admin") && !request.nextUrl.pathname.startsWith('/admin/login')) {
@@ -20,5 +23,5 @@ export default function (request: NextRequest) {
 
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|blog|project|admin/login|.*\\.png$).*)'], // Don't run on these
+    matcher: ['/((?!api|_next/static|_next/image|blog|project|admin/login|.*\\.png|$).*)'], // Don't run on these
 }
