@@ -41,7 +41,7 @@ export default async function ProjectList() {
                                             {p.projecturl}
                                         </Link>
                                     </div>
-                                    <Link href={`/blog/${p.slug}`} className="mb-5">
+                                    <Link href={`/project/${p.slug}`} className="mb-5">
                                         <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
                                     </Link>
                                 </div>

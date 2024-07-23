@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
+import { useSession } from 'next-auth/react';
+import { AcademicCapIcon } from '@heroicons/react/24/outline';
 
 const links = [
     {
@@ -18,6 +20,10 @@ const links = [
     {
         href: "/",
         title: "Home"
+    },
+    {
+        href: "/admin",
+        title: "Admin"
     }
 ];
 
@@ -25,10 +31,12 @@ const MOBILE_NAV_WIDTH = 600;
 
 export default function WebNav() {
     const pathname = usePathname();
+    // const { data: session, status } = useSession();
     const [showMobileNav, setShowMobileNav] = useState(false);
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
     // console.log("RENDER WebNav", showMobileNav);
+    // console.log("session", session, status);
 
     function toggleMobileNav() {
         setShowMobileNav(prevState => {

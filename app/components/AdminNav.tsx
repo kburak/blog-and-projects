@@ -12,7 +12,7 @@ const links = [
         icon: BookOpenIcon
     },
     {
-        href: "/admin/projects",
+        href: "/admin/project",
         text: "Projects",
         icon: ClipboardDocumentListIcon
     },

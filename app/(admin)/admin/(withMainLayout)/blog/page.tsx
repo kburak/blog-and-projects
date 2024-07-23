@@ -1,4 +1,4 @@
-import { getAllBlogs } from "@/app/lib/data";
+import { getAllPosts } from "@/app/lib/data";
 import Link from "next/link";
 import { PencilIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Search from '@/app/components/search';
@@ -12,7 +12,7 @@ export default async function Page({ searchParams }:
     }) {
 
     const query = searchParams?.query || '';
-    const blogPosts = await getAllBlogs(query);
+    const blogPosts = await getAllPosts(query, "Blog");
 
     return (
         <div id="blogList-Posts" className="flex flex-col justify-center ml-auto mr-auto pl-2 pr-2 md:w-3/5 gap-4 mt-20">

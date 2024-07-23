@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation';
 import makeSlug from './makeSlug';
 import normalizeFormData from './normalizeFormData';
 import normalizeValidationErrors from './normalizeValidationErrors';
+import { signIn } from '@/auth';
+import { AuthError } from '@/auth';
 
 const ImageSchema = z.object({
     id: z.string().optional(),
@@ -473,4 +475,23 @@ export async function createProject(prevState: State | undefined, formData: Form
     // redirect internally throws an error so it should be called outside of try/catch blocks.
     redirect(`/project/${slug}`);
 
+}
+
+export async function handleLogin(prevState: any, formData: FormData) {
+    try {
+        const status = await signIn('credentials', formData);
+        if (status === "success") {
+            redirect(`/admin/`);
+        };
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                    return 'Invalid credentials.'
+                default:
+                    return 'Something went wrong.'
+            }
+        }
+        throw error
+    }
 }
