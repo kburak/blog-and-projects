@@ -7,7 +7,7 @@ import makeSlug from './makeSlug';
 import normalizeFormData from './normalizeFormData';
 import normalizeValidationErrors from './normalizeValidationErrors';
 import { signIn } from '@/auth';
-import { AuthError } from '@/auth';
+import { AuthError } from 'next-auth';
 
 const ImageSchema = z.object({
     id: z.string().optional(),
@@ -477,12 +477,13 @@ export async function createProject(prevState: State | undefined, formData: Form
 
 }
 
-export async function handleLogin(prevState: any, formData: FormData) {
+export async function authenticate(prevState: any, formData: FormData) {
     try {
-        const status = await signIn('credentials', formData);
-        if (status === "success") {
-            redirect(`/admin/`);
-        };
+        await signIn('credentials', {
+            redirectTo: "/admin",
+            email: formData.get("email"),
+            password: formData.get("password")
+        });
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {
@@ -492,6 +493,7 @@ export async function handleLogin(prevState: any, formData: FormData) {
                     return 'Something went wrong.'
             }
         }
-        throw error
+        throw error;
     }
 }
+
