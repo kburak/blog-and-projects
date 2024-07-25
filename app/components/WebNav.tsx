@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { useSession } from 'next-auth/react';
 import { AcademicCapIcon } from '@heroicons/react/24/outline';
 
 const links = [
@@ -29,14 +28,13 @@ const links = [
 
 const MOBILE_NAV_WIDTH = 600;
 
-export default function WebNav() {
+export default function WebNav(props: { isAdmin: boolean }) {
     const pathname = usePathname();
-    // const { data: session, status } = useSession();
+    const { isAdmin } = props;
     const [showMobileNav, setShowMobileNav] = useState(false);
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
     // console.log("RENDER WebNav", showMobileNav);
-    // console.log("session", session, status);
 
     function toggleMobileNav() {
         setShowMobileNav(prevState => {
@@ -98,6 +96,20 @@ export default function WebNav() {
                         )}>
                         {
                             links.map(link => {
+                                if (link.title === "Admin") {
+                                    if (isAdmin) {
+                                        return <Link
+                                            key={`mobileNavLink-Admin}`}
+                                            href={link.href}
+                                            onClick={() => setIsMobileNavOpen(false)}
+                                            className="block px-12 py-4 text-gray-800 hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-500"
+                                        >
+                                            {link.title}
+                                        </Link>;
+                                    } else {
+                                        return;
+                                    }
+                                }
                                 return <Link
                                     key={`mobileNavLink-${link.title}`}
                                     href={link.href}
@@ -113,6 +125,24 @@ export default function WebNav() {
 
                 :
                 links.map(link => {
+                    if (link.title === "Admin") {
+                        if (isAdmin) {
+                            return <Link
+                                key={`navLink-Admin`}
+                                href={link.href}
+                                className={clsx(
+                                    'text-white content-center hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 h-12',
+                                    {
+                                        'text-white text-opacity-10': pathname === link.href
+                                    }
+                                )}
+                            >
+                                {link.title}
+                            </Link>;
+                        } else {
+                            return;
+                        }
+                    }
                     return <Link
                         key={`navLink-${link.title}`}
                         href={link.href}
@@ -125,6 +155,7 @@ export default function WebNav() {
                     >
                         {link.title}
                     </Link>;
+
                 })
             }
         </div >

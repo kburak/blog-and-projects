@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import makeSlug from './makeSlug';
 import normalizeFormData from './normalizeFormData';
 import normalizeValidationErrors from './normalizeValidationErrors';
-import { signIn } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
 const ImageSchema = z.object({
@@ -497,3 +497,8 @@ export async function authenticate(prevState: any, formData: FormData) {
     }
 }
 
+export async function handleSignOut(){
+    await signOut({
+        redirectTo: "/",
+    });
+}

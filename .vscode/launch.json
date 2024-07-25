@@ -3,7 +3,7 @@
     "configurations": [
       {
         "name": "Attach by Process ID",
-        "processId": "48484" /* "${command:PickProcess}" */,
+        "processId": "53732" /* "${command:PickProcess}" */,
         "request": "attach",
         "skipFiles": [
           "<node_internals>/**"
