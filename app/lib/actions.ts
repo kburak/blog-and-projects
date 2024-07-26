@@ -228,7 +228,7 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                     dbUpdates.push(p);
                 }
 
-            } else if (cur?.dbUpdate === "on" && (!cur.dbDelete || cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+            } else if (cur?.dbUpdate === "on" && (!cur.dbDelete && cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
 
                 // Throw error if id is missing
                 if (!id) throw Error(`Missing blog content id`);
@@ -474,6 +474,151 @@ export async function createProject(prevState: State | undefined, formData: Form
     // Redirect user to the new blog page
     // redirect internally throws an error so it should be called outside of try/catch blocks.
     redirect(`/project/${slug}`);
+
+}
+
+export async function editProject(postData: string[], prevState: State | undefined, formData: FormData) {
+    console.log(prevState, formData);
+
+    const [postId, postSlug] = postData;
+
+    // Normalize form data
+    const normalizedFormData = normalizeFormData(formData, 'project');
+
+    // Validate data
+    const validationResult = ProjectSchema.safeParse(normalizedFormData);
+
+    // Validation failed, normalize error data and return errors in state.
+    if (!validationResult.success) {
+
+        const pResult = normalizeValidationErrors(validationResult?.error.errors);
+
+        console.log("pResult", pResult)
+
+        return {
+            errors: pResult,
+            message: 'Missing Fields. Failed to Create Project.'
+        }
+    }
+
+    // console.log("validatedData", validationResult.data);
+
+    const dbUpdates: Promise<any>[] = [];
+
+    try {
+
+        // DELETE, UPDATE, INSERT CONTENT DATA
+        for (let i = 0; i < validationResult.data.content.length; i++) {
+
+            const cur = validationResult.data.content[i];
+            const { type, id } = cur;
+
+            if (cur?.dbDelete === "on") { // Is dbDelete provided for item?
+
+                // Throw error if id is missing
+                if (!id) throw Error(`Missing project content id`);
+                // Delete content
+                if (type === "image") {
+                    const p = sql`DELETE FROM image WHERE id = ${id}`;
+                    dbUpdates.push(p);
+                } else if (type === "text") {
+                    const p = sql`DELETE FROM text WHERE id = ${id}`;
+                    dbUpdates.push(p);
+                } else if (type === "code") {
+                    const p = sql`DELETE FROM codesnippet WHERE id = ${id}`;
+                    dbUpdates.push(p);
+                }
+            } else if (cur?.dbUpdate === "on" && (!cur.dbDelete && cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+
+                // Throw error if id is missing
+                if (!id) throw Error(`Missing project content id`);
+
+                // Update content
+                if (type === "image") {
+                    const updateImage = sql`
+                    UPDATE image set ${sql(cur, 'url', 'caption', 'size')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateImage);
+                } else if (type === "text") {
+                    const updateText = sql`
+                    UPDATE text set ${sql(cur, 'content', 'size', 'style')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateText);
+                } else if (type === "code") {
+                    const updateCode = sql`
+                    UPDATE codesnippet set ${sql(cur, 'code', 'language')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateCode);
+                }
+
+            } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
+
+                // Insert content
+                if (type === "image") {
+                    const { url, caption, size: imageSize } = cur;
+                    const insertImage = sql`
+                    INSERT INTO image (postid, url, caption, size, position)
+                    VALUES (${postId}, ${url}, ${caption}, ${imageSize}, ${i})
+                    `;
+                    dbUpdates.push(insertImage);
+                } else if (type === "text") {
+                    const { content: textContent, size: textSize, style: textStyle } = cur;
+                    const insertText = sql`
+                    INSERT INTO text (postid, size, style, word_count, content, position)
+                    VALUES (${postId}, ${textSize}, ${textStyle}, ${textContent.length}, ${textContent}, ${i})
+                    `;
+                    dbUpdates.push(insertText);
+                } else if (type === "code") {
+                    const { code, language } = cur;
+                    const insertCode = sql`
+                    INSERT INTO codesnippet (postid, language, code, position )
+                    VALUES (${postId}, ${language}, ${code}, ${i})
+                    `;
+                    dbUpdates.push(insertCode);
+                }
+
+            }
+
+        }
+
+        // UPDATE PROJECTPOST DATA (title, summary, updatedAt, etc.)
+        const { title, summary, header } = validationResult.data;
+        const updatedat = new Date(Date.now()).toISOString();
+        const updateProject = sql`
+        UPDATE post set ${sql({
+            title,
+            summary,
+            updatedat,
+            header
+        }, 'title', 'summary', 'updatedat', 'header')}
+        WHERE id = ${postId}
+        `;
+        dbUpdates.push(updateProject);
+
+        // WAIT FOR ALL PROMISES to resolve
+        await Promise.all(dbUpdates);
+
+    } catch (e) {
+        console.error("Update project post failed", e);
+        return {
+            message: "Update project post failed",
+            errors: {}
+        }
+    }
+
+    // Revalidate path / Clear cache because the project is newly created!!!
+    revalidatePath(`/project/${postSlug}`);
+
+    // Redirect user to the new project page
+    // redirect internally throws an error so it should be called outside of try/catch blocks.
+    console.log("Redirect to:", `/project/${postSlug}`);
+    redirect(`/project/${postSlug}`);
 
 }
 

@@ -28,9 +28,8 @@ const links = [
 
 const MOBILE_NAV_WIDTH = 600;
 
-export default function WebNav(props: { isAdmin: boolean }) {
+export default function WebNav({ isAdmin }: { isAdmin: boolean }) {
     const pathname = usePathname();
-    const { isAdmin } = props;
     const [showMobileNav, setShowMobileNav] = useState(false);
     const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 

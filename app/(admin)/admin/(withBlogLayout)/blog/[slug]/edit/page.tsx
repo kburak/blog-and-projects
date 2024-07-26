@@ -1,10 +1,10 @@
-import { getBlog } from "@/app/lib/data";
+import { getPost } from "@/app/lib/data";
 import EditBlogForm from "@/app/components/edit-form-blog";
 
 export default async function Page({ params: { slug } }: { params: { slug: string } }) {
 
     // Get post data with content
-    const blogData = await getBlog(slug);
+    const blogData = await getPost(slug);
 
     return (
         <div className='w-full md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto mt-20'>
