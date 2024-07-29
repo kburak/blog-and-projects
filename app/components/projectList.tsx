@@ -20,26 +20,32 @@ export default async function ProjectList() {
                     <div id="projectList-Posts" className="w-full gap-4 mt-4">
                         {projects?.map((p, idx) => {
                             return <div id={`project-${idx}`}
-                                className="md:flex md:flex-row md:min-h-36 w-full border-blue-100 border-solid border-2 rounded-xl overflow-hidden mb-2"
+                                className="md:flex md:flex-row min-h-36 w-full border-blue-100 border-solid border-2 rounded-xl overflow-hidden mb-2"
                                 key={`project-${p.slug}`}
                             >
-                                <div id="projectImage-Wrap" className='relative w-full h-40 md:w-48 md:min-w-48'>
-                                    <Image
-                                        className="object-cover"
-                                        src="https://cdn.pixabay.com/photo/2024/06/20/17/03/fishing-8842590_1280.jpg"
-                                        quality={100}
-                                        alt="Placeholder image"
-                                        fill={true}
-                                    />
-                                </div>
+
+                                {p.header &&
+                                    <div id="projectImage-Wrap" className='relative w-full h-40 md:w-48 md:min-w-48'>
+                                        <Image
+                                            className="object-cover"
+                                            src="https://cdn.pixabay.com/photo/2024/06/20/17/03/fishing-8842590_1280.jpg"
+                                            quality={100}
+                                            alt="Placeholder image"
+                                            fill={true}
+                                        />
+                                    </div>
+                                }
+
                                 <div id="projectContent-Wrap" className='p-2 md:p-4 flex w-full'>
                                     <div className="flex-grow relative">
                                         <h2 className="text-xl text-blue-700">{p.title}</h2>
                                         <p>{p.summary}</p>
-                                        <Link href={p.projecturl} className="hidden md:block md:absolute md:bottom-0">
-                                            <LinkIcon className="w-5 inline mr-2"/>
-                                            {p.projecturl}
-                                        </Link>
+                                        {p.projecturl &&
+                                            <Link href={p.projecturl} className="hidden md:block md:absolute md:bottom-0">
+                                                <LinkIcon className="w-5 inline mr-2" />
+                                                {p.projecturl}
+                                            </Link>
+                                        }
                                     </div>
                                     <Link href={`/project/${p.slug}`} className="mb-5">
                                         <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
