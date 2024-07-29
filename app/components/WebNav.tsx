@@ -84,7 +84,7 @@ export default function WebNav({ isAdmin }: { isAdmin: boolean }) {
 
                 // Scrolling down or up?
                 if (prevState.showNav && window.scrollY > scrolled.current && window.scrollY > MOBILE_NAV_HIDE) {
-                    // Not yet hidden and Scrolling down and exceeded the limit(already scolled more than 100px)?
+                    // Not yet hidden and Scrolling down and Already scolled more than MOBILE_NAV_HIDE px?
                     return {
                         ...prevState,
                         showNav: false // Hide navigation
