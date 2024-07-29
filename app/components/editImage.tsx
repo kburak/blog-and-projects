@@ -1,6 +1,8 @@
 import FlexTextArea from "./flexTextArea";
 import Image from 'next/image';
 import imageSizeMap from "../lib/imageSizeMap";
+import { useState, useEffect } from "react";
+import fetch from 'node-fetch';
 
 export default function editImage({
     type,
@@ -30,6 +32,8 @@ export default function editImage({
     errors: { [key: string]: string }
 }) {
 
+    const [renderImage, setRenderImage] = useState(false);
+
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
         remove("image", index, false, dbInsert);
@@ -42,6 +46,8 @@ export default function editImage({
 
     function handleUrlUpdate(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
+        // Set renderImage to false with every url change so that it can be revalidated.
+        setRenderImage(false);
         update("image", index, e.target?.value, caption, size);
     }
 
@@ -55,14 +61,36 @@ export default function editImage({
         update("image", index, url, caption, e.target?.value);
     }
 
+    async function validateImgUrl() {
+        // console.log("Run validateImgUrl");
+        try {
+            if (url) {
+                const res = await fetch(url);
+                if (res.ok === true) {
+                    // Show / Render image
+                    setRenderImage(true);
+                }
+            }
+        } catch (e) {
+            setRenderImage(false);
+        }
+    }
+
+    useEffect(() => {
+
+        // Validate image url every time url changes
+        validateImgUrl();
+
+    }, [url]);
+
     return (
         <div className="p-4 relative">{/* // If to be deleted hide content. */}
             <p>{type?.toUpperCase()}</p>
             <input type="checkbox" name={`${index}-${type}-dbUpdate`} checked={dbUpdate} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbDelete`} checked={dbDelete} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
             <input type="checkbox" name={`${index}-${type}-dbInsert`} checked={dbInsert} readOnly /> {/* Not submitted when false. When checked, submitted to server as 'on' if no value provided. */}
-            <input type="text" name={`${index}-${type}-id`} value={id} readOnly /* hidden *//>
-            {url &&
+            <input type="text" name={`${index}-${type}-id`} value={id} readOnly /* hidden */ />
+            {url && renderImage &&
                 <Image
                     src={url}
                     width={imageSizeMap[size || "large"].width}
