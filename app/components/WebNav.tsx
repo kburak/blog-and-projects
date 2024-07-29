@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { AcademicCapIcon } from '@heroicons/react/24/outline';
 
 const links = [
     {
@@ -27,10 +26,10 @@ const links = [
 ];
 
 const MOBILE_NAV_WIDTH = 600;
-const MOBILE_NAV_HIDE = 100;
+const MOBILE_NAV_HIDE = 200;
 
 export default function WebNav({ isAdmin }: { isAdmin: boolean }) {
-    console.log("RENDER WEBNAV");
+    // console.log("RENDER WEBNAV");
     const pathname = usePathname();
     const [navState, setNavState] = useState({
         showHam: false, // Show and hide hamburger menu
