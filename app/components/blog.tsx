@@ -86,6 +86,19 @@ export default async function Blog(props: { slug: string }) {
                                     {code}
                                 </SyntaxHighlighter>
                             </div>
+                        } else if (c.contenttype === "iframe") {
+                            const { iframetype, url, title } = c.custom_attr;
+                            return <div className='text-xs md:text-sm w-full' key={`${idx}-iframe`}>
+                                <iframe
+                                    width="100%"
+                                    height="315"
+                                    src={url}
+                                    title={title}
+                                    allow={iframetype === "video" ? "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" : ""}
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allowFullScreen={true}>
+                                </iframe>
+                            </div>
                         }
                     })
                 }

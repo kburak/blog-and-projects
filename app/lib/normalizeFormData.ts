@@ -24,8 +24,8 @@ export default function normalizeFormData(formData: FormData, postType: "blog" |
     for (let data of formData.entries()) {
         const [key, value] = data;
 
-        // Does key contain image, text or code? (name attribute of element)
-        if (["image", "text", "code"].includes(key.split('-')[1])) {
+        // Does key contain image, text, code, iframe? (name attribute of element)
+        if (["image", "text", "code", "iframe"].includes(key.split('-')[1])) {
             // Extract index, type, field
             const index: number = parseInt(key.split('-')[0]);
             const typeName: string = key.split('-')[1];

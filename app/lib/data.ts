@@ -88,6 +88,16 @@ export async function getPost(slug: string) {
             json_build_object('language', language, 'code', code) as custom_attr
             FROM codesnippet
             WHERE postId = ${id}
+
+            UNION ALL
+
+            SELECT 
+            id,
+            position,
+            'iframe' as contentType,
+            json_build_object('iframetype', iframetype, 'url', url, 'title', title) as custom_attr
+            FROM iframe
+            WHERE postId = ${id}
             ORDER BY position ASC`
                 ;
 

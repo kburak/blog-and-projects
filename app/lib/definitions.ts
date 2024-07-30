@@ -10,7 +10,9 @@ export type ContentType = {
     size?: string;
     dbUpdate?: boolean,
     dbDelete?: boolean,
-    dbInsert?: boolean
+    dbInsert?: boolean,
+    iframetype?: string,
+    title?: string,
 };
 
 export type Post = "Project" | "Blog";
