@@ -1,4 +1,4 @@
-import WebNav from '../../components/WebNav';
+import WebMainNav from '../../components/WebMainNav';
 import { auth } from '@/auth';
 
 export default async function MainLayout({
@@ -9,7 +9,7 @@ export default async function MainLayout({
     const session = await auth();
     return (
         <div>
-            <WebNav isAdmin={!!session?.user} />
+            <WebMainNav isAdmin={!!session?.user} />
             {children}
         </div>
     );
