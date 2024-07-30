@@ -42,7 +42,7 @@ export default function AdminNav() {
                             action={() => {
                                 handleSignOut();
                             }}
-                            className='inline text-white hover:bg-gray-100 hover:text-red-600 md:flex-none md:justify-start px-3 md:px-3 h-12'
+                            className='inline content-center text-white hover:bg-gray-100 hover:text-red-600 md:flex-none md:justify-start px-3 md:px-3 h-12'
                         >
                             <button>
                                 <LinkIcon className="w-6 mr-auto ml-auto mt-3 md:mt-0" />
