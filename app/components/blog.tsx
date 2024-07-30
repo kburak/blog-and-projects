@@ -31,7 +31,7 @@ export default async function Blog(props: { slug: string }) {
     const { title, summary, header, createdAt, updatedAt, content } = blogData;
 
     return (
-        <div className='p-6 md:max-w-2xl lg:max-w-4xl mt-0 mb-0 ml-auto mr-auto'>
+        <div className='p-6 md:max-w-2xl lg:max-w-3xl mt-0 mb-0 ml-auto mr-auto'>
             {/* Header section */}
             <h1 className="font-bold text-3xl pb-6 pt-16 pb-10 md:pt-16 md:pb-8">{title}</h1>
             <div id="blog-image-wrap" className="relative w-full h-64 pt-2 pb-2 mt-0 ml-auto mr-auto">

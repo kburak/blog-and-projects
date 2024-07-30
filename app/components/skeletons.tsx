@@ -89,14 +89,14 @@ export function BlogListSkeleton() {
 
 export function BlogSkeleton() {
   return <div>
-    <div className={`${shimmer} relative overflow-hidden p-6 md:max-w-2xl lg:max-w-4xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
+    <div className={`${shimmer} relative overflow-hidden p-6 md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
       <div className="flex flex-col w-full items-center">
         <div className="w-full rounded-md h-12 bg-gray-200 mb-4"></div>
         <div className="w-full rounded-md h-64 bg-gray-200 mt-2"></div>
       </div>
     </div>
 
-    <div className={`${shimmer} flex flex-col items-center relative overflow-hidden pl-6 md:max-w-2xl lg:max-w-4xl pr-6 shadow-sm pb-10 md:pb-5 mt-6 ml-auto mr-auto`}>
+    <div className={`${shimmer} flex flex-col items-center relative overflow-hidden pl-6 md:max-w-2xl lg:max-w-3xl pr-6 shadow-sm pb-10 md:pb-5 mt-6 ml-auto mr-auto`}>
       <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
       <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
       <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
@@ -119,31 +119,28 @@ export function BlogSkeleton() {
 }
 
 export function ProjectSkeleton() {
-  return <div>
-    <div className={`${shimmer} relative overflow-hidden p-6 pt-10 md:pt-12 mt-12`}>
-      <div className="flex flex-col w-full items-center">
-        <div className="w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-12 bg-gray-200 mb-4"></div>
-        <div className="w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-8 bg-gray-200 mt-2"></div>
-      </div>
+  return <div className={`${shimmer} relative overflow-hidden p-6 md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
+    <div className="flex flex-col w-full items-center pl-6 pr-6">
+      <div className="w-full rounded-md h-12 bg-gray-100 mb-4"></div>
     </div>
 
     <div className={`${shimmer} flex flex-col items-center relative overflow-hidden pl-6 pr-6 shadow-sm pb-10 md:pb-5 mt-6`}>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
       <div className="bg-gray-100 w-64 h-6 rounded-md bg-gray-100 mb-4"></div>
 
       <div className="mt-2 mb-2"></div>
 
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-48 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-48 bg-gray-100 mb-4"></div>
 
       <div className="mt-2 mb-2"></div>
 
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
-      <div className="bg-gray-100 w-full md:w-3/4 rounded-md lg:w-3/5 xl:w-1/2 h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
       <div className="bg-gray-100 w-64 h-6 rounded-md bg-gray-100 mb-4"></div>
     </div>
   </div>
