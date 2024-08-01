@@ -29,9 +29,11 @@ export default async function ProjectList() {
                                         <Image
                                             className="object-cover"
                                             src="https://cdn.pixabay.com/photo/2024/06/20/17/03/fishing-8842590_1280.jpg"
-                                            quality={100}
+                                            quality={75}
                                             alt="Placeholder image"
                                             fill={true}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            priority
                                         />
                                     </div>
                                 }

@@ -23,6 +23,7 @@ export async function getAllPosts(query: string, postType: Post) {
             WHERE userId = ${userId}
             AND posttype = ${postType}
             AND title ILIKE ${`%${query}%`}
+            ORDER BY createdat DESC
             `;
         } else {
             posts = await sql`
@@ -31,6 +32,7 @@ export async function getAllPosts(query: string, postType: Post) {
             FROM post
             WHERE userId = ${userId}
             AND posttype = ${postType}
+            ORDER BY createdat DESC
             `;
         }
 

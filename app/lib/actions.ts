@@ -246,6 +246,9 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                 } else if (type === "code") {
                     const p = sql`DELETE FROM codesnippet WHERE id = ${id}`;
                     dbUpdates.push(p);
+                } else if (type === "iframe") {
+                    const p = sql`DELETE FROM iframe WHERE id = ${id}`;
+                    dbUpdates.push(p);
                 }
 
             } else if (cur?.dbUpdate === "on" && (!cur.dbDelete && cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
@@ -275,6 +278,13 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                     WHERE id = ${id}
                     `;
                     dbUpdates.push(updateCode);
+                } else if (type === "iframe") {
+                    const updateIframe = sql`
+                    UPDATE iframe set ${sql(cur, 'iframetype', 'url', 'title')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateIframe);
                 }
 
             } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
@@ -297,10 +307,17 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                 } else if (type === "code") {
                     const { code, language } = cur;
                     const insertCode = sql`
-                    INSERT INTO codesnippet (postid, language, code, position )
+                    INSERT INTO codesnippet (postid, language, code, position)
                     VALUES (${postId}, ${language}, ${code}, ${i})
                     `;
                     dbUpdates.push(insertCode);
+                } else if (type === "iframe") {
+                    const { iframetype, url, title } = cur;
+                    const insertIframe = sql`
+                    INSERT INTO iframe (postid, iframetype, url, title, position)
+                    VALUES (${postId}, ${iframetype}, ${url}, ${title}, ${i})
+                    `;
+                    dbUpdates.push(insertIframe);
                 }
 
             }

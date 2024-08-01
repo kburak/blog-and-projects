@@ -15,6 +15,9 @@ export default async function BlogList() {
                     quality={100}
                     alt="Placeholder image"
                     fill={true}
+                    priority={true}
+                /* You should add the priority property to the image that will be the Largest Contentful Paint (LCP) element for each page. 
+                Doing so allows Next.js to specially prioritize the image for loading (e.g. through preload tags or priority hints), leading to a meaningful boost in LCP. */
                 />
                 <div className="relative bg-white bg-opacity-75 h-auto">
                     <p className="text-blue-700 text-4xl">Highlight TBD</p>
@@ -36,20 +39,32 @@ export default async function BlogList() {
                                 className="w-full p-2 md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-1rem)] lg:p-0"
                                 key={`blogPost-${b.slug}`}
                             >
-                                <div id="blogList-image-wrap" className="relative w-full h-48 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0">
-                                    <Link href={`/blog/${b.slug}`} className="mb-5">
-                                        <Image
-                                            className="object-cover"
-                                            src={b.header}
-                                            quality={100}
-                                            alt={b.title}
-                                            fill={true}
-                                        />
-                                    </Link>
-                                </div>
-                                <div className="flex flex-row mt-2 mb-5">
+                                <Link
+                                    id="blogList-image-wrap"
+                                    className="block relative w-full h-48 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
+                                    href={`/blog/${b.slug}`}
+                                >
+                                    <Image
+                                        className="object-cover"
+                                        src={b.header}
+                                        quality={75}
+                                        alt={b.title}
+                                        fill={true}
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        /* 
+                                            (max-width: 768px) 100vw: If the viewport width is 768 pixels or less, the image should take up 100% of the viewport width (100vw).
+                                            (max-width: 1200px) 50vw: If the viewport width is between 769 pixels and 1200 pixels, the image should take up 50% of the viewport width (50vw).
+                                            33vw: If the viewport width is greater than 1200 pixels, the image should take up 33% of the viewport width (33vw). 
+                                        */
+                                        priority={false}
+                                    />
+                                </Link>
+
+                                <div className="flex mt-2 mb-5">
                                     <div className="flex-grow">
-                                        <h2 className="text-xl text-blue-700">{b.title}</h2>
+                                        <Link href={`/blog/${b.slug}`}>
+                                            <h2 className="text-xl text-blue-700">{b.title}</h2>
+                                        </Link>
                                         <p>{b.summary}</p>
                                     </div>
                                     <Link href={`/blog/${b.slug}`} className="mb-5">

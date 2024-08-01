@@ -43,6 +43,7 @@ export default async function Blog(props: { slug: string }) {
                         quality={100}
                         alt={title}
                         fill={true}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                 </div>
             }
@@ -71,6 +72,7 @@ export default async function Blog(props: { slug: string }) {
                                     height={imageSizeMap[size].height}
                                     className="pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
                                     alt={caption}
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                             </div>;
                         } else if (c.contenttype === "text") {
