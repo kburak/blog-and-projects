@@ -35,7 +35,7 @@ export default async function Page({ searchParams }:
                         <PencilIcon className="w-5" />
                     </Link>
                     {/* `/project/${b.slug}` */}
-                    <DeleteButton postId={b.id} />
+                    <DeleteButton postId={b.id} posttype="project" />
                 </div>
 
             })}

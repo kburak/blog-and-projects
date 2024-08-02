@@ -6,6 +6,7 @@ import { State, editProject } from "../lib/actions";
 import EditImage from "./editImage";
 import EditText from "./editText";
 import EditCode from "./editCode";
+import EditIFrame from "./editIframe";
 import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
 
@@ -74,6 +75,18 @@ export default function EditProjectForm(props: any) {
                         dbInsert: false
                     });
                     break;
+                case 'iframe':
+                    populatedState.push({
+                        id: c.id,
+                        type: "iframe",
+                        iframetype: c.custom_attr.iframetype,
+                        url: c.custom_attr.url,
+                        title: c.custom_attr.title,
+                        dbUpdate: false,
+                        dbDelete: false,
+                        dbInsert: false
+                    });
+                    break;
             }
         }
 
@@ -84,7 +97,8 @@ export default function EditProjectForm(props: any) {
         const typeMap: { [key: string]: ContentType } = {
             "image": { type: "image", url: "", caption: "", size: "large", dbUpdate: false, dbDelete: false, dbInsert: true },
             "text": { type: "text", content: "", size: "p", style: "normal", dbUpdate: false, dbDelete: false, dbInsert: true },
-            "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false, dbInsert: true }
+            "code": { type: "code", code: "", language: "", dbUpdate: false, dbDelete: false, dbInsert: true },
+            "iframe": { type: "iframe", iframetype: "video", url: "", title: "", dbDelete: false, dbInsert: true }
         }
 
         setContent((prevState) => {
@@ -154,6 +168,16 @@ export default function EditProjectForm(props: any) {
             setContent(prevState => {
                 return prevState.map((sC, sIdx) => {
                     if (sIdx === index && sC.type === type) return { ...sC, code, language, dbUpdate: !sC.dbInsert && true }; // Set dbUpdate to true only if item existed already.
+                    return sC;
+                })
+            });
+        } else if (type === "iframe") {
+            const [iframetype, url, title] = args;
+
+            // Update contentState with new parameters
+            setContent(prevState => {
+                return prevState.map((sC, sIdx) => {
+                    if (sIdx === index && sC.type === type) return { ...sC, iframetype, url, title, dbUpdate: !sC.dbInsert && true }; // Set dbUpdate to true only if item existed already.
                     return sC;
                 })
             });
@@ -280,6 +304,25 @@ export default function EditProjectForm(props: any) {
                             />
                         </div>
                     );
+                    if (c.type === "iframe") return (
+                        <div key={`content-${idx}`} className="border-2 border-dashed border-teal-700">
+                            <EditIFrame
+                                key={`emptyIframe-${idx}`}
+                                type={c.type}
+                                id={c.id}
+                                index={idx}
+                                dbUpdate={c.dbUpdate}
+                                dbDelete={c.dbDelete}
+                                dbInsert={c.dbInsert}
+                                iframetype={c.iframetype}
+                                url={c.url}
+                                title={c.title}
+                                update={editContent}
+                                remove={removeContent}
+                                errors={state?.errors?.content && state.errors.content[idx] && state.errors.content[idx]}
+                            />
+                        </div>
+                    );
                 })
             }
 
@@ -287,7 +330,7 @@ export default function EditProjectForm(props: any) {
             <div id='add-new-content'>
                 {/* Helper for Selecting content type*/}
                 {
-                    ["image", "text", "code"].map(c_type => {
+                    ["image", "text", "code", "iframe"].map(c_type => {
                         return <button
                             key={`button-${c_type}`}
                             className="h-10 rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"

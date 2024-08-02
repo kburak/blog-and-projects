@@ -28,22 +28,22 @@ export default function editCode({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("code", index, false, dbInsert);
+        remove(type, index, false, dbInsert);
     }
 
     function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("code", index, true);
+        remove(type, index, true);
     }
 
     function handleCodeUpdate(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
-        update("code", index, e.target?.value, language);
+        update(type, index, e.target?.value, language);
     }
 
     function handleLanguageUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
         e.preventDefault();
-        update("code", index, code, e.target?.value);
+        update(type, index, code, e.target?.value);
     }
 
     return (

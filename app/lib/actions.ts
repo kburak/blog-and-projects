@@ -251,7 +251,7 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                     dbUpdates.push(p);
                 }
 
-            } else if (cur?.dbUpdate === "on" && (!cur.dbDelete && cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+            } else if (cur?.dbUpdate === "on" && !cur.dbDelete) { // Is dbUpdate provided for item and not dbDelete?
 
                 // Throw error if id is missing
                 if (!id) throw Error(`Missing blog content id`);
@@ -359,7 +359,9 @@ export async function editBlog(postData: string[], prevState: State | undefined,
 
 }
 
-export async function deleteBlog(postId: string) {
+export async function deletePost(postData: string[]) {
+
+    const [postId, posttype] = postData;
     if (!postId) throw new Error("No postId provided");
 
     try {
@@ -379,6 +381,10 @@ export async function deleteBlog(postId: string) {
             DELETE FROM codesnippet 
             WHERE postId = ${postId} 
         `);
+        promises.push(sql`
+            DELETE FROM iframe 
+            WHERE postId = ${postId} 
+        `);
 
         // Remove blog post
         promises.push(sql`
@@ -391,10 +397,10 @@ export async function deleteBlog(postId: string) {
 
         // Since this action is being called in the /dashboard/invoices path, you don't need to call redirect. 
         // Calling revalidatePath will trigger a new server request and re-render the table.
-        revalidatePath('/admin/blog');
+        revalidatePath(`/admin/${posttype}`);
 
     } catch (e) {
-        console.error("Delete Blog Action failed.", e);
+        console.error(`Delete ${posttype[0].toUpperCase() + posttype.substring(1)} Action failed.`, e);
     }
 }
 
@@ -491,6 +497,15 @@ export async function createProject(prevState: State | undefined, formData: Form
                     `;
 
                 dbUpdates.push(insertCode);
+            } else if (type === "iframe") {
+                const { iframetype, url, title } = cur;
+
+                const insertIframe = sql`
+                    INSERT INTO iframe (postid, iframetype, url, title, position)
+                    VALUES (${id}, ${iframetype}, ${url}, ${title}, ${i})
+                    `;
+
+                dbUpdates.push(insertIframe);
             }
 
         }
@@ -564,8 +579,12 @@ export async function editProject(postData: string[], prevState: State | undefin
                 } else if (type === "code") {
                     const p = sql`DELETE FROM codesnippet WHERE id = ${id}`;
                     dbUpdates.push(p);
+                } else if (type === "iframe") {
+                    const p = sql`DELETE FROM iframe WHERE id = ${id}`;
+                    dbUpdates.push(p);
                 }
-            } else if (cur?.dbUpdate === "on" && (!cur.dbDelete && cur.dbDelete !== "on")) { // Is dbUpdate provided for item and not dbDelete?
+
+            } else if (cur?.dbUpdate === "on" && !cur.dbDelete) { // Is dbUpdate provided for item and not dbDelete?
 
                 // Throw error if id is missing
                 if (!id) throw Error(`Missing project content id`);
@@ -592,6 +611,13 @@ export async function editProject(postData: string[], prevState: State | undefin
                     WHERE id = ${id}
                     `;
                     dbUpdates.push(updateCode);
+                } else if (type === "iframe") {
+                    const updateIframe = sql`
+                    UPDATE iframe set ${sql(cur, 'iframetype', 'url', 'title')
+                        }
+                    WHERE id = ${id}
+                    `;
+                    dbUpdates.push(updateIframe);
                 }
 
             } else if (cur?.dbInsert === "on") { // Is dbInsert provided for item?
@@ -618,6 +644,13 @@ export async function editProject(postData: string[], prevState: State | undefin
                     VALUES (${postId}, ${language}, ${code}, ${i})
                     `;
                     dbUpdates.push(insertCode);
+                } else if (type === "iframe") {
+                    const { iframetype, url, title } = cur;
+                    const insertIframe = sql`
+                    INSERT INTO iframe (postid, iframetype, url, title, position)
+                    VALUES (${postId}, ${iframetype}, ${url}, ${title}, ${i})
+                    `;
+                    dbUpdates.push(insertIframe);
                 }
 
             }
@@ -679,7 +712,7 @@ export async function authenticate(prevState: any, formData: FormData) {
     }
 }
 
-export async function handleSignOut(){
+export async function handleSignOut() {
     await signOut({
         redirectTo: "/",
     });

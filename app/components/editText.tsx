@@ -30,27 +30,27 @@ export default function editText({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("text", index, false, dbInsert);
+        remove(type, index, false, dbInsert);
     }
 
     function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("text", index, true);
+        remove(type, index, true);
     }
 
     function handleContentUpdate(e: React.ChangeEvent<HTMLTextAreaElement>) {
         e.preventDefault();
-        update("text", index, e.target?.value, size, style);
+        update(type, index, e.target?.value, size, style);
     }
 
     function handleSizeUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
         e.preventDefault();
-        update("text", index, content, e.target?.value, style);
+        update(type, index, content, e.target?.value, style);
     }
 
     function handleStyleUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
         e.preventDefault();
-        update("text", index, content, size, e.target?.value);
+        update(type, index, content, size, e.target?.value);
     }
 
     return (

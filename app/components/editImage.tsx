@@ -36,29 +36,29 @@ export default function editImage({
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("image", index, false, dbInsert);
+        remove(type, index, false, dbInsert);
     }
 
     function handleRemoveRevert(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        remove("image", index, true);
+        remove(type, index, true);
     }
 
     function handleUrlUpdate(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         // Set renderImage to false with every url change so that it can be revalidated.
         setRenderImage(false);
-        update("image", index, e.target?.value, caption, size);
+        update(type, index, e.target?.value, caption, size);
     }
 
     function handleCaptionUpdate(e: React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
-        update("image", index, url, e.target?.value, size);
+        update(type, index, url, e.target?.value, size);
     }
 
     function handleSizeUpdate(e: React.ChangeEvent<HTMLSelectElement>) {
         e.preventDefault();
-        update("image", index, url, caption, e.target?.value);
+        update(type, index, url, caption, e.target?.value);
     }
 
     async function validateImgUrl() {
