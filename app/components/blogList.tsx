@@ -35,14 +35,14 @@ export default async function BlogList() {
                     </div>
                     <div id="blogList-Posts" className="flex flex-wrap justify-center -ml-2 -mr-2 lg:w-3/4 gap-4">
                         {blogPosts?.map((b) => {
-                            return <div
+                            return <Link
                                 className="w-full p-2 md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-1rem)] lg:p-0"
+                                href={`/blog/${b.slug}`}
                                 key={`blogPost-${b.slug}`}
                             >
-                                <Link
+                                <div
                                     id="blogList-image-wrap"
                                     className="block relative w-full h-48 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
-                                    href={`/blog/${b.slug}`}
                                 >
                                     <Image
                                         className="object-cover"
@@ -58,20 +58,19 @@ export default async function BlogList() {
                                         */
                                         priority={false}
                                     />
-                                </Link>
-
-                                <div className="flex mt-2 mb-5">
+                                </div>
+                                <div className="mt-2 mb-5">
+                                    <h2 className="text-xl text-blue-700">{b.title}</h2>
+                                    <p>{b.summary}</p>
+                                </div>
+                                {/* <div className="flex mt-2 mb-5">
                                     <div className="flex-grow">
-                                        <Link href={`/blog/${b.slug}`}>
-                                            <h2 className="text-xl text-blue-700">{b.title}</h2>
-                                        </Link>
+                                        <h2 className="text-xl text-blue-700">{b.title}</h2>
                                         <p>{b.summary}</p>
                                     </div>
-                                    <Link href={`/blog/${b.slug}`} className="mb-5">
-                                        <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
-                                    </Link>
-                                </div>
-                            </div>
+                                    <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
+                                </div> */}
+                            </Link>
                         })}
                     </div>
                 </div>

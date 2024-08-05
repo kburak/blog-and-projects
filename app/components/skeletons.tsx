@@ -119,7 +119,7 @@ export function BlogSkeleton() {
 }
 
 export function ProjectSkeleton() {
-  return <div className={`${shimmer} relative overflow-hidden p-6 md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
+  return <div className={`${shimmer} relative overflow-hidden md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
     <div className="flex flex-col w-full items-center pl-6 pr-6">
       <div className="w-full rounded-md h-12 bg-gray-100 mb-4"></div>
     </div>

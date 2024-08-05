@@ -69,7 +69,8 @@ export default async function Blog(props: { slug: string }) {
                                 return <p
                                     key={`${idx}-text-${split_idx}`}
                                     className={
-                                        `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} pt-2 pb-2`
+                                        `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} 
+                                        leading-relaxed pt-2 pb-2`
                                     }
                                 >
                                     {tc}
