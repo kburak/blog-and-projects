@@ -1,9 +1,8 @@
 import sql from './db';
-import { getSession } from 'next-auth/react';
 import { Post } from './definitions';
 /* import { unstable_noStore as noStore } from 'next/cache'; */
 
-export async function getAllPosts(query: string, postType: Post) {
+export async function getAllPosts(query: string, tags: string[], postType: Post) {
     // Add noStore() here to prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
     // noStore();
@@ -14,8 +13,32 @@ export async function getAllPosts(query: string, postType: Post) {
 
         // await new Promise((resolve) => { setTimeout(resolve, 2000) });
 
+        /*
+            Search posts with query and tags
+            Search posts with only query
+            Search posts with only tags
+            Search without query or tags 
+
+        */
         let posts;
-        if (query) {
+        // Search posts with query and tags
+        if (query && tags.length > 0) {
+            const tagsStr = tags.join();
+            posts = await sql`
+            SELECT
+            *
+            FROM post p
+            JOIN posts_tags pt ON pt.postid = p.id
+            JOIN tag t ON pt.tagid = t.id
+            WHERE p.userId = ${userId}
+            AND p.posttype = ${postType}
+            AND p.title ILIKE ${`%${query}%`}
+            AND t.name IN (${tagsStr})
+            ORDER BY p.createdat DESC
+            `;
+        }
+        // Search posts with only query
+        else if (query) {
             posts = await sql`
             SELECT
             *
@@ -25,7 +48,24 @@ export async function getAllPosts(query: string, postType: Post) {
             AND title ILIKE ${`%${query}%`}
             ORDER BY createdat DESC
             `;
-        } else {
+        }
+        // Search posts with only tags
+        else if (tags.length > 0) {
+            const tagsStr = tags.join();
+            posts = await sql`
+            SELECT
+            *
+            FROM post p
+            JOIN posts_tags pt ON pt.postid = p.id
+            JOIN tag t ON pt.tagid = t.id
+            WHERE p.userId = ${userId}
+            AND p.posttype = ${postType}
+            AND t.name IN (${tagsStr})
+            ORDER BY p.createdat DESC
+            `;
+        }
+        // Search without query or tags 
+        else {
             posts = await sql`
             SELECT
             *
@@ -153,4 +193,25 @@ export async function getPostMetadata(slug: string) {
     }
 
 
+}
+
+export async function getAllTags(postType: string) {
+    try {
+
+        // Get all tags per postType
+        const tags = await sql`SELECT 
+        DISTINCT name
+        FROM tag t
+        JOIN posts_tags pt ON pt.tagid = t.id
+        JOIN post p ON pt.postid = p.id
+        WHERE p.posttype = ${postType}
+        `;
+
+        if(!tags) return [];
+
+        return tags;
+
+    } catch (e) {
+        console.error("Couldn't get tags", e);
+    }
 }

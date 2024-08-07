@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 
 export default async function ProjectList() {
-    const projects = await getAllPosts('', 'Project');
+    const projects = await getAllPosts('', [], 'Project');
 
     return (
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto mt-12">

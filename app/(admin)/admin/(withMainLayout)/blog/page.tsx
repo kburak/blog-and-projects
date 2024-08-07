@@ -1,18 +1,22 @@
-import { getAllPosts } from "@/app/lib/data";
+import { getAllPosts, getAllTags } from "@/app/lib/data";
 import Link from "next/link";
 import { PencilIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Search from '@/app/components/search';
 import DeleteButton from "@/app/components/deleteButton";
+import TagFilter from "@/app/components/tagFilter";
 
 export default async function Page({ searchParams }:
     {
         searchParams?: {
-            query?: string
+            query?: string,
+            tags?: string,
         }
     }) {
 
-    const query = searchParams?.query || '';
-    const blogPosts = await getAllPosts(query, "Blog");
+    const searchQuery = searchParams?.query || '';
+    const searchTags = searchParams?.tags?.split(',') || [];
+    const blogPosts = await getAllPosts(searchQuery, searchTags, "Blog");
+    const blogTags = await getAllTags("Blog");
 
     return (
         <div id="blogList-Posts" className="flex flex-col justify-center ml-auto mr-auto pl-2 pr-2 md:w-3/5 gap-4 mt-20">
@@ -26,6 +30,7 @@ export default async function Page({ searchParams }:
                     <PlusIcon className="h-5 md:ml-4" />
                 </Link>
             </div>
+            <TagFilter availableTags={blogTags}/>
             {blogPosts?.map((b) => {
                 return <div className="flex" key={`blogPost-${b.slug}`}>
                     <div className="flex-grow">

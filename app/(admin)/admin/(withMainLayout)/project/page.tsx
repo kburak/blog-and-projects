@@ -12,7 +12,7 @@ export default async function Page({ searchParams }:
     }) {
 
     const query = searchParams?.query || '';
-    const projectPosts = await getAllPosts(query, "Project");
+    const projectPosts = await getAllPosts(query, [], "Project");
 
     return (
         <div id="projectList-Posts" className="flex flex-col justify-center ml-auto mr-auto pl-2 pr-2 md:w-3/5 gap-4 mt-20">

@@ -1,10 +1,13 @@
-import { getAllPosts } from "@/app/lib/data";
+import { getAllPosts, getAllTags } from "@/app/lib/data";
 import Link from "next/link";
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
 
 export default async function BlogList() {
-    const blogPosts = await getAllPosts('', 'Blog');
+    const [blogPosts, blogTags] = await Promise.all([
+        getAllPosts('', [], 'Blog'),
+        getAllTags('Blog')
+    ]);
 
     return (
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20">
@@ -30,8 +33,11 @@ export default async function BlogList() {
                 <div id="blogList-Wrap" className="flex flex-wrap justify-between">
                     <div id="blogList-Navigation" className="w-full h-auto lg:w-1/4 lg:h-64 mb-4">
                         <p className="mb-2">Filter by</p>
-                        <span className="mr-1 bg-blue-100 rounded-md p-1">Apple</span>
-                        <span className="mr-1 bg-blue-100 rounded-md p-1">Peach</span>
+                        {
+                            blogTags?.map((tag) => (
+                                <span className="mr-1 bg-blue-100 rounded-md p-1">{tag.name}</span>
+                            ))
+                        }
                     </div>
                     <div id="blogList-Posts" className="flex flex-wrap justify-center -ml-2 -mr-2 lg:w-3/4 gap-4">
                         {blogPosts?.map((b) => {
