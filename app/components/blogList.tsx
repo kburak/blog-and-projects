@@ -2,10 +2,11 @@ import { getAllPosts, getAllTags } from "@/app/lib/data";
 import Link from "next/link";
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
+import TagFilter from "./tagFilter";
 
-export default async function BlogList() {
+export default async function BlogList({ searchQuery, searchTags }: { searchQuery: string, searchTags: string[] }) {
     const [blogPosts, blogTags] = await Promise.all([
-        getAllPosts('', [], 'Blog'),
+        getAllPosts(searchQuery, searchTags, 'Blog'),
         getAllTags('Blog')
     ]);
 
@@ -31,18 +32,11 @@ export default async function BlogList() {
             <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
                 <h1 className="font-bold text-xl pb-4">Blog Articles</h1>
                 <div id="blogList-Wrap" className="flex flex-wrap justify-between">
-                    <div id="blogList-Navigation" className="w-full h-auto lg:w-1/4 lg:h-64 mb-4">
-                        <p className="mb-2">Filter by</p>
-                        {
-                            blogTags?.map((tag) => (
-                                <span className="mr-1 bg-blue-100 rounded-md p-1">{tag.name}</span>
-                            ))
-                        }
-                    </div>
-                    <div id="blogList-Posts" className="flex flex-wrap justify-center -ml-2 -mr-2 lg:w-3/4 gap-4">
+                    <TagFilter availableTags={blogTags} fullWidth={false} />
+                    <div id="blogList-Posts" className="flex flex-wrap justify-start w-full lg:w-3/4 gap-4">
                         {blogPosts?.map((b) => {
                             return <Link
-                                className="w-full p-2 md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-1rem)] lg:p-0"
+                                className="w-full p-2 md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0"
                                 href={`/blog/${b.slug}`}
                                 key={`blogPost-${b.slug}`}
                             >
