@@ -118,6 +118,74 @@ export function BlogSkeleton() {
   </div>
 }
 
+export function ProjectListSkeleton() {
+  return <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto mt-12 shadow-sm relative overflow-hidden`}>
+    <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-10">
+      {/* Header text */}
+      <div className="bg-gray-100 rounded-md w-48 h-8 bg-gray-100 mb-4"></div>
+      {/* Filter by */}
+      <div className="w-24 h-4 bg-gray-100 mb-2"></div>
+      <div className="flex mb-8">
+        <div className="w-24 h-6 bg-gray-100 mr-4"></div>
+        <div className="w-24 h-6 bg-gray-100 mr-4"></div>
+        <div className="w-24 h-6 bg-gray-100 mr-4"></div>
+        <div className="w-24 h-6 bg-gray-100 mr-4"></div>
+      </div>
+      {/* Project Boxes */}
+      <div>
+        <div className="flex flex-wrap justify-between w-full min-h-36 rounded-xl overflow-hidden mb-4 border-gray-100 border-solid border-2">
+          <div className="w-full h-40 md:w-48 md:min-w-48 bg-gray-100"></div>
+          <div className="flex-grow ml-4">
+            <div className="mt-4">
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-8 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-36 h-4 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="bg-gray-100 w-8 h-8 rounded-md bg-gray-100 self-center mt-2 mr-4 mb-4"></div>
+        </div>
+        <div className="flex flex-wrap justify-between w-full min-h-36 rounded-xl overflow-hidden mb-4 border-gray-100 border-solid border-2">
+          <div className="w-full h-40 md:w-48 md:min-w-48 bg-gray-100"></div>
+          <div className="flex-grow ml-4">
+            <div className="mt-4">
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-8 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-36 h-4 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="bg-gray-100 w-8 h-8 rounded-md bg-gray-100 self-center mt-2 mr-4 mb-4"></div>
+        </div>
+        <div className="flex flex-wrap justify-between w-full min-h-36 rounded-xl overflow-hidden mb-4 border-gray-100 border-solid border-2">
+          <div className="w-full h-40 md:w-48 md:min-w-48 bg-gray-100"></div>
+          <div className="flex-grow ml-4">
+            <div className="mt-4">
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-8 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-36 h-4 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="bg-gray-100 w-8 h-8 rounded-md bg-gray-100 self-center mt-2 mr-4 mb-4"></div>
+        </div>
+        <div className="flex flex-wrap justify-between w-full min-h-36 rounded-xl overflow-hidden mb-4 border-gray-100 border-solid border-2">
+          <div className="w-full h-40 md:w-48 md:min-w-48 bg-gray-100"></div>
+          <div className="flex-grow ml-4">
+            <div className="mt-4">
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-8 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-11/12 md:w-9/12 h-4 rounded-md bg-gray-100 mb-4"></div>
+              <div className="bg-gray-100 w-36 h-4 rounded-md bg-gray-100 mb-4"></div>
+            </div>
+          </div>
+          <div className="bg-gray-100 w-8 h-8 rounded-md bg-gray-100 self-center mt-2 mr-4 mb-4"></div>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
 export function ProjectSkeleton() {
   return <div className={`${shimmer} relative overflow-hidden md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
     <div className="flex flex-col w-full items-center pl-6 pr-6">
