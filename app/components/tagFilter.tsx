@@ -1,51 +1,81 @@
 'use client';
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import clsx from "clsx";
 
-export default function TagFilter({ availableTags }: { availableTags: any }) {
+export default function TagFilter({ availableTags, fullWidth }: { availableTags: any, fullWidth: Boolean }) {
     // Get current pathname, searchParams
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    // Function that Handles tag click
+    // Function that Handles tag click - Add / Remove tags from the search params
     function handleClick(clickedTag: string, selected: Boolean) {
-        // Determine if a tag is selected or unselected and add it or remove it from seachParams accordingly
+        // Create new URLSearchParams object with existing searchParams
         const params = new URLSearchParams(searchParams);
-        if (selected) {
-            // Do tags already exist in searchParams?
+
+        // Is the tag selected / should be activated?
+        if (selected) { // Activate / Add clickedTag
+
+            // Do other tags already exist in searchParams?
             if (params.has('tags')) {
-                // Yes, then Add to the existing one
+                // Yes, then Add clickedTag to the existing string
                 const newVal = params.get('tags') + "," + clickedTag;
                 params.set('tags', newVal);
             } else {
                 // No, then just add it
                 params.set('tags', clickedTag);
             }
-        } else {
-            // Do the clicked tag exist in searchParams?
+
+        } else { // Deactivate / Remove clickedTag
+
+            // Does the clickedTag exist in searchParams?
             if (params.has('tags') && params.get('tags')?.includes(clickedTag)) {
-                // Yes, then remove from the existing one
+
+                // Is there more than one tag in search params?
                 if (params.get('tags')?.includes(',')) {
-                    // If there are multiple tags
+                    // Multiple tags, extract clickedTag
                     const newVal = params.get('tags')?.split(',')
                         .filter((t) => t !== clickedTag)
                         .join();
 
-                    if(newVal) params.set('tags', newVal);
+                    if (newVal) params.set('tags', newVal);
                 } else {
-                    // If there is only one tag, just remove it completely.
+                    // One tag, just remove it completely.
                     params.delete('tags');
                 }
+
             }
+
         }
 
         // Call Replace with new searchParams for client-side navigation
         replace(`${pathname}?${params.toString()}`);
     }
 
+    if (!availableTags.length) {
+        return (
+            <div id="tagFilter" className={clsx(
+                "w-full h-auto mb-4",
+                { "lg:w-1/4 lg:h-64": !fullWidth }
+            )}>
+                <p className="mb-2 text-xs">FILTER BY</p>
+                <button
+                    key={`tag-noTag-unselected`}
+                    className="mr-1 bg-gray-100 text-black text-sm rounded-md p-1"
+
+                >
+                    There are no tags...
+                </button>
+            </div>
+        )
+    }
+
     return (
-        <div id="blogList-Navigation" className="w-full h-auto lg:w-1/4 lg:h-64 mb-4">
-            {/* <p className="mb-2">Filter by</p> */}
+        <div id="tagFilter" className={clsx(
+            "w-full h-auto mb-4",
+            { "lg:w-1/4 lg:h-64": !fullWidth }
+        )}>
+            <p className="mb-2 text-xs">FILTER BY</p>
             {
                 availableTags?.map((tag: any) => {
                     // Does the tag.name exist in searchParams?
@@ -53,7 +83,7 @@ export default function TagFilter({ availableTags }: { availableTags: any }) {
                         // Show selected
                         return <button
                             key={`tag-${tag.name}-selected`}
-                            className="mr-1 bg-blue-300 rounded-md p-1"
+                            className="mr-1 bg-blue-900 text-white text-sm rounded-md p-1"
                             onClick={() => { handleClick(tag.name, false) }}
                         >
                             {tag.name}
@@ -62,7 +92,7 @@ export default function TagFilter({ availableTags }: { availableTags: any }) {
                         // Show unselected
                         return <button
                             key={`tag-${tag.name}-unselected`}
-                            className="mr-1 rounded-md p-1"
+                            className="mr-1 rounded-md border text-sm border-gray-200 p-1"
                             onClick={() => { handleClick(tag.name, true) }}
                         >
                             {tag.name}
