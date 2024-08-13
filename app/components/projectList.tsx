@@ -14,7 +14,7 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto mt-12">
             <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
                 <h1 className="font-bold text-2xl pb-4">Projects</h1>
-                <TagFilter availableTags={searchTags} fullWidth={true}/>
+                <TagFilter availableTags={projectTags} fullWidth={true}/>
                 <div id="projectList-Posts" className="w-full gap-4 mt-8">
                     {projectPosts?.map((p, idx) => {
                         return <Link

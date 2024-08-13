@@ -9,6 +9,7 @@ import EditCode from "./editCode";
 import EditIFrame from "./editIframe";
 import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
+import TagSelector from "./TagSelector";
 
 export default function CreateBlogForm() {
     const initialState: State = { message: "", errors: {} };
@@ -144,6 +145,7 @@ export default function CreateBlogForm() {
                 textStyle="normal"
                 error={state?.errors?.header}
             />
+            <TagSelector />
 
             <div id='blog-content'>
 

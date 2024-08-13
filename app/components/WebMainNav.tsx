@@ -126,7 +126,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
 
     if (navState.showHam) {
         return <div className={clsx(
-            'bg-blue-700 bg-opacity-95 flex justify-end items-center fixed w-full h-12 top-0 left-0 z-10',
+            'bg-blue-700 flex justify-end items-center fixed w-full h-12 top-0 left-0 z-10',
             {
                 "hidden": !navState.showNav
             }
@@ -188,7 +188,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
             </div>
         </div>;
     } else {
-        return <div className='bg-blue-700 bg-opacity-95 flex justify-end items-center fixed w-full h-12 top-0 left-0 z-10'>
+        return <div className='bg-blue-700 flex justify-end items-center fixed w-full h-12 top-0 left-0 z-10'>
             {
                 links.map(link => {
                     if (link.title === "Admin") {

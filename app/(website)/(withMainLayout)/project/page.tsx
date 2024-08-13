@@ -14,7 +14,6 @@ export default function Page({ searchParams }:
     return (
         <Suspense fallback={<ProjectListSkeleton />}>
             <ProjectList searchQuery={searchQuery} searchTags={searchTags} />
-            {/* <ProjectListSkeleton /> */}
         </Suspense>
 
     );

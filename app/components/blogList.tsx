@@ -36,7 +36,7 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                     <div id="blogList-Posts" className="flex flex-wrap justify-start w-full lg:w-3/4 gap-4">
                         {blogPosts?.map((b) => {
                             return <Link
-                                className="w-full p-2 md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0"
+                                className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0"
                                 href={`/blog/${b.slug}`}
                                 key={`blogPost-${b.slug}`}
                             >

@@ -47,7 +47,7 @@ export default function WebNav({ goBackLink }: { goBackLink: string }) {
 
     return (
         <div className={clsx(
-            'transition-all ease-in duration-100 bg-blue-700 bg-opacity-95 flex justify-end items-center fixed w-full h-12 left-0 z-10',
+            'transition-all ease-in duration-100 bg-blue-700 flex justify-end items-center fixed w-full h-12 left-0 z-10',
             {
                 "top-0": showNav
             },
