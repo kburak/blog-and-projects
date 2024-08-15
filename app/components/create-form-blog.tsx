@@ -11,7 +11,7 @@ import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
 import TagSelector from "./TagSelector";
 
-export default function CreateBlogForm() {
+export default function CreateBlogForm({ allTags }: { allTags: any[]}) {
     const initialState: State = { message: "", errors: {} };
     const contentInitialState: ContentType[] = [];
     const [state, dispatch] = useFormState(createBlog, initialState);
@@ -145,7 +145,7 @@ export default function CreateBlogForm() {
                 textStyle="normal"
                 error={state?.errors?.header}
             />
-            <TagSelector />
+            <TagSelector allTags={allTags}/>
 
             <div id='blog-content'>
 

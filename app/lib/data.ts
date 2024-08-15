@@ -195,19 +195,27 @@ export async function getPostMetadata(slug: string) {
 
 }
 
-export async function getAllTags(postType: string) {
+export async function getAllTags(postType?: string) {
     try {
+        let tags;
+        if (postType) {
+            // Get all tags per postType that has a relation with a post
+            tags = await sql`SELECT 
+                DISTINCT name
+                FROM tag t
+                JOIN posts_tags pt ON pt.tagid = t.id
+                JOIN post p ON pt.postid = p.id
+                WHERE p.posttype = ${postType}
+                `;
+        } else {
+            // Get all tags
+            tags = await sql`SELECT 
+                DISTINCT name
+                FROM tag t
+                `;
+        }
 
-        // Get all tags per postType
-        const tags = await sql`SELECT 
-        DISTINCT name
-        FROM tag t
-        JOIN posts_tags pt ON pt.tagid = t.id
-        JOIN post p ON pt.postid = p.id
-        WHERE p.posttype = ${postType}
-        `;
-
-        if(!tags) return [];
+        if (!tags) return [];
 
         return tags;
 

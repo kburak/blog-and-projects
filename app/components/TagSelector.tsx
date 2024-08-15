@@ -1,31 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from "clsx";
 
-export default function TagSelector() {
-    // Get all blog tags
-    const blogTags = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
+export default function TagSelector({ allTags }: { allTags: any[] }) {
 
-    const initialState: {
+    const initialListState: {
         show: boolean,
         value: string,
         matchLength: number,
-        availabletags: string[],
+        availabletags: any[],
         selectedTags: string[],
         currentFocus: number
     } = {
         show: false,
         value: "",
         matchLength: 0,
-        availabletags: blogTags,
+        availabletags: allTags, /* [...blogTags, ...(new Array(100)).fill({name: "test"})], */
         selectedTags: [],
         currentFocus: 0
     }
+    // console.log(initialListState)
 
     // State that keeps track if autocomplete list is shown
-    const [listState, setListState] = useState(initialState);
+    const [listState, setListState] = useState(initialListState);
+
+    // Handle focus on input element
+    function handleFocus() {
+        // Show autocomplete list
+        setListState(prevState => ({
+            ...prevState,
+            show: true
+        }));
+    }
+
+    // Handle click away from input element
+    function handleClickAway(e: any) {
+        // console.log(e.target);
+        // if clicked element is an HTMLElement and NOT includes avTag and NOT equal to tag-input-field, hide the list.
+        if (
+            e.target instanceof HTMLElement &&
+            !e.target?.id.includes('avTag') &&
+            e.target?.id !== 'tag-input-field'
+        ) {
+            setListState((prevState) => ({
+                ...prevState,
+                show: false
+            }))
+        }
+    }
 
     // Handle typing/input
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -40,19 +64,16 @@ export default function TagSelector() {
                 show: true,
                 value: newValue,
                 matchLength: newLength,
-                availabletags: blogTags.filter(avTag => avTag.substring(0, newLength).toLowerCase() === newValue.toLowerCase())
+                availabletags: allTags.filter(avTag => avTag.name.substring(0, newLength).toLowerCase() === newValue.toLowerCase())
             }
         });
-
-        setListState(prevState => {
-            console.log(prevState);
-            return prevState;
-        });
-
     }
 
+    // Handle Tag click
     function handleClick(e: React.MouseEvent<HTMLParagraphElement>) {
-        const newTag = e.currentTarget.id.replace('avTag-', '');
+        console.log("handleClick");
+        const newTag = e.currentTarget.id.replace(/^[0-9]+-avTag-/, '');
+        console.log(newTag);
         // console.log(id);
         if (newTag) {
             setListState(prevState => ({
@@ -62,13 +83,9 @@ export default function TagSelector() {
                 selectedTags: !prevState.selectedTags.includes(newTag) ? [...prevState.selectedTags, newTag] : prevState.selectedTags
             }));
         }
-
-        setListState(prevState => {
-            console.log(prevState);
-            return prevState;
-        });
     }
 
+    // Handle key down while typing
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.code === "ArrowDown") {
             /*If the arrow DOWN key is pressed,
@@ -79,7 +96,7 @@ export default function TagSelector() {
                 return {
                     ...prevState,
                     currentFocus: newIdx,
-                    value: prevState.availabletags[newIdx]
+                    value: prevState.availabletags[newIdx].name
                 }
             });
         } else if (e.code === "ArrowUp") { //up
@@ -91,7 +108,7 @@ export default function TagSelector() {
                 return {
                     ...prevState,
                     currentFocus: newIdx,
-                    value: prevState.availabletags[newIdx]
+                    value: prevState.availabletags[newIdx].name
                 }
             });
         } else if (e.code === "Enter" || e.code === "NumpadEnter") {
@@ -101,12 +118,14 @@ export default function TagSelector() {
             setListState(prevState => {
                 // Does the entered value exist as a tag in avaiableTags array OR is there only one tag left in avaiable tags?
                 console.log("Hit Enter", prevState);
-                if (prevState.currentFocus > -1 && (prevState.availabletags.includes(prevState.value) || prevState.availabletags.length === 1)) {
-                    const tag = prevState.availabletags[prevState.currentFocus];
+                if (prevState.currentFocus > -1 /* && (prevState.availabletags.some((avTag => avTag.name.toLowerCase() === prevState.value.toLowerCase())) || prevState.availabletags.length === 1) */) {
+                    const tag = prevState.availabletags[prevState.currentFocus].name;
                     return {
                         ...prevState,
-                        show: false,
+                        /* show: false, */
                         value: "",
+                        availabletags: allTags,
+                        matchLength: 0,
                         selectedTags: !prevState.selectedTags.includes(tag) ? [...prevState.selectedTags, tag] : prevState.selectedTags,
                         currentFocus: 0
                     }
@@ -138,6 +157,30 @@ export default function TagSelector() {
         }));
     }
 
+    // Handle mouse over events on the autocomplete list items
+    function handleMouseOver(e: React.MouseEvent<HTMLInputElement>) {
+        // Extract id
+        const matchRes = e.currentTarget.id.match(/^[0-9]+/);
+        if (matchRes) {
+            const tagIdx = parseInt(matchRes[0]);
+
+            // Set currentFocus
+            setListState(prevState => ({
+                ...prevState,
+                currentFocus: tagIdx
+            }))
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("click", handleClickAway)
+
+        return () => {
+            // Clear handleClickAway click even listener
+            document.removeEventListener("click", handleClickAway);
+        }
+    }, []); // [] => Run only once
+
     return (
         <div className="mb-4">
             <p>Select Tags</p>
@@ -166,29 +209,35 @@ export default function TagSelector() {
             </div>
             {/* Input Field */}
             <input
-                className="bg-green-100 w-full h-8 mt-2"
+                id="tag-input-field"
+                className="bg-green-100 w-full h-10 mt-2 p-2"
                 type="text"
                 onChange={handleChange}
                 value={listState.value}
                 onKeyDown={handleKeyDown}
+                onFocus={handleFocus}
+                /* onBlur={handleBlur} */ // Click away
                 placeholder="Start typing a tag name..."
             />
             {/* Avaiable Tag Autocomplete List */}
             {listState.show && listState.availabletags.length > 0 &&
-                <div className="border-t-0 border-r-2 border-b-2 border-l-2 border-grey-300 border-solid">
+                <div className="max-h-64 overflow-y-auto p-0">
                     {
                         listState.availabletags.map((tag, idx) => {
                             return <p
-                                id={`avTag-${tag}`}
-                                key={`avTag-${tag}`}
+                                id={`${idx}-avTag-${tag.name}`}
+                                key={`${idx}-avTag-${tag.name}`}
                                 onClick={handleClick}
+                                onMouseOver={handleMouseOver}
                                 className={clsx(
-                                    "text-lg",
-                                    { "bg-green-100": listState.currentFocus === idx }
+                                    "w-full text-lg border-t-[1px] border-l-[1px] border-r-[1px] border-gray-400 border-solid p-2",
+                                    { "bg-gray-200": listState.currentFocus === idx },
+                                    { "border-t-0": idx === 0 }, // Don't show top border for first item
+                                    { "border-b-[1px]": listState.availabletags.length - 1 === idx } // Show border at bottom when last item
                                 )}
                             >
-                                <strong>{tag.substring(0, listState.matchLength)}</strong>
-                                {tag.substring(listState.matchLength)}
+                                <strong>{tag.name.substring(0, listState.matchLength)}</strong>
+                                {tag.name.substring(listState.matchLength)}
                             </p>
                         })
                     }
