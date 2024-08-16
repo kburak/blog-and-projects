@@ -17,3 +17,10 @@ export type ContentType = {
 
 export type Post = "Project" | "Blog";
 
+export interface ContentObject {
+    [key: string]: string | File
+}
+
+export interface TagObject {
+    name: string | File
+}

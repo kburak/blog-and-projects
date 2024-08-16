@@ -4,7 +4,7 @@ import sql from './db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import makeSlug from './makeSlug';
-import normalizeFormData from './normalizeFormData';
+import { normalizePostFormData, normalizeTagFormData } from './normalizeFormData';
 import normalizeValidationErrors from './normalizeValidationErrors';
 import { auth, signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
@@ -86,10 +86,11 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     console.log(prevState, formData);
 
     // Normalize form data
-    const normalizedFormData = normalizeFormData(formData, 'blog');
+    const normalizedPostData = normalizePostFormData(formData, 'blog');
+    const normalizedTagData = normalizeTagFormData(formData);
 
     // Validate the form data using safeParse
-    const validationResult = BlogSchema.safeParse(normalizedFormData);
+    const validationResult = BlogSchema.safeParse(normalizedPostData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
@@ -202,7 +203,7 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     const [postId, postSlug] = postData;
 
     // Normalize form data
-    const normalizedFormData = normalizeFormData(formData, 'blog');
+    const normalizedFormData = normalizePostFormData(formData, 'blog');
 
     // Validate data
     const validationResult = BlogSchema.safeParse(normalizedFormData);
@@ -408,7 +409,7 @@ export async function createProject(prevState: State | undefined, formData: Form
     console.log(prevState, formData);
 
     // Normalize form data
-    const normalizedFormData = normalizeFormData(formData, 'project');
+    const normalizedFormData = normalizePostFormData(formData, 'project');
 
     // Validate the form data using safeParse
     const validationResult = ProjectSchema.safeParse(normalizedFormData);
@@ -535,7 +536,7 @@ export async function editProject(postData: string[], prevState: State | undefin
     const [postId, postSlug] = postData;
 
     // Normalize form data
-    const normalizedFormData = normalizeFormData(formData, 'project');
+    const normalizedFormData = normalizePostFormData(formData, 'project');
 
     // Validate data
     const validationResult = ProjectSchema.safeParse(normalizedFormData);

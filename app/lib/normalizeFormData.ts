@@ -1,14 +1,12 @@
-interface ContentObject {
-    [key: string]: string | File
-}
+import { ContentObject, TagObject } from "./definitions";
 
-export default function normalizeFormData(formData: FormData, postType: "blog" | "project") {
+export function normalizePostFormData(formData: FormData, postType: "blog" | "project") {
 
     if (!formData || !postType) {
-        throw new Error("normalizeFormData input arguments are missing!");
+        throw new Error("normalizePostFormData input arguments are missing!");
     }
 
-    // Normalize form data, Group content data
+    // Normalize form data, Group content data, Group tags
     const res: { [key: string]: string | ContentObject[] | null } = {};
     const groupedContent: ContentObject[] = [];
 
@@ -42,6 +40,34 @@ export default function normalizeFormData(formData: FormData, postType: "blog" |
                     [fieldName]: value
                 });
             }
+
+            // Continue to next form element
+            continue;
+        }
+    }
+
+    return res;
+}
+
+export function normalizeTagFormData(formData: FormData) {
+
+    if (!formData) {
+        throw new Error("normalizeTagFormData input arguments are missing!");
+    }
+
+    // Normalize form data for tags, Group tags
+    const res: TagObject[] = [];
+
+    for (let data of formData.entries()) {
+        const [key, value] = data;
+
+        // Is the key tags[]?
+        if(key === 'tags[]'){
+            // Add value to groupedTags
+            res.push({name: value});
+
+            // Continue to next form element
+            continue;
         }
     }
 
