@@ -64,6 +64,12 @@ export default function normalizeValidationErrors(validationErrors: ZodIssue[]) 
                     pResult['content'][idx] = { [field]: err.message };
                 }
                 break;
+            case 'tags':
+                if (pResult['tags']) {
+                    pResult['tags'].push(err.message);
+                } else {
+                    pResult['tags'] = [err.message];
+                }
         }
 
     }

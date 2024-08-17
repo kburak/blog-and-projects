@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from "clsx";
 
-export default function TagSelector({ allTags }: { allTags: any[] }) {
+export default function TagSelector({ allTags, errors }: { allTags: any[], errors: string[] }) {
 
     const initialListState: {
         show: boolean,
@@ -17,7 +17,7 @@ export default function TagSelector({ allTags }: { allTags: any[] }) {
         show: false,
         value: "",
         matchLength: 0,
-        availabletags: allTags, /* [...blogTags, ...(new Array(100)).fill({name: "test"})], */
+        availabletags: allTags, /* [...allTags, ...(new Array(100)).fill({name: "test"})], */
         selectedTags: [],
         currentFocus: 0
     }
@@ -46,7 +46,8 @@ export default function TagSelector({ allTags }: { allTags: any[] }) {
         ) {
             setListState((prevState) => ({
                 ...prevState,
-                show: false
+                show: false,
+                currentFocus: 0
             }))
         }
     }
@@ -207,6 +208,14 @@ export default function TagSelector({ allTags }: { allTags: any[] }) {
                     </div>
                 })}
             </div>
+            {/* Validation Errors */}
+            {errors &&
+                errors.map((error: string) => (
+                    <p className="text-sm text-red-500" key={error}>
+                        {error}
+                    </p>
+                ))
+            }
             {/* Input Field */}
             <input
                 id="tag-input-field"

@@ -56,6 +56,12 @@ const IframeSchema = z.object({
     dbInsert: z.string().optional()
 });
 
+const TagSchema = z.object({
+    name: z.string()
+    .min(1, { message: 'Please enter a tag!' })
+    .max(50, { message: 'Tag name must be 50 characters or fewer.' })
+});
+
 const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema, IframeSchema]);
 
 const BlogSchema = z.object({
@@ -63,7 +69,8 @@ const BlogSchema = z.object({
     summary: z.string().min(1, { message: 'Please enter a summary!' }),
     header: z.string().min(1, { message: 'Please provide a valid header image URL!' }),
     projecturl: z.string().nullable().optional(),
-    content: z.array(ContentSchema)
+    content: z.array(ContentSchema),
+    tags: z.array(TagSchema)
 });
 
 const ProjectSchema = z.object({
@@ -89,8 +96,12 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     const normalizedPostData = normalizePostFormData(formData, 'blog');
     const normalizedTagData = normalizeTagFormData(formData);
 
+    // Union post and tag data
+    const normalizedData = {...normalizedPostData, tags: normalizedTagData}
+
     // Validate the form data using safeParse
-    const validationResult = BlogSchema.safeParse(normalizedPostData);
+    const validationResult = BlogSchema.safeParse(normalizedData);
+
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
