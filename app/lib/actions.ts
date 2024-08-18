@@ -56,12 +56,6 @@ const IframeSchema = z.object({
     dbInsert: z.string().optional()
 });
 
-const TagSchema = z.object({
-    name: z.string()
-    .min(1, { message: 'Please enter a tag!' })
-    .max(50, { message: 'Tag name must be 50 characters or fewer.' })
-});
-
 const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema, IframeSchema]);
 
 const BlogSchema = z.object({
@@ -70,7 +64,7 @@ const BlogSchema = z.object({
     header: z.string().min(1, { message: 'Please provide a valid header image URL!' }),
     projecturl: z.string().nullable().optional(),
     content: z.array(ContentSchema),
-    tags: z.array(TagSchema)
+    tags: z.array(z.string())
 });
 
 const ProjectSchema = z.object({
@@ -97,11 +91,10 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
     const normalizedTagData = normalizeTagFormData(formData);
 
     // Union post and tag data
-    const normalizedData = {...normalizedPostData, tags: normalizedTagData}
+    const normalizedData = { ...normalizedPostData, tags: normalizedTagData }
 
     // Validate the form data using safeParse
     const validationResult = BlogSchema.safeParse(normalizedData);
-
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
@@ -140,7 +133,15 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
         const { id } = res[0];
 
+        // Iterate grouped tags
+        for (let tag of validationResult.data.tags) {
+
+            // Create post tag relationship using postid and tagid
+
+        }
+
         const dbUpdates: Promise<any>[] = [];
+
         // Iterate grouped data 
         for (let i = 0; i < validationResult.data.content.length; i++) {
 

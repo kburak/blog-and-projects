@@ -21,6 +21,7 @@ export interface ContentObject {
     [key: string]: string | File
 }
 
-export interface TagObject {
+/* export interface TagObject {
     name: string | File
 }
+ */

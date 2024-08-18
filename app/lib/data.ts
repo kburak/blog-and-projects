@@ -201,7 +201,7 @@ export async function getAllTags(postType?: string) {
         if (postType) {
             // Get all tags per postType that has a relation with a post
             tags = await sql`SELECT 
-                DISTINCT name
+                DISTINCT id, name
                 FROM tag t
                 JOIN posts_tags pt ON pt.tagid = t.id
                 JOIN post p ON pt.postid = p.id
@@ -210,7 +210,7 @@ export async function getAllTags(postType?: string) {
         } else {
             // Get all tags
             tags = await sql`SELECT 
-                DISTINCT name
+                DISTINCT id, name
                 FROM tag t
                 `;
         }

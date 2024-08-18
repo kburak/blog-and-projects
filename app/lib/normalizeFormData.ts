@@ -1,4 +1,4 @@
-import { ContentObject, TagObject } from "./definitions";
+import { ContentObject } from "./definitions";
 
 export function normalizePostFormData(formData: FormData, postType: "blog" | "project") {
 
@@ -56,7 +56,7 @@ export function normalizeTagFormData(formData: FormData) {
     }
 
     // Normalize form data for tags, Group tags
-    const res: TagObject[] = [];
+    const res = [];
 
     for (let data of formData.entries()) {
         const [key, value] = data;
@@ -64,7 +64,7 @@ export function normalizeTagFormData(formData: FormData) {
         // Is the key tags[]?
         if(key === 'tags[]'){
             // Add value to groupedTags
-            res.push({name: value});
+            res.push(value);
 
             // Continue to next form element
             continue;

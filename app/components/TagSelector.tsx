@@ -11,7 +11,7 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
         value: string,
         matchLength: number,
         availabletags: any[],
-        selectedTags: string[],
+        selectedTags: any[],
         currentFocus: number
     } = {
         show: false,
@@ -71,17 +71,17 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
     }
 
     // Handle Tag click
-    function handleClick(e: React.MouseEvent<HTMLParagraphElement>) {
-        console.log("handleClick");
-        const newTag = e.currentTarget.id.replace(/^[0-9]+-avTag-/, '');
-        console.log(newTag);
+    function handleClick(id: string, name: string, e: React.MouseEvent<HTMLParagraphElement>) {
+        // console.log("handleClick");
+        // const newTag = e.currentTarget.id.replace(/^[0-9]+-avTag-/, '');
+        console.log("handleClick", id, name);
         // console.log(id);
-        if (newTag) {
+        if (id && name) {
             setListState(prevState => ({
                 ...prevState,
                 show: false,
                 value: "",
-                selectedTags: !prevState.selectedTags.includes(newTag) ? [...prevState.selectedTags, newTag] : prevState.selectedTags
+                selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name }]
             }));
         }
     }
@@ -119,15 +119,15 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
             setListState(prevState => {
                 // Does the entered value exist as a tag in avaiableTags array OR is there only one tag left in avaiable tags?
                 console.log("Hit Enter", prevState);
-                if (prevState.currentFocus > -1 /* && (prevState.availabletags.some((avTag => avTag.name.toLowerCase() === prevState.value.toLowerCase())) || prevState.availabletags.length === 1) */) {
-                    const tag = prevState.availabletags[prevState.currentFocus].name;
+                if (prevState.currentFocus > -1) {
+                    const { id, name } = prevState.availabletags[prevState.currentFocus];
                     return {
                         ...prevState,
                         /* show: false, */
                         value: "",
                         availabletags: allTags,
                         matchLength: 0,
-                        selectedTags: !prevState.selectedTags.includes(tag) ? [...prevState.selectedTags, tag] : prevState.selectedTags,
+                        selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name }],
                         currentFocus: 0
                     }
                 } else {
@@ -137,8 +137,6 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
                         show: false
                     };
                 }
-
-
             });
         } else if (e.code === "Escape" || e.code === "Tab") {
             // Close autocomplete list
@@ -150,11 +148,11 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
     }
 
     function handleDelete(e: React.MouseEvent<SVGSVGElement>) {
-        const removeTag = e.currentTarget.id.replace('delete-selectedTag-', '');
+        const removeTagId = e.currentTarget.id.replace('delete-selectedTag-', '');
         // Remove tag from state
         setListState(prevState => ({
             ...prevState,
-            selectedTags: prevState.selectedTags.filter(tag => tag !== removeTag)
+            selectedTags: prevState.selectedTags.filter(tag => tag.id !== removeTagId)
         }));
     }
 
@@ -189,19 +187,25 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
             <div className="md:flex flex-wrap">
                 {listState.selectedTags.map((tag) => {
                     return <div
-                        id={`selectedTag-wrap-${tag}`}
-                        key={`selectedTag-wrap-${tag}`}
+                        id={`selectedTag-wrap-${tag.name}`}
+                        key={`selectedTag-wrap-${tag.name}`}
                         className="flex mb-2 md:mb-2 md:w-1/4"
                     >
                         <input
+                            id="hiddenId"
                             name="tags[]"
+                            type="hidden"
+                            value={tag.id}
+                            readOnly
+                        />
+                        <input
                             className="bg-gray-100 w-full md:w-1/8 h-8"
                             type="text"
-                            value={tag}
+                            value={tag.name}
                             readOnly
                         />
                         <XMarkIcon
-                            id={`delete-selectedTag-${tag}`}
+                            id={`delete-selectedTag-${tag.id}`}
                             className="inline w-6"
                             onClick={handleDelete}
                         />
@@ -233,10 +237,12 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
                 <div className="max-h-64 overflow-y-auto p-0">
                     {
                         listState.availabletags.map((tag, idx) => {
+
+                            const handleClickWithTag = handleClick.bind(null, tag.id, tag.name);
                             return <p
-                                id={`${idx}-avTag-${tag.name}`}
-                                key={`${idx}-avTag-${tag.name}`}
-                                onClick={handleClick}
+                                id={`${idx}-avTag-${tag.id}-${tag.name}`}
+                                key={`${idx}-avTag-${tag.id}-${tag.name}`}
+                                onClick={handleClickWithTag}
                                 onMouseOver={handleMouseOver}
                                 className={clsx(
                                     "w-full text-lg border-t-[1px] border-l-[1px] border-r-[1px] border-gray-400 border-solid p-2",
@@ -248,6 +254,7 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
                                 <strong>{tag.name.substring(0, listState.matchLength)}</strong>
                                 {tag.name.substring(listState.matchLength)}
                             </p>
+
                         })
                     }
                 </div>
