@@ -52,7 +52,7 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
         replace(`${pathname}?${params.toString()}`);
     }
 
-    if (!availableTags.length) {
+    if (!availableTags?.length) {
         return (
             <div id="tagFilter" className={clsx(
                 "w-full h-auto mb-4",
