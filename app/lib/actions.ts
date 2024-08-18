@@ -133,14 +133,17 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
 
         const { id } = res[0];
 
-        // Iterate grouped tags
-        for (let tag of validationResult.data.tags) {
-
-            // Create post tag relationship using postid and tagid
-
-        }
-
         const dbUpdates: Promise<any>[] = [];
+
+        // Iterate grouped tags
+        for (let tagId of validationResult.data.tags) {
+            // Create post tag relationship using postid and tagid
+            const insertPostTag = sql`
+            INSERT INTO posts_tags (postid, tagid) 
+            VALUES (${id}, ${tagId})`;
+
+            dbUpdates.push(insertPostTag);
+        }
 
         // Iterate grouped data 
         for (let i = 0; i < validationResult.data.content.length; i++) {

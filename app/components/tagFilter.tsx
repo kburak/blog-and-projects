@@ -79,7 +79,7 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
             {
                 availableTags?.map((tag: any) => {
                     // Does the tag.name exist in searchParams?
-                    if (searchParams.get('tags')?.includes(tag.name)) {
+                    if (searchParams.get('tags')?.split(',').includes(tag.name)) {
                         // Show selected
                         return <button
                             key={`tag-${tag.name}-selected`}

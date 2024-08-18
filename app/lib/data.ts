@@ -21,19 +21,19 @@ export async function getAllPosts(query: string, tags: string[], postType: Post)
 
         */
         let posts;
+
         // Search posts with query and tags
         if (query && tags.length > 0) {
-            const tagsStr = tags.join();
             posts = await sql`
             SELECT
-            *
+            DISTINCT p.*
             FROM post p
             JOIN posts_tags pt ON pt.postid = p.id
             JOIN tag t ON pt.tagid = t.id
             WHERE p.userId = ${userId}
             AND p.posttype = ${postType}
             AND p.title ILIKE ${`%${query}%`}
-            AND t.name IN (${tagsStr})
+            AND t.name IN ${sql(tags)}
             ORDER BY p.createdat DESC
             `;
         }
@@ -51,16 +51,15 @@ export async function getAllPosts(query: string, tags: string[], postType: Post)
         }
         // Search posts with only tags
         else if (tags.length > 0) {
-            const tagsStr = tags.join();
             posts = await sql`
             SELECT
-            *
+            DISTINCT p.*
             FROM post p
             JOIN posts_tags pt ON pt.postid = p.id
             JOIN tag t ON pt.tagid = t.id
             WHERE p.userId = ${userId}
             AND p.posttype = ${postType}
-            AND t.name IN (${tagsStr})
+            AND t.name IN ${sql(tags)}
             ORDER BY p.createdat DESC
             `;
         }
