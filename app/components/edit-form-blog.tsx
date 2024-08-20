@@ -9,9 +9,10 @@ import EditCode from "./editCode";
 import EditIFrame from "./editIframe";
 import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
+import TagSelector from "./TagSelector";
 
 export default function EditBlogForm(props: any) {
-    const { blogData } = props;
+    const { blogData, allTags, postTags } = props;
     const initialState: State = { message: "", errors: {} };
     const editBlogWithData = editBlog.bind(null, [blogData.id, blogData.slug]);
     const [state, dispatch] = useFormState(editBlogWithData, initialState);
@@ -223,6 +224,11 @@ export default function EditBlogForm(props: any) {
                 textSize="p"
                 textStyle="normal"
                 error={state?.errors?.header}
+            />
+            <TagSelector
+                allTags={allTags}
+                initSelTags={postTags}
+                errors={state?.errors?.tags}
             />
 
             {/* Content */}

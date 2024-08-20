@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
+import Image from "next/image";
 
 const links = [
     {
@@ -52,7 +53,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                 showHam: false
             }));
         }
-        
+
     }
 
     // Handle closing Mobile Hamburger Nav
@@ -131,6 +132,21 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                 "hidden": !navState.showNav
             }
         )}>
+            <Link
+                href="/"
+                className={clsx(
+                    "absolute left-3 top-3 ml-auto mr-auto",
+                    { "hidden": pathname === "/" }
+                )}
+            >
+                <Image
+                    className="text-white"
+                    src="/logo-w-xl-transparent.png"
+                    alt="Logo"
+                    width={25}
+                    height={25}
+                />
+            </Link>
             <div className="relative">
                 <Bars3Icon
                     id="menu-button"
@@ -189,6 +205,21 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
         </div>;
     } else {
         return <div className='bg-blue-700 flex justify-end items-center fixed w-full h-12 top-0 left-0 z-10'>
+            <Link
+                href="/"
+                className={clsx(
+                    "absolute left-3 top-3 ml-auto mr-auto",
+                    { "hidden": pathname === "/" }
+                )}
+            >
+                <Image
+                    className="text-white"
+                    src="/logo-w-xl-transparent.png"
+                    alt="Logo"
+                    width={25}
+                    height={25}
+                />
+            </Link>
             {
                 links.map(link => {
                     if (link.title === "Admin") {

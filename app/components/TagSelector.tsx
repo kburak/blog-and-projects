@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from "clsx";
 
-export default function TagSelector({ allTags, errors }: { allTags: any[], errors: string[] }) {
+export default function TagSelector({ allTags, initSelTags, errors }: { allTags: any[], initSelTags?: any[], errors: string[] }) {
 
     const initialListState: {
         show: boolean,
@@ -18,7 +18,7 @@ export default function TagSelector({ allTags, errors }: { allTags: any[], error
         value: "",
         matchLength: 0,
         availabletags: allTags, /* [...allTags, ...(new Array(100)).fill({name: "test"})], */
-        selectedTags: [],
+        selectedTags: initSelTags ?? [],
         currentFocus: 0
     }
     // console.log(initialListState)

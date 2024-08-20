@@ -222,3 +222,22 @@ export async function getAllTags(postType?: string) {
         console.error("Couldn't get tags", e);
     }
 }
+
+export async function getPostTags(slug: string) {
+    try {
+        const tags = sql`SELECT
+            t.id, t.name
+            FROM tag t
+            JOIN posts_tags pt ON pt.tagid = t.id
+            JOIN post p ON p.id = pt.postid
+            WHERE p.slug = ${slug} 
+        `;
+
+        if (!tags) return [];
+
+        return tags;
+        
+    } catch (e) {
+        console.error("Couldn't get tags", e);
+    }
+}
