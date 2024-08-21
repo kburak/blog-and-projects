@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from "clsx";
 
-export default function TagSelector({ allTags, initSelTags, errors }: { allTags: any[], initSelTags?: any[], errors: string[] }) {
+export default function TagSelector({ allTags, initSelTags = [], errors }: { allTags: any[], initSelTags?: any[], errors: string[] }) {
 
     const initialListState: {
         show: boolean,
@@ -18,10 +18,38 @@ export default function TagSelector({ allTags, initSelTags, errors }: { allTags:
         value: "",
         matchLength: 0,
         availabletags: allTags, /* [...allTags, ...(new Array(100)).fill({name: "test"})], */
-        selectedTags: initSelTags ?? [],
+        selectedTags: initSelTags.map(i_tag => ({ ...i_tag, dbInsert: false, dbDelete: false })), // Extend tab objects for db logic.
         currentFocus: 0
     }
     // console.log(initialListState)
+    /*
+        Need a way send information to backend action whether a tag relation should be inserted or removed or untouched.
+        Delete relation if there was a relation already.
+        Insert relation if there was NO relation already.
+
+        Extend the tag object like {id, name, dbInsert: false, dbDelete: false}. Just under selectedTags. Do at init.
+        When delete is clicked on a selectedTag
+            Check if that tag exists in initSelTags,
+                If existed, set dbDelete to true, but keep it in selectedTags
+                If NOT existed, remove it from selectedTags array.
+            
+        When any add is clicked on a avalibleTag
+            Check if that tag exists in initSelTags
+                If NOT existed, add it to selectedTags array, add/set its dbInsert to true, add/set its dbDelete to false.
+                If existed, it should be already in selectedTags(check that extra to be sure)
+                    Set its dbDelete to false.
+
+        Rendering - Selected tags
+        When dbDelete is true
+            set dbDelete input checkbox to true
+            Hide tag
+        When dbInsert is true
+            set dbInsert input checkbox to true
+            Unhide tag, show extra with green color
+
+
+
+    */
 
     // State that keeps track if autocomplete list is shown
     const [listState, setListState] = useState(initialListState);
@@ -73,16 +101,47 @@ export default function TagSelector({ allTags, initSelTags, errors }: { allTags:
     // Handle Tag click
     function handleClick(id: string, name: string, e: React.MouseEvent<HTMLParagraphElement>) {
         // console.log("handleClick");
-        // const newTag = e.currentTarget.id.replace(/^[0-9]+-avTag-/, '');
         console.log("handleClick", id, name);
         // console.log(id);
         if (id && name) {
-            setListState(prevState => ({
-                ...prevState,
-                show: false,
-                value: "",
-                selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name }]
-            }));
+            setListState(prevState => {
+                // Check if the tag relation exists in initSetTags / in DB
+                const exists = initSelTags.some(i_tag => i_tag.id === id);
+
+                // Does the tag relation exist already in DB?
+                if (exists) { // If exists
+
+                    // Hold existing tag obj in a variable
+                    const existingTagObj = prevState.selectedTags.find(tag => tag.id === id && tag.name === name);
+                    // Set its dbDelete to false
+                    existingTagObj.dbDelete = false;
+
+                    // Filter out existingObj from selectedTags
+                    // Push existing obj as last element (so that it shows up as last added element)
+                    const newSelectedTags = [
+                        ...prevState.selectedTags.filter(tag => tag.id !== id),
+                        existingTagObj
+                    ]; 
+
+                    return {
+                        ...prevState,
+                        show: false,
+                        value: "",
+                        currentFocus: 0,
+                        selectedTags: newSelectedTags
+                    }
+
+                } else {
+                    // If NOT exists in DB and NOT yet added to selectedTags, add it along with dbAction property set to false
+                    return {
+                        ...prevState,
+                        show: false,
+                        value: "",
+                        currentFocus: 0,
+                        selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name, dbInsert: true, dbDelete: false }]
+                    }
+                }
+            });
         }
     }
 
@@ -117,19 +176,50 @@ export default function TagSelector({ allTags, initSelTags, errors }: { allTags:
             e.preventDefault();
 
             setListState(prevState => {
-                // Does the entered value exist as a tag in avaiableTags array OR is there only one tag left in avaiable tags?
                 console.log("Hit Enter", prevState);
+                // Is currentFocus valid?
                 if (prevState.currentFocus > -1) {
                     const { id, name } = prevState.availabletags[prevState.currentFocus];
-                    return {
-                        ...prevState,
-                        /* show: false, */
-                        value: "",
-                        availabletags: allTags,
-                        matchLength: 0,
-                        selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name }],
-                        currentFocus: 0
+
+                    // Check if the tag relation exists in initSetTags / in DB
+                    const exists = initSelTags.some(i_tag => i_tag.id === id);
+
+                    // Does the tag relation exist already in DB?
+                    if (exists) { // if exists
+
+                        // Hold existing tag obj in a variable
+                        const existingTagObj = prevState.selectedTags.find(tag => tag.id === id && tag.name === name);
+                        // Set its dbDelete to false
+                        existingTagObj.dbDelete = false;
+
+                        // Filter out existingObj from selectedTags
+                        // Push existing obj as last element (so that it shows up as last added element)
+                        const newSelectedTags = [
+                            ...prevState.selectedTags.filter(tag => tag.id !== id),
+                            existingTagObj
+                        ]; 
+
+                        return {
+                            ...prevState,
+                            value: "",
+                            availabletags: allTags,
+                            matchLength: 0,
+                            currentFocus: 0,
+                            selectedTags: newSelectedTags
+                        }
+
+                    } else {
+                        // If NOT exists in DB and NOT yet added to selectedTags, add it along with dbAction property set to false
+                        return {
+                            ...prevState,
+                            value: "",
+                            availabletags: allTags,
+                            matchLength: 0,
+                            currentFocus: 0,
+                            selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name, dbInsert: true, dbDelete: false }]
+                        }
                     }
+
                 } else {
                     // Hide autocomplete list
                     return {
@@ -149,11 +239,34 @@ export default function TagSelector({ allTags, initSelTags, errors }: { allTags:
 
     function handleDelete(e: React.MouseEvent<SVGSVGElement>) {
         const removeTagId = e.currentTarget.id.replace('delete-selectedTag-', '');
-        // Remove tag from state
-        setListState(prevState => ({
-            ...prevState,
-            selectedTags: prevState.selectedTags.filter(tag => tag.id !== removeTagId)
-        }));
+
+        setListState(prevState => {
+            // Check if the tag relation exists in initSetTags / in DB
+            const exists = initSelTags.some(i_tag => i_tag.id === removeTagId);
+
+            // Does the tag relation exist already in DB?
+            if (exists) {
+                // If exists, set dbDelete to true, but keep it in selectedTags
+                return {
+                    ...prevState,
+                    selectedTags: prevState.selectedTags.map(tag => {
+                        if (tag.id === removeTagId) {
+                            return {
+                                ...tag,
+                                dbDelete: true
+                            }
+                        }
+                        return tag;
+                    })
+                }
+            } else {
+                // If NOT exists, remove it from selectedTags array.
+                return {
+                    ...prevState,
+                    selectedTags: prevState.selectedTags.filter(tag => tag.id !== removeTagId)
+                }
+            }
+        });
     }
 
     // Handle mouse over events on the autocomplete list items
@@ -192,6 +305,18 @@ export default function TagSelector({ allTags, initSelTags, errors }: { allTags:
                         className="flex mb-2 md:mb-2 md:w-1/4"
                     >
                         <input
+                            id="dbInsert"
+                            type="checkbox"
+                            value={tag.dbInsert}
+                            readOnly
+                        />
+                        <input
+                            id="dbDelete"
+                            type="checkbox"
+                            value={tag.dbDelete}
+                            readOnly
+                        />
+                        <input
                             id="hiddenId"
                             name="tags[]"
                             type="hidden"
@@ -199,7 +324,11 @@ export default function TagSelector({ allTags, initSelTags, errors }: { allTags:
                             readOnly
                         />
                         <input
-                            className="bg-gray-100 w-full md:w-1/8 h-8"
+                            className={clsx(
+                                "bg-gray-100 w-full md:w-1/8 h-8",
+                                { "bg-green-400": tag.dbInsert },
+                                { "hidden": tag.dbDelete }
+                            )}
                             type="text"
                             value={tag.name}
                             readOnly
