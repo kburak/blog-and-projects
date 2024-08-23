@@ -56,6 +56,12 @@ const IframeSchema = z.object({
     dbInsert: z.string().optional()
 });
 
+const TagSchema = z.object({
+    id: z.string().min(1, { message: 'Please provide id!' }),
+    dbInsert: z.string().optional(),
+    dbDelete: z.string().optional(),
+})
+
 const ContentSchema = z.union([ImageSchema, TextSchema, CodeSchema, IframeSchema]);
 
 const BlogSchema = z.object({
@@ -64,7 +70,7 @@ const BlogSchema = z.object({
     header: z.string().min(1, { message: 'Please provide a valid header image URL!' }),
     projecturl: z.string().nullable().optional(),
     content: z.array(ContentSchema),
-    tags: z.array(z.string())
+    tags: z.array(TagSchema)
 });
 
 const ProjectSchema = z.object({
@@ -136,7 +142,8 @@ export async function createBlog(prevState: State | undefined, formData: FormDat
         const dbUpdates: Promise<any>[] = [];
 
         // Iterate grouped tags
-        for (let tagId of validationResult.data.tags) {
+        for (let tag of validationResult.data.tags) {
+            const { id: tagId } = tag;
             // Create post tag relationship using postid and tagid
             const insertPostTag = sql`
             INSERT INTO posts_tags (postid, tagid) 
@@ -218,10 +225,14 @@ export async function editBlog(postData: string[], prevState: State | undefined,
     const [postId, postSlug] = postData;
 
     // Normalize form data
-    const normalizedFormData = normalizePostFormData(formData, 'blog');
+    const normalizedPostData = normalizePostFormData(formData, 'blog');
+    const normalizedTagData = normalizeTagFormData(formData);
+
+    // Union post and tag data
+    const normalizedData = { ...normalizedPostData, tags: normalizedTagData }
 
     // Validate data
-    const validationResult = BlogSchema.safeParse(normalizedFormData);
+    const validationResult = BlogSchema.safeParse(normalizedData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {

@@ -105,30 +105,43 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
         // console.log(id);
         if (id && name) {
             setListState(prevState => {
+                console.log("handleClick seListState");
                 // Check if the tag relation exists in initSetTags / in DB
                 const exists = initSelTags.some(i_tag => i_tag.id === id);
 
                 // Does the tag relation exist already in DB?
                 if (exists) { // If exists
-
                     // Hold existing tag obj in a variable
                     const existingTagObj = prevState.selectedTags.find(tag => tag.id === id && tag.name === name);
-                    // Set its dbDelete to false
-                    existingTagObj.dbDelete = false;
 
-                    // Filter out existingObj from selectedTags
-                    // Push existing obj as last element (so that it shows up as last added element)
-                    const newSelectedTags = [
-                        ...prevState.selectedTags.filter(tag => tag.id !== id),
-                        existingTagObj
-                    ]; 
+                    // Is it marked to be deleted?
+                    if (existingTagObj.dbDelete) {
 
-                    return {
-                        ...prevState,
-                        show: false,
-                        value: "",
-                        currentFocus: 0,
-                        selectedTags: newSelectedTags
+                        return {
+                            ...prevState,
+                            value: "",
+                            availabletags: allTags,
+                            matchLength: 0,
+                            currentFocus: 0,
+                            // Filter out existingObj from selectedTags
+                            // Push existing obj as last element (so that it shows up as last added element)
+                            selectedTags: [
+                                ...prevState.selectedTags.filter(tag => tag.id !== id),
+                                { ...existingTagObj, dbDelete: false } // Pass existingObj as new obj instance and set its dbDelete to false
+                            ]
+                        };
+
+                    } else {
+                        console.log("2");
+                        // Not marked to be deleted, the return existing selectedTags state
+                        return {
+                            ...prevState,
+                            value: "",
+                            availabletags: allTags,
+                            matchLength: 0,
+                            currentFocus: 0,
+                            selectedTags: prevState.selectedTags
+                        };
                     }
 
                 } else {
@@ -139,7 +152,7 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
                         value: "",
                         currentFocus: 0,
                         selectedTags: prevState.selectedTags.some((s_tag) => s_tag.id === id) ? prevState.selectedTags : [...prevState.selectedTags, { id, name, dbInsert: true, dbDelete: false }]
-                    }
+                    };
                 }
             });
         }
@@ -147,6 +160,7 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
 
     // Handle key down while typing
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+        console.log("handleKeyDown");
         if (e.code === "ArrowDown") {
             /*If the arrow DOWN key is pressed,
             increase the currentFocus variable:*/
@@ -189,23 +203,35 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
 
                         // Hold existing tag obj in a variable
                         const existingTagObj = prevState.selectedTags.find(tag => tag.id === id && tag.name === name);
-                        // Set its dbDelete to false
-                        existingTagObj.dbDelete = false;
 
-                        // Filter out existingObj from selectedTags
-                        // Push existing obj as last element (so that it shows up as last added element)
-                        const newSelectedTags = [
-                            ...prevState.selectedTags.filter(tag => tag.id !== id),
-                            existingTagObj
-                        ]; 
+                        // Is it marked to be deleted?
+                        if (existingTagObj.dbDelete) {
 
-                        return {
-                            ...prevState,
-                            value: "",
-                            availabletags: allTags,
-                            matchLength: 0,
-                            currentFocus: 0,
-                            selectedTags: newSelectedTags
+                            return {
+                                ...prevState,
+                                value: "",
+                                availabletags: allTags,
+                                matchLength: 0,
+                                currentFocus: 0,
+                                // Filter out existingObj from selectedTags
+                                // Push existing obj as last element (so that it shows up as last added element)
+                                selectedTags: [
+                                    ...prevState.selectedTags.filter(tag => tag.id !== id),
+                                    { ...existingTagObj, dbDelete: false } // Pass existingObj as new obj instance and set its dbDelete to false
+                                ]
+                            };
+
+                        } else {
+                            console.log("2");
+                            // Not marked to be deleted, the return existing selectedTags state
+                            return {
+                                ...prevState,
+                                value: "",
+                                availabletags: allTags,
+                                matchLength: 0,
+                                currentFocus: 0,
+                                selectedTags: prevState.selectedTags
+                            };
                         }
 
                     } else {
@@ -271,6 +297,7 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
 
     // Handle mouse over events on the autocomplete list items
     function handleMouseOver(e: React.MouseEvent<HTMLInputElement>) {
+        console.log("handleMouseOver");
         // Extract id
         const matchRes = e.currentTarget.id.match(/^[0-9]+/);
         if (matchRes) {
@@ -298,31 +325,39 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
             <p>Select Tags</p>
             {/* Selected Tags */}
             <div className="md:flex flex-wrap">
-                {listState.selectedTags.map((tag) => {
+                {listState.selectedTags.map((tag, idx) => {
                     return <div
                         id={`selectedTag-wrap-${tag.name}`}
                         key={`selectedTag-wrap-${tag.name}`}
-                        className="flex mb-2 md:mb-2 md:w-1/4"
+                        className={clsx(
+                            "flex mb-2 md:mb-2 md:w-1/4",
+                            { "hidden": tag.dbDelete }
+                        )}
                     >
+                        {/* Hidden fields */}
                         <input
                             id="dbInsert"
-                            type="checkbox"
+                            name={`${idx}-tag-dbInsert`}
+                            type="hidden"
                             value={tag.dbInsert}
                             readOnly
                         />
                         <input
                             id="dbDelete"
-                            type="checkbox"
+                            name={`${idx}-tag-dbDelete`}
+                            type="hidden"
                             value={tag.dbDelete}
                             readOnly
                         />
                         <input
                             id="hiddenId"
-                            name="tags[]"
+                            name={`${idx}-tag-id`}
                             type="hidden"
                             value={tag.id}
                             readOnly
                         />
+                        {/* Hidden fields */}
+                        {/* Visual fields */}
                         <input
                             className={clsx(
                                 "bg-gray-100 w-full md:w-1/8 h-8",
@@ -338,6 +373,7 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
                             className="inline w-6"
                             onClick={handleDelete}
                         />
+                        {/* Visual fields */}
                     </div>
                 })}
             </div>
@@ -363,7 +399,7 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
             />
             {/* Avaiable Tag Autocomplete List */}
             {listState.show && listState.availabletags.length > 0 &&
-                <div className="max-h-64 overflow-y-auto p-0">
+                <div className="max-h-64 overflow-y-auto p-0 border-b-[1px] border-gray-400 border-solid">
                     {
                         listState.availabletags.map((tag, idx) => {
 

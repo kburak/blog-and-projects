@@ -54,21 +54,34 @@ export function normalizeTagFormData(formData: FormData) {
     if (!formData) {
         throw new Error("normalizeTagFormData input arguments are missing!");
     }
-
+    /*
+    [1-tag-id, id]
+    [1-tag-dbDelete, false]
+    [1-tag-dbInsert, true]
+    */
     // Normalize form data for tags, Group tags
-    const res = [];
+    const res: any[] = [];
 
     for (let data of formData.entries()) {
         const [key, value] = data;
 
-        // Is the key tags[]?
-        if(key === 'tags[]'){
-            // Add value to groupedTags
-            res.push(value);
+        // Is the key, value pair tag related?
+        if ("tag" === key.split('-')[1]) {
 
-            // Continue to next form element
-            continue;
+            const [idx, typeName, fieldName] = key.split('-');
+
+            // Is there already tag object at cur Idx?
+            if (res[parseInt(idx)]) {
+                // Yes. Then add field into that existing one.
+                res[parseInt(idx)][fieldName] = value;
+            } else {
+                res.push({
+                    [fieldName]: value
+                });
+            }
+
         }
+
     }
 
     return res;
