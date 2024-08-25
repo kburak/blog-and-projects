@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from "clsx";
 
@@ -22,37 +22,10 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
         currentFocus: 0
     }
     // console.log(initialListState)
-    /*
-        Need a way send information to backend action whether a tag relation should be inserted or removed or untouched.
-        Delete relation if there was a relation already.
-        Insert relation if there was NO relation already.
-
-        Extend the tag object like {id, name, dbInsert: false, dbDelete: false}. Just under selectedTags. Do at init.
-        When delete is clicked on a selectedTag
-            Check if that tag exists in initSelTags,
-                If existed, set dbDelete to true, but keep it in selectedTags
-                If NOT existed, remove it from selectedTags array.
-            
-        When any add is clicked on a avalibleTag
-            Check if that tag exists in initSelTags
-                If NOT existed, add it to selectedTags array, add/set its dbInsert to true, add/set its dbDelete to false.
-                If existed, it should be already in selectedTags(check that extra to be sure)
-                    Set its dbDelete to false.
-
-        Rendering - Selected tags
-        When dbDelete is true
-            set dbDelete input checkbox to true
-            Hide tag
-        When dbInsert is true
-            set dbInsert input checkbox to true
-            Unhide tag, show extra with green color
-
-
-
-    */
 
     // State that keeps track if autocomplete list is shown
     const [listState, setListState] = useState(initialListState);
+    const AV_TAGS_REF = useRef<HTMLDivElement>(null);
 
     // Handle focus on input element
     function handleFocus() {
@@ -167,24 +140,36 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
             setListState(prevState => {
                 const newIdx = Math.min(Math.max(prevState.currentFocus + 1, 0), prevState.availabletags.length - 1);
                 console.log("Currentfocus increase", prevState.currentFocus + 1, prevState.availabletags.length, newIdx);
+
+                // Scroll to currently focused tag / bring it to viewable part.
+                scrollToFocusedTag(newIdx);
+
                 return {
                     ...prevState,
                     currentFocus: newIdx,
                     value: prevState.availabletags[newIdx].name
                 }
             });
+
+
+
         } else if (e.code === "ArrowUp") { //up
             /*If the arrow UP key is pressed,
             decrease the currentFocus variable:*/
             setListState(prevState => {
                 const newIdx = Math.min(Math.max(prevState.currentFocus - 1, 0), prevState.availabletags.length - 1);
                 console.log("Currentfocus decrease", prevState.currentFocus - 1, prevState.availabletags.length, newIdx);
+
+                // Scroll to currently focused tag / bring it to viewable part.
+                scrollToFocusedTag(newIdx);
+
                 return {
                     ...prevState,
                     currentFocus: newIdx,
                     value: prevState.availabletags[newIdx].name
                 }
             });
+
         } else if (e.code === "Enter" || e.code === "NumpadEnter") {
             /*If the ENTER key is pressed, prevent the form from being submitted,*/
             e.preventDefault();
@@ -261,6 +246,41 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
                 show: false
             }));
         }
+    }
+
+    function scrollToFocusedTag(index: number) {
+        // console.log("scrollToFocusedTag AV_TAGS_REF", AV_TAGS_REF.current);
+        if (AV_TAGS_REF.current) {
+
+            const parent = AV_TAGS_REF.current;
+            const { top: parentTop, bottom: parentBottom, height: parentHeight } = parent.getBoundingClientRect();
+            const scrollable = parentHeight < parent.scrollHeight;
+
+            // Are there any children and Is there already scrollable area?
+            if (parent.children.length > 0 && scrollable) {
+                // Get the current focused child
+                const child = parent?.children[index];
+                const { top: childTop, bottom: childBottom } = child.getBoundingClientRect();
+
+                // Shift scroll area based on top, bottom positions of child relative to parent top, bottom positions
+                if(childBottom > parentBottom){
+                    // Calculate detal, the area that needs to be added to scrollTop so that the current tag is in view area.
+                    const delta = childBottom - parentBottom;
+                    console.log("scrollTop will be increased by", delta);
+                    parent.scrollTop = parent.scrollTop + delta;
+                } else if(childTop < parentTop){
+                    const delta = parentTop - childTop;
+                    console.log("scrollTop will be decreased by", delta);
+                    parent.scrollTop = parent.scrollTop - delta;
+                }
+
+            }
+
+
+        }
+
+
+
     }
 
     function handleDelete(e: React.MouseEvent<SVGSVGElement>) {
@@ -399,7 +419,10 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
             />
             {/* Avaiable Tag Autocomplete List */}
             {listState.show && listState.availabletags.length > 0 &&
-                <div className="max-h-64 overflow-y-auto p-0 border-b-[1px] border-gray-400 border-solid">
+                <div
+                    className="max-h-64 overflow-y-auto p-0 border-b-[1px] border-gray-400 border-solid"
+                    ref={AV_TAGS_REF}
+                >
                     {
                         listState.availabletags.map((tag, idx) => {
 

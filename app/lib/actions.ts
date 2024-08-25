@@ -253,6 +253,30 @@ export async function editBlog(postData: string[], prevState: State | undefined,
 
     try {
 
+        // DELETE, INSERT TAG RELATIONS
+        for (let tag of validationResult.data.tags) {
+
+            const { id: tagId, dbDelete, dbInsert } = tag;
+
+            // Act depending on action requirement
+            if ('true' === dbDelete) {
+                // Delete the tag relation with the post
+                const p = sql`DELETE FROM posts_tags 
+                WHERE postid = ${postId}
+                AND tagid = ${tagId}`;
+
+                dbUpdates.push(p);
+
+            } else if ('true' === dbInsert) {
+                // Insert tag relation to the post
+                const p = sql`
+                INSERT INTO posts_tags (postid, tagid) 
+                VALUES (${postId}, ${tagId})`;
+                
+                dbUpdates.push(p);
+            }
+        }
+
         // DELETE, UPDATE, INSERT CONTENT DATA
         for (let i = 0; i < validationResult.data.content.length; i++) {
 
