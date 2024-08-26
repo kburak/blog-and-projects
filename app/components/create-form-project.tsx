@@ -9,8 +9,9 @@ import EditCode from "./editCode";
 import EditIFrame from "./editIframe";
 import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
+import TagSelector from "./TagSelector";
 
-export default function CreateProjectForm() {
+export default function CreateProjectForm({ allTags }: { allTags: any[] }) {
     const initialState: State = { message: "", errors: {} };
     const contentInitialState: ContentType[] = [];
     const [state, dispatch] = useFormState(createProject, initialState);
@@ -147,7 +148,11 @@ export default function CreateProjectForm() {
                 allowEnter={false}
                 textSize="p"
                 textStyle="normal"
-                error={state?.errors?.header}
+                error={state?.errors?.projecturl}
+            />
+            <TagSelector
+                allTags={allTags}
+                errors={state?.errors?.tags}
             />
 
             <div id='project-content'>

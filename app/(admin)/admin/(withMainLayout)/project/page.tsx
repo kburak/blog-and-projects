@@ -23,9 +23,9 @@ export default async function Page({ searchParams }:
             <div id="filter-option" className="w-full bg-white sticky top-0">
                 <div id="white-space" className="h-16 md:h-24 bg-white"></div>
                 <div className="mb-2 flex items-center justify-between gap-2">
-                    <Search placeholder="Search blog..." />
+                    <Search placeholder="Search project..." />
                     <Link
-                        href="/admin/blog/create"
+                        href="/admin/project/create"
                         className="flex h-10 items-center rounded-lg bg-green-600 px-4 text-sm font-medium text-white transition-colors hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                     >
                         <span className="hidden md:block">Create Project</span>

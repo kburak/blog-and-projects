@@ -275,12 +275,8 @@ export default function TagSelector({ allTags, initSelTags = [], errors }: { all
                 }
 
             }
-
-
+            
         }
-
-
-
     }
 
     function handleDelete(e: React.MouseEvent<SVGSVGElement>) {

@@ -78,7 +78,8 @@ const ProjectSchema = z.object({
     summary: z.string().min(1, { message: 'Please enter a summary!' }),
     header: z.string().nullable().optional(),
     projecturl: z.string().nullable().optional(),
-    content: z.array(ContentSchema)
+    content: z.array(ContentSchema),
+    tags: z.array(TagSchema)
 });
 
 // This is temporary until @types/react-dom is updated
@@ -272,7 +273,7 @@ export async function editBlog(postData: string[], prevState: State | undefined,
                 const p = sql`
                 INSERT INTO posts_tags (postid, tagid) 
                 VALUES (${postId}, ${tagId})`;
-                
+
                 dbUpdates.push(p);
             }
         }
@@ -422,19 +423,25 @@ export async function deletePost(postData: string[]) {
         // Remove all content
         promises.push(sql`
             DELETE FROM image 
-            WHERE postId = ${postId} 
+            WHERE postid = ${postId} 
         `);
         promises.push(sql`
             DELETE FROM text 
-            WHERE postId = ${postId} 
+            WHERE postid = ${postId} 
         `);
         promises.push(sql`
             DELETE FROM codesnippet 
-            WHERE postId = ${postId} 
+            WHERE postid = ${postId} 
         `);
         promises.push(sql`
             DELETE FROM iframe 
-            WHERE postId = ${postId} 
+            WHERE postid = ${postId} 
+        `);
+
+        // Remove tag relations
+        promises.push(sql`
+            DELETE FROM posts_tags
+            WHERE postid = ${postId} 
         `);
 
         // Remove blog post
@@ -459,10 +466,14 @@ export async function createProject(prevState: State | undefined, formData: Form
     console.log(prevState, formData);
 
     // Normalize form data
-    const normalizedFormData = normalizePostFormData(formData, 'project');
+    const normalizedPostData = normalizePostFormData(formData, 'project');
+    const normalizedTagData = normalizeTagFormData(formData);
+
+    // Union post and tag data
+    const normalizedData = { ...normalizedPostData, tags: normalizedTagData }
 
     // Validate the form data using safeParse
-    const validationResult = ProjectSchema.safeParse(normalizedFormData);
+    const validationResult = ProjectSchema.safeParse(normalizedData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
@@ -513,6 +524,18 @@ export async function createProject(prevState: State | undefined, formData: Form
         const { id } = res[0];
 
         const dbUpdates: Promise<any>[] = [];
+
+        // Iterate grouped tags
+        for (let tag of validationResult.data.tags) {
+            const { id: tagId } = tag;
+            // Create post tag relationship using postid and tagid
+            const insertPostTag = sql`
+            INSERT INTO posts_tags (postid, tagid) 
+            VALUES (${id}, ${tagId})`;
+
+            dbUpdates.push(insertPostTag);
+        }
+
         // Iterate grouped data 
         for (let i = 0; i < validationResult.data.content.length; i++) {
 
@@ -586,10 +609,14 @@ export async function editProject(postData: string[], prevState: State | undefin
     const [postId, postSlug] = postData;
 
     // Normalize form data
-    const normalizedFormData = normalizePostFormData(formData, 'project');
+    const normalizedPostData = normalizePostFormData(formData, 'project');
+    const normalizedTagData = normalizeTagFormData(formData);
+
+    // Union post and tag data
+    const normalizedData = { ...normalizedPostData, tags: normalizedTagData }
 
     // Validate data
-    const validationResult = ProjectSchema.safeParse(normalizedFormData);
+    const validationResult = BlogSchema.safeParse(normalizedData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {
@@ -609,6 +636,30 @@ export async function editProject(postData: string[], prevState: State | undefin
     const dbUpdates: Promise<any>[] = [];
 
     try {
+
+        // DELETE, INSERT TAG RELATIONS
+        for (let tag of validationResult.data.tags) {
+
+            const { id: tagId, dbDelete, dbInsert } = tag;
+
+            // Act depending on action requirement
+            if ('true' === dbDelete) {
+                // Delete the tag relation with the post
+                const p = sql`DELETE FROM posts_tags 
+                WHERE postid = ${postId}
+                AND tagid = ${tagId}`;
+
+                dbUpdates.push(p);
+
+            } else if ('true' === dbInsert) {
+                // Insert tag relation to the post
+                const p = sql`
+                INSERT INTO posts_tags (postid, tagid) 
+                VALUES (${postId}, ${tagId})`;
+
+                dbUpdates.push(p);
+            }
+        }
 
         // DELETE, UPDATE, INSERT CONTENT DATA
         for (let i = 0; i < validationResult.data.content.length; i++) {

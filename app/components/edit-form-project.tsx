@@ -9,9 +9,10 @@ import EditCode from "./editCode";
 import EditIFrame from "./editIframe";
 import { ContentType } from "../lib/definitions";
 import FlexTextAreaStateful from "./flexTextAreaStateful";
+import TagSelector from "./TagSelector";
 
 export default function EditProjectForm(props: any) {
-    const { projectData } = props;
+    const { projectData, allTags, postTags } = props;
     const initialState: State = { message: "", errors: {} };
     const editProjectWithData = editProject.bind(null, [projectData.id, projectData.slug]);
     const [state, dispatch] = useFormState(editProjectWithData, initialState);
@@ -34,7 +35,7 @@ export default function EditProjectForm(props: any) {
 
         // Iterate sorted data
         for (let c of projectData.content) {
-            console.log("c", c);
+            // console.log("c", c);
             // Extract type
             const { contenttype: type } = c;
 
@@ -184,7 +185,7 @@ export default function EditProjectForm(props: any) {
         }
     }
 
-    console.log(projectData);
+    // console.log(projectData);
     return (
         <form action={dispatch} className="flex flex-col p-2">
             <FlexTextAreaStateful
@@ -237,7 +238,12 @@ export default function EditProjectForm(props: any) {
                 allowEnter={false}
                 textSize="p"
                 textStyle="normal"
-                error={state?.errors?.header}
+                error={state?.errors?.projecturl}
+            />
+            <TagSelector
+                allTags={allTags}
+                initSelTags={postTags}
+                errors={state?.errors?.tags}
             />
 
             {/* Content */}
