@@ -86,6 +86,39 @@ export async function getAllPosts(query: string, tags: string[], postType: Post)
 
 }
 
+export async function getNumOfPosts(count: number, postType: Post) {
+    // Add noStore() here to prevent the response from being cached.
+    // This is equivalent to in fetch(..., {cache: 'no-store'}).
+    // noStore();
+
+    const userId = "c74de708-5937-41c2-9600-6286993866b3";
+
+    try {
+
+        let posts;
+
+        if (count > 0) {
+            posts = await sql`
+            SELECT
+            *
+            FROM post
+            WHERE userId = ${userId}
+            AND posttype = ${postType}
+            ORDER BY createdat DESC
+            LIMIT ${count}
+            `;
+        }
+
+        if (!posts) return [];
+        return posts;
+
+    } catch (e) {
+
+        console.error("Error happened getting Posts", e);
+
+    }
+}
+
 export async function getPost(slug: string) {
 
     try {
@@ -236,7 +269,7 @@ export async function getPostTags(slug: string) {
         if (!tags) return [];
 
         return tags;
-        
+
     } catch (e) {
         console.error("Couldn't get tags", e);
     }

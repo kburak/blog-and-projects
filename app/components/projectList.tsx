@@ -14,13 +14,13 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto mt-12">
             <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
                 <h1 className="font-bold text-2xl pb-4">Projects</h1>
-                <TagFilter availableTags={projectTags} fullWidth={true}/>
+                <TagFilter availableTags={projectTags} fullWidth={true} />
                 <div id="projectList-Posts" className="w-full gap-4 mt-8">
                     {projectPosts?.map((p, idx) => {
                         return <Link
                             id={`project-${idx}`}
                             href={`/project/${p.slug}`}
-                            className="block md:flex md:flex-row min-h-36 w-full border-blue-100 border-solid border-2 rounded-xl overflow-hidden mb-2"
+                            className="block md:flex md:flex-row min-h-40 w-full border-blue-100 border-solid border-2 rounded-xl overflow-hidden mb-2"
                             key={`project-${p.slug}`}
                         >
                             {p.header &&
@@ -39,7 +39,7 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
                             <div id="projectContent-Wrap" className='p-2 md:p-4 flex w-full'>
                                 <div className="flex-grow relative">
                                     <h2 className="text-xl text-blue-700">{p.title}</h2>
-                                    <p>{p.summary}</p>
+                                    <p>{p.summary.length > 70 ? p.summary.substring(0, 70) + "..." : p.summary.substring(0, 70)}</p>
                                 </div>
                                 <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
                             </div>
