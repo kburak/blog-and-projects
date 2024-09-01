@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
 import { inter, lusitana } from '@/app/lib/fonts';
 import HomeProjectList from "@/app/components/homeProjectList";
 import HomeBlogList from '@/app/components/homeBlogList';
 import { Suspense } from "react";
+import HomeFooter from "@/app/components/homeFooter";
 
 export default function Home() {
   return (
@@ -32,6 +32,8 @@ export default function Home() {
         </Suspense>
 
       </div>
+
+      <HomeFooter />
 
     </main >
   );

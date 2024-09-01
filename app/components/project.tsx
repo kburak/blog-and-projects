@@ -52,12 +52,10 @@ export default async function Blog(props: { slug: string }) {
                 <a
                     href={projecturl}
                     target="_blank"
-                    className='block mt-4'
+                    className='block mt-4 flex'
                 >
-                    <div className='flex'>
-                        <LinkIcon className='w-5' />
-                        <p className='underline ml-2'>{projecturl}</p>
-                    </div>
+                    <LinkIcon className='w-5' />
+                    <p className='underline ml-2 break-words break-all'>{projecturl}</p>
                 </a>
             }
             {/* Content Section */}
