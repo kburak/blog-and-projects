@@ -1,6 +1,5 @@
 import { getAllPosts, getAllTags } from "@/app/lib/data";
 import Link from "next/link";
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
 import TagFilter from "./tagFilter";
 

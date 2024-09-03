@@ -1,5 +1,6 @@
 import WebMainNav from '../../components/WebMainNav';
 import { auth } from '@/auth';
+import Footer from '@/app/components/footer';
 
 export default async function MainLayout({
     children,
@@ -10,7 +11,10 @@ export default async function MainLayout({
     return (
         <div>
             <WebMainNav isAdmin={!!session?.user} />
-            {children}
+            <div className='min-h-screen'>
+                {children}
+            </div>
+            <Footer />
         </div>
     );
 }

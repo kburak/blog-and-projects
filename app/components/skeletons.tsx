@@ -214,6 +214,32 @@ export function ProjectSkeleton() {
   </div>
 }
 
+export function CarouselSkeleton() {
+  return (
+    <p>Carousel Skeleton</p>
+  );
+}
+
+export function HomeProjectListSkeleton() {
+  return (
+    <div>
+      <div>tbd</div>
+      <CarouselSkeleton />
+      <div>tbd</div>
+    </div>
+  );
+}
+
+export function HomeBlogListSkeleton() {
+  return (
+    <div>
+      <div>tbd</div>
+      <CarouselSkeleton />
+      <div>tbd</div>
+    </div>
+  );
+}
+
 export function CardSkeleton() {
   return (
     <>
