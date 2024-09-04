@@ -2,6 +2,24 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function PostGrid({ posts, postType }: { posts: any[], postType: "blog" | "project" }) {
+
+    function generateLogoGrid(num: number) {
+        const grid = [];
+        for (let i = 0; i < num; i++) {
+            grid.push(
+                <Image
+                    className="text-white mb-1"
+                    key={`grid-logo-${i}`}
+                    src="/logo-w-xl-transparent.png"
+                    alt="Logo"
+                    width={25}
+                    height={25}
+                />
+            );
+        }
+        return grid;
+    }
+
     return (
         <div id={`${postType}-posts`} className="flex flex-wrap justify-start gap-4">
             {posts?.map((p) => {
@@ -10,8 +28,7 @@ export default function PostGrid({ posts, postType }: { posts: any[], postType: 
                     href={`/${postType}/${p.slug}`}
                     key={`${postType}-${p.slug}`}
                 >
-
-                    {p.header &&
+                    {p.header ?
                         <div
                             id={`${postType}-image-wrap`}
                             className="block relative w-full h-48 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
@@ -31,9 +48,14 @@ export default function PostGrid({ posts, postType }: { posts: any[], postType: 
                                 priority={false}
                             />
                         </div>
-
+                        :
+                        <div
+                            id="empty-placeholder"
+                            className="grid grid-rows-4 grid-flow-col gap-4 bg-gray-100 items-center w-full h-48 p-4"
+                        >
+                            {generateLogoGrid(32)}
+                        </div>
                     }
-
                     <div className="mt-2 mb-5">
                         <h2 className="text-xl text-blue-700">{p.title}</h2>
                         <p>{p.summary}</p>

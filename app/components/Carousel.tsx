@@ -84,6 +84,23 @@ export default function Carousel({ posts, postType }: { posts: any[], postType: 
         }
     }
 
+    function generateLogoGrid(num: number) {
+        const grid = [];
+        for (let i = 0; i < num; i++) {
+            grid.push(
+                <Image
+                    className="text-white mb-1"
+                    key={`grid-logo-${i}`}
+                    src="/logo-w-xl-transparent.png"
+                    alt="Logo"
+                    width={25}
+                    height={25}
+                />
+            );
+        }
+        return grid;
+    }
+
     return (
         <div id="carousel" className="relative">
             <div className="flex absolute top-52 left-1/2 -translate-x-1/2 rounded items-center justify-around bg-gray-800 bg-opacity-75 z-5 w-auto h-4 z-10">
@@ -122,7 +139,7 @@ export default function Carousel({ posts, postType }: { posts: any[], postType: 
                                 className="snap-start min-w-full min-h-60"
                             >
                                 <Link href={`/${postType}/${p.slug}`}>
-                                    {p.header &&
+                                    {p.header ?
                                         <div id="post-image-cover" className="block relative w-full h-60 w-auto">
                                             <Image
                                                 className="object-cover"
@@ -138,6 +155,13 @@ export default function Carousel({ posts, postType }: { posts: any[], postType: 
                                                 */
                                                 priority={false}
                                             />
+                                        </div>
+                                        :
+                                        <div
+                                            id="empty-placeholder"
+                                            className="grid grid-rows-4 grid-flow-col items-center gap-4 bg-gray-100 w-full h-60 p-4"
+                                        >
+                                            {generateLogoGrid(32)}
                                         </div>
                                     }
                                     <p className="text-black text-xl text-blue-700 mt-2">{p.title}</p>
