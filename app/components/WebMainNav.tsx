@@ -55,7 +55,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
 
             {/* Mobile Nav */}
             <div className={clsx(
-                'flex md:hidden bg-blue-700 justify-end items-center fixed w-full h-12 top-0 left-0 z-10'
+                'flex md:hidden bg-blue-700 justify-end items-center fixed w-full h-12 top-0 z-50'
             )}>
                 <Link
                     href="/"
@@ -77,7 +77,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                         id="menu-button"
                         className={
                             clsx(
-                                "md:hidden w-12 p-2  border-1px",
+                                "w-12 p-2 border-1px",
                                 {
                                     "bg-white text-black": navState.openHam
                                 },
@@ -91,7 +91,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                     <nav
                         id="mobile-menu"
                         className={clsx(
-                            "absolute top-12 right-0 md:flex flex-col md:flex-row md:items-center md:space-x-6 bg-white md:bg-transparent",
+                            "absolute top-12 right-0 bg-white",
                             {
                                 "block": navState.openHam
                             },

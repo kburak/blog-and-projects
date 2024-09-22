@@ -103,7 +103,7 @@ export default function Carousel({ posts, postType }: { posts: any[], postType: 
 
     return (
         <div id="carousel" className="relative">
-            <div className="flex absolute top-52 left-1/2 -translate-x-1/2 rounded items-center justify-around bg-gray-800 bg-opacity-75 z-5 w-auto h-4 z-10">
+            <div className="flex absolute top-52 left-1/2 -translate-x-1/2 rounded items-center justify-around bg-gray-800 bg-opacity-75 w-auto h-4 z-10">
                 {
                     posts?.map((p, idx) => (
                         <i

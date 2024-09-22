@@ -31,7 +31,7 @@ export default function PostGrid({ posts, postType }: { posts: any[], postType: 
                     {p.header ?
                         <div
                             id={`${postType}-image-wrap`}
-                            className="block relative w-full h-48 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
+                            className="block relative w-full h-48 xl:h-64 pt-2 pb-2 mt-0 ml-auto mr-auto mb-0"
                         >
                             <Image
                                 className="object-cover"

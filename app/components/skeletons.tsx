@@ -216,26 +216,139 @@ export function ProjectSkeleton() {
 
 export function CarouselSkeleton() {
   return (
-    <p>Carousel Skeleton</p>
+    <div className={`${shimmer} relative`}>
+
+      {/* Image and Dots */}
+      <div className="relative">
+        <div className="flex absolute top-52 left-1/2 -translate-x-1/2 rounded items-center justify-around bg-gray-100 bg-opacity-75 w-auto h-4">
+          <div className="w-2 h-2 rounded ml-1 mr-1 bg-white"></div>
+          <div className="w-2 h-2 rounded ml-1 mr-1 bg-white"></div>
+          <div className="w-2 h-2 rounded ml-1 mr-1 bg-white"></div>
+        </div>
+        <div className="bg-gray-100 w-full rounded-md h-60 bg-gray-100 mb-4"></div>
+      </div>
+      {/* Text */}
+      <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>
+      <div className="bg-gray-100 w-64 rounded-md h-6 bg-gray-100 mb-4"></div>
+
+    </div>
+
+  );
+}
+
+export function PostGridSkeleton() {
+  return (
+    <div className={`${shimmer} md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto shadow-sm relative overflow-hidden`}>
+      <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
+        <div className="flex flex-wrap justify-start gap-4">
+
+          {/* PostGrid Content */}
+          <div className="flex flex-wrap justify-center w-full md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="w-full lg:p-0">
+              {/* PostGrid Image */}
+              <div className="bg-gray-100 rounded-md h-48 lg:h-64 bg-gray-100 mb-4"></div>
+              {/* PostGrid Image */}
+              <div className="flex flex-row">
+                <div className="flex-grow">
+                  <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* PostGrid Content */}
+
+          {/* PostGrid Content */}
+          <div className="flex flex-wrap justify-center w-full md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="w-full lg:p-0">
+              {/* PostGrid Image */}
+              <div className="bg-gray-100 rounded-md h-48 lg:h-64 bg-gray-100 mb-4"></div>
+              {/* PostGrid Image */}
+              <div className="flex flex-row">
+                <div className="flex-grow">
+                  <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* PostGrid Content */}
+
+          {/* PostGrid Content */}
+          <div className="flex flex-wrap justify-center w-full md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="w-full lg:p-0">
+              {/* PostGrid Image */}
+              <div className="bg-gray-100 rounded-md h-48 lg:h-64 bg-gray-100 mb-4"></div>
+              {/* PostGrid Image */}
+              <div className="flex flex-row">
+                <div className="flex-grow">
+                  <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* PostGrid Content */}
+
+          {/* PostGrid Content */}
+          <div className="flex flex-wrap justify-center w-full md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0">
+            <div className="w-full lg:p-0">
+              {/* PostGrid Image */}
+              <div className="bg-gray-100 rounded-md h-48 lg:h-64 bg-gray-100 mb-4"></div>
+              {/* PostGrid Image */}
+              <div className="flex flex-row">
+                <div className="flex-grow">
+                  <div className="bg-gray-100 h-8 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 rounded-md bg-gray-100 mb-4"></div>
+                  <div className="bg-gray-100 h-4 w-2/5 rounded-md bg-gray-100 mb-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* PostGrid Content */}
+
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function HomeProjectListSkeleton() {
   return (
-    <div>
-      <div>tbd</div>
-      <CarouselSkeleton />
-      <div>tbd</div>
+    <div className={`${shimmer} relative p-6 md:p-0 mt-6 md:mt-12 mb-6`}>
+      <div className="bg-gray-100 rounded-md w-36 h-8 bg-gray-100 mb-4 md:mb-0"></div>
+      <div className="block md:hidden">
+        <CarouselSkeleton />
+      </div>
+      <div className="hidden md:block">
+        <PostGridSkeleton />
+      </div>
+      <div className="flex w-full justify-end mt-6">
+        <div className="flex h-10 w-1/2 md:w-1/4 items-center rounded bg-gray-100"></div>
+      </div>
     </div>
   );
 }
 
+
+
+
 export function HomeBlogListSkeleton() {
   return (
-    <div>
-      <div>tbd</div>
-      <CarouselSkeleton />
-      <div>tbd</div>
+    <div className={`${shimmer} relative p-6 md:p-0 mt-6 md:mt-12 mb-6`}>
+      <div className="bg-gray-100 rounded-md w-36 h-8 bg-gray-100 mb-4 md:mb-0"></div>
+      <div className="block md:hidden">
+        <CarouselSkeleton />
+      </div>
+      <div className="hidden md:block">
+        <PostGridSkeleton />
+      </div>
+      <div className="flex w-full justify-end mt-6">
+        <div className="flex h-10 w-48 md:w-1/4 items-center rounded bg-gray-100"></div>
+      </div>
     </div>
   );
 }
