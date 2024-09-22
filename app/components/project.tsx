@@ -85,18 +85,6 @@ export default async function Blog(props: { slug: string }) {
                                     size={size}
                                     style={style}
                                 />;
-                                /* return <p
-                                    key={`${idx}-text-${split_idx}`}
-                                    className={
-                                        `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} 
-                                        leading-relaxed pt-2 pb-2`
-                                    }
-                                >
-                                    {sanitizeHtml(tc)}
-                                    {
-                                        document.create
-                                    }
-                                </p>; */
                             });
 
                         } else if (c.contenttype === "code") {

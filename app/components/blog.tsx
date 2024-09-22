@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPost } from "@/app/lib/data";
 import imageSizeMap from '../lib/imageSizeMap';
+import TextElement from './textElement';
 
 
 const options: RTCSetParameterOptions = {
@@ -66,15 +67,13 @@ export default async function Blog(props: { slug: string }) {
                             const { size, style, word_count, content: textContent } = c.custom_attr;
                             // Split the text content with \n (empty space) and show each in a <p> element
                             return textContent.split("\r").map((tc: string, split_idx: number) => {
-                                return <p
-                                    key={`${idx}-text-${split_idx}`}
-                                    className={
-                                        `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} 
-                                        leading-relaxed pt-2 pb-2`
-                                    }
-                                >
-                                    {tc}
-                                </p>;
+                                return <TextElement
+                                    htmlStr={tc}
+                                    idx={idx}
+                                    split_idx={split_idx}
+                                    size={size}
+                                    style={style}
+                                />;
                             });
 
                         } else if (c.contenttype === "code") {
