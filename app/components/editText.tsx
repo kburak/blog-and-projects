@@ -94,6 +94,7 @@ export default function editText({
                 allowEnter={true}
                 textSize={size ?? "p"}
                 textStyle={style ?? "normal"}
+                showInlineStyleOptions={true}
                 error={errors?.content}
             />
             <div className="absolute right-0 top-0 p-4">

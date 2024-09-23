@@ -70,7 +70,7 @@ const BlogSchema = z.object({
     header: z.string().min(1, { message: 'Please provide a valid header image URL!' }),
     projecturl: z.string().nullable().optional(),
     content: z.array(ContentSchema),
-    tags: z.array(TagSchema)
+    tags: z.array(TagSchema).min(1, { message: "Tag Array must have at least 1 items" })
 });
 
 const ProjectSchema = z.object({
@@ -79,7 +79,7 @@ const ProjectSchema = z.object({
     header: z.string().nullable().optional(),
     projecturl: z.string().nullable().optional(),
     content: z.array(ContentSchema),
-    tags: z.array(TagSchema)
+    tags: z.array(TagSchema).min(1, { message: "Tag Array must have at least 1 items" })
 });
 
 // This is temporary until @types/react-dom is updated
