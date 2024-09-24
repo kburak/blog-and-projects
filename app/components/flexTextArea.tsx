@@ -53,19 +53,27 @@ export default function FlexTextArea({
         "bold": "font-bold"
     }
 
-    function makeLink() {
+    function makeStyle(type: string) {
+
         const textarea = mainElm.current;
         const startIdx = textarea?.selectionStart;
         const endIdx = textarea?.selectionEnd;
-        console.log("start:",startIdx, "end:", endIdx);
+        console.log("start:", startIdx, "end:", endIdx);
 
-        if(startIdx && endIdx){
+        if (textarea && (startIdx !== undefined && endIdx !== undefined) && (startIdx >= 0 && endIdx > startIdx)) {
 
             // Extract selected str
             const str = textarea?.value.substring(startIdx, endIdx);
+            let wrapped;
 
-            // Wrap str
-            const wrapped = `<a href="" target="_blank">${str}</a>`
+            // Wrap str into html tag depending on type
+            if (type === "a") {
+                // Make Link
+                wrapped = `<a href="" target="_blank">${str}</a>`
+            } else if (type === "strong") {
+                // Make strong
+                wrapped = `<strong>${str}</strong>`
+            }
 
             // Replace the str with wrapped version in the textarea
             const startStr = textarea?.value.substring(0, startIdx);
@@ -75,6 +83,7 @@ export default function FlexTextArea({
             textarea.value = newValue;
 
         }
+
     }
 
     // Set the height of mainElm(textarea) to be the scrollHeight of the mirrorElm. Do this at first render.
@@ -88,7 +97,10 @@ export default function FlexTextArea({
         <div>
             {/* Inline Style Buttons */}
             {showInlineStyleOptions &&
-                <button type="button" className="bg-gray-200 inline" onClick={makeLink}>{"<a>"}</button>
+                <div id="inlineStyleOptionButton" className='mt-4 mb-2'>
+                    <button type="button" className="bg-gray-200 rounded mr-1 inline" onClick={() => { makeStyle("a") }}>{"<a>"}</button>
+                    <button type="button" className="bg-gray-200 rounded mr-1 inline" onClick={() => { makeStyle("strong") }}>{"<strong>"}</button>
+                </div>
             }
             <div id={id} className="flex flex-col">
                 {/* Blog title */}
