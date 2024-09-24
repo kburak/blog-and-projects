@@ -80,8 +80,13 @@ export default function FlexTextArea({
             const rest = textarea?.value.substring(endIdx);
             const newValue = startStr + wrapped + rest;
 
-            textarea.value = newValue;
-
+            // Create an event obj instance and send it to changeHandler so that the state is updated.
+            const fakeEvent = new Event('change', { bubbles: true, cancelable: true });
+            Object.defineProperty(fakeEvent, 'target', {
+                writable: false, // true if the value associated with the property may be changed with an assignment operator. Like: fakeEvent.target.value = "asdasdasdas"
+                value: { value: newValue }
+            });
+            changeHandler(fakeEvent);
         }
 
     }
