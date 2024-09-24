@@ -36,7 +36,7 @@ export default async function Blog(props: { slug: string }) {
             {/* Header section */}
             <h1 className="font-bold text-3xl pb-6 pt-16 pb-10 md:pt-16 md:pb-8">{title}</h1>
             {header &&
-                <div id="blog-image-wrap" className="relative w-full h-64 pt-2 pb-2 mt-0 ml-auto mr-auto">
+                <div id="blog-image-wrap" className="relative w-full h-96 max-h-96 pt-2 pb-2 mt-0 ml-auto mr-auto">
                     <Image
                         className="object-cover"
                         src={header}
