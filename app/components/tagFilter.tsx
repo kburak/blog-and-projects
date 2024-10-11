@@ -83,7 +83,7 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
                         // Show selected
                         return <button
                             key={`tag-${tag.name}-selected`}
-                            className="mr-1 bg-blue-900 text-white text-sm rounded-md p-1"
+                            className="mr-1 bg-blue-900 text-white text-sm rounded-md p-1 font-bold"
                             onClick={() => { handleClick(tag.name, false) }}
                         >
                             {tag.name}

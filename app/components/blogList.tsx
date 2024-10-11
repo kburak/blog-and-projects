@@ -59,8 +59,8 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                                     />
                                 </div>
                                 <div className="mt-2 mb-5">
-                                    <h2 className="text-xl text-blue-700">{b.title}</h2>
-                                    <p>{b.summary}</p>
+                                    <h2 className="text-xl text-blue-700 font-bold">{b.title}</h2>
+                                    <p className="font-normal">{b.summary}</p>
                                 </div>
                                 {/* <div className="flex mt-2 mb-5">
                                     <div className="flex-grow">

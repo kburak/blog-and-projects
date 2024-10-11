@@ -16,10 +16,10 @@ const links = [
         href: "/project",
         title: "Projects"
     },
-    {
+    /* {
         href: "/",
         title: "Home"
-    },
+    }, */
     {
         href: "/admin",
         title: "Admin"
@@ -55,7 +55,8 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
 
             {/* Mobile Nav */}
             <div className={clsx(
-                'flex md:hidden bg-blue-700 justify-end items-center fixed w-full h-12 top-0 z-50'
+                'flex md:hidden bg-blue-700 justify-end items-center fixed w-full h-12 top-0 z-50',
+                { "bg-transparent": pathname === "/" }
             )}>
                 <Link
                     href="/"
@@ -130,7 +131,10 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
             </div>
 
             {/* Desktop Nav */}
-            <div className='hidden md:flex bg-blue-700 justify-end items-center fixed w-full h-12 top-0 left-0 z-10'>
+            <div className={clsx(
+                'hidden md:flex bg-blue-700 justify-end items-center fixed w-full h-12 top-0 left-0 z-50',
+                { "bg-transparent": pathname === "/" }
+            )}>
                 <Link
                     href="/"
                     className={clsx(
@@ -154,7 +158,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                                     key={`navLink-Admin`}
                                     href={link.href}
                                     className={clsx(
-                                        'text-white content-center hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 h-12',
+                                        'text-white hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
                                         {
                                             'text-white text-opacity-10': pathname === link.href
                                         }
@@ -170,7 +174,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                             key={`navLink-${link.title}`}
                             href={link.href}
                             className={clsx(
-                                'text-white content-center hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 h-12',
+                                'text-white hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
                                 {
                                     'text-white text-opacity-10': pathname === link.href
                                 }
