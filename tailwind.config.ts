@@ -14,7 +14,8 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        "customBlue": "#1350ff"
+        "customBlue": "#00a2e6",
+        "customOrange": "#d8661d"
       }
     },
     keyframes: {

@@ -29,9 +29,15 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
 
             </div>
             <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
-                <h1 className="font-bold text-xl pb-4">Blog Articles</h1>
+                <h1 className="font-bold text-xl">Blog Articles</h1>
                 <div id="blogList-Wrap" className="flex flex-wrap justify-between">
-                    <TagFilter availableTags={blogTags} fullWidth={false} />
+
+                    <div id="sticky-tag-wrap" className="w-full bg-white z-10 mb-4 sticky top-12 lg:w-1/4 lg:h-64 pt-2 pb-4">
+                        <p className="text-xs mt-2 mb-1">FILTER BY</p>
+                        <TagFilter availableTags={blogTags} fullWidth={true} />
+                    </div>
+
+                    {/* <TagFilter availableTags={blogTags} fullWidth={false} /> */}
                     <div id="blogList-Posts" className="flex flex-wrap justify-start w-full lg:w-3/4 gap-4">
                         {blogPosts?.map((b) => {
                             return <Link

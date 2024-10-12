@@ -13,11 +13,16 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
     return (
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto mt-12">
             <div className="md:pl-0 md:pr-0"> {/* pl-6 pr-6 md:pl-0 md:pr-0 pt-8 */}
-                <div id="sticky-projectList-header" className="bg-white sticky top-12 z-10 pt-5 md:pt-10 pl-6 pr-6 pb-1">
-                    <h1 className="font-bold text-2xl pb-4">Projects</h1>
+
+                <div className="pt-5 md:pt-10 pl-6 pr-6">
+                    <h1 className="font-bold text-2xl ">Projects</h1>
+                </div>
+                <div id="sticky-tag-wrap" className="bg-white z-10 mb-2 sticky top-12 pt-2 pb-4 pl-6 pr-6">
+                    <p className="text-xs mt-2 mb-1">FILTER BY</p>
                     <TagFilter availableTags={projectTags} fullWidth={true} />
                 </div>
-                <div id="projectList-Posts" className="w-full gap-4 mt-8 pl-6 pr-6">
+
+                <div id="projectList-Posts" className="w-full gap-4 pb-6 pl-6 pr-6">
                     {projectPosts?.map((p, idx) => {
                         return <Link
                             id={`project-${idx}`}

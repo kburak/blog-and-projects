@@ -72,10 +72,9 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
 
     return (
         <div id="tagFilter" className={clsx(
-            "w-full h-auto mb-4",
+            "w-full h-auto",
             { "lg:w-1/4 lg:h-64": !fullWidth }
         )}>
-            <p className="mb-2 text-xs">FILTER BY</p>
             {
                 availableTags?.map((tag: any) => {
                     // Does the tag.name exist in searchParams?

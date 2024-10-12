@@ -57,7 +57,7 @@ export default function PostGrid({ posts, postType }: { posts: any[], postType: 
                         </div>
                     }
                     <div className="mt-2 mb-5">
-                        <h2 className="text-xl text-blue-700">{p.title}</h2>
+                        <h2 className="text-xl font-bold text-customBlue">{p.title}</h2>
                         <p>{p.summary}</p>
                     </div>
                 </Link>

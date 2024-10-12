@@ -158,7 +158,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                                     key={`navLink-Admin`}
                                     href={link.href}
                                     className={clsx(
-                                        'text-white hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
+                                        'text-white font-bold hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
                                         {
                                             'text-white text-opacity-10': pathname === link.href
                                         }
@@ -174,7 +174,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                             key={`navLink-${link.title}`}
                             href={link.href}
                             className={clsx(
-                                'text-white hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
+                                'text-white font-bold hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
                                 {
                                     'text-white text-opacity-10': pathname === link.href
                                 }

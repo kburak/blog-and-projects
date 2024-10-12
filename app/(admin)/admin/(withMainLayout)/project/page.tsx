@@ -32,6 +32,7 @@ export default async function Page({ searchParams }:
                         <PlusIcon className="h-5 md:ml-4" />
                     </Link>
                 </div>
+                <p className="mb-2 text-xs">FILTER BY</p>
                 <TagFilter availableTags={projectTags} fullWidth={true} />
             </div>
             {projectPosts?.map((b) => {
