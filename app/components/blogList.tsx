@@ -28,17 +28,17 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                 </div>
 
             </div>
-            <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-8">
-                <h1 className="font-bold text-xl">Blog Articles</h1>
+            <div className="pt-8">
+                <h1 className="font-bold text-xl pl-6 pr-6 md:pl-0 md:pr-0">Blog Articles</h1>
                 <div id="blogList-Wrap" className="flex flex-wrap justify-between">
 
-                    <div id="sticky-tag-wrap" className="w-full bg-white z-10 mb-4 sticky top-12 lg:w-1/4 lg:h-64 pt-2 pb-4">
+                    <div id="sticky-tag-wrap" className="w-full bg-white z-10 mb-4 sticky top-12 lg:w-1/4 lg:h-64 pt-2 pb-4 pl-6 pr-6 md:pl-0 md:pr-0">
                         <p className="text-xs mt-2 mb-1">FILTER BY</p>
                         <TagFilter availableTags={blogTags} fullWidth={true} />
                     </div>
 
                     {/* <TagFilter availableTags={blogTags} fullWidth={false} /> */}
-                    <div id="blogList-Posts" className="flex flex-wrap justify-start w-full lg:w-3/4 gap-4">
+                    <div id="blogList-Posts" className="flex flex-wrap justify-start w-full lg:w-3/4 gap-4 pl-6 pr-6 md:pl-0 md:pr-0">
                         {blogPosts?.map((b) => {
                             return <Link
                                 className="w-full md:pl-0 md:pr-0 md:w-1/2 md:max-w-[calc(50%-0.5rem)] lg:p-0"

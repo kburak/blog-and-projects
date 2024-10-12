@@ -55,7 +55,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
 
             {/* Mobile Nav */}
             <div className={clsx(
-                'flex md:hidden bg-blue-700 justify-end items-center fixed w-full h-12 top-0 z-50',
+                'flex md:hidden bg-customBlue justify-end items-center fixed w-full h-12 top-0 z-50',
                 { "bg-transparent": pathname === "/" }
             )}>
                 <Link
@@ -132,7 +132,7 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
 
             {/* Desktop Nav */}
             <div className={clsx(
-                'hidden md:flex bg-blue-700 justify-end items-center fixed w-full h-12 top-0 left-0 z-50',
+                'hidden md:flex bg-customBlue justify-end items-center fixed w-full h-12 top-0 left-0 z-50',
                 { "bg-transparent": pathname === "/" }
             )}>
                 <Link
@@ -158,9 +158,9 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                                     key={`navLink-Admin`}
                                     href={link.href}
                                     className={clsx(
-                                        'text-white font-bold hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
+                                        'text-white font-bold hover:bg-white hover:text-customBlue px-3 md:px-3 md:py-3',
                                         {
-                                            'text-white text-opacity-10': pathname === link.href
+                                            'bg-white text-customBlue': pathname === link.href
                                         }
                                     )}
                                 >
@@ -174,9 +174,9 @@ export default function WebMainNav({ isAdmin }: { isAdmin: boolean }) {
                             key={`navLink-${link.title}`}
                             href={link.href}
                             className={clsx(
-                                'text-white font-bold hover:bg-gray-100 hover:text-blue-600 px-3 md:px-3 md:py-3',
+                                'text-white font-bold hover:bg-white hover:text-customBlue px-3 md:px-3 md:py-3',
                                 {
-                                    'text-white text-opacity-10': pathname === link.href
+                                    'bg-white text-customBlue': pathname === link.href
                                 }
                             )}
                         >
