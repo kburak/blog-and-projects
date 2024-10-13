@@ -164,7 +164,7 @@ export default function Carousel({ posts, postType }: { posts: any[], postType: 
                                             {generateLogoGrid(32)}
                                         </div>
                                     }
-                                    <p className="text-black text-xl text-customBlue font-bold mt-2">{p.title}</p>
+                                    <p className="text-black text-2xl text-customBlue font-bold mt-2">{p.title}</p>
                                     <p className="text-black text-base">{p.summary.length > 70 ? p.summary.substring(0, 70) + "..." : p.summary}</p>
                                 </Link>
                             </div>

@@ -32,8 +32,11 @@ export default async function Page({ searchParams }:
                         <PlusIcon className="h-5 md:ml-4" />
                     </Link>
                 </div>
+                <div id="sticky-tag-wrap" className="bg-white z-10 mb-2 sticky top-12 pt-2 pb-4">
+                    <p className="text-xs mt-2 mb-1">FILTER BY</p>
+                    <TagFilter availableTags={projectTags} fullWidth={true} />
+                </div>
                 <p className="mb-2 text-xs">FILTER BY</p>
-                <TagFilter availableTags={projectTags} fullWidth={true} />
             </div>
             {projectPosts?.map((b) => {
                 return <div className="flex" key={`projectPost-${b.slug}`}>

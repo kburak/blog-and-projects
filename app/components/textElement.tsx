@@ -20,7 +20,7 @@ export default function TextElement(
     const p = dom.window.document.body.querySelector("p"); // <body> is implicitly created
     if(p){
         p.setAttribute("key", `${idx}-text-${split_idx}`);
-        p.setAttribute("className", `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-base'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} leading-relaxed pt-2 pb-2`);
+        p.setAttribute("className", `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-lg md:text-xl'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} leading-relaxed md:leading-9 pt-2 pb-2`);
         // console.log("p.attributes array", Array.from(p.attributes));
     }
 

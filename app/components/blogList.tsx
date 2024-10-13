@@ -28,10 +28,12 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                     /* You should add the priority property to the image that will be the Largest Contentful Paint (LCP) element for each page. 
                     Doing so allows Next.js to specially prioritize the image for loading (e.g. through preload tags or priority hints), leading to a meaningful boost in LCP. */
                     />
-                    <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-90 h-auto text-left px-6 py-2">
-                        <p className="font-bold">Latest Post</p>
-                        <p className="text-customBlue text-2xl font-bold">{blogPosts[0].title}</p>
-                        <p className="text-black text-base">{blogPosts[0].summary}</p>
+                    <div id="blog-full-gradient" className="bg-gradient-to-t from-black to-70% to-transparent absolute bottom-0 left-0 w-full h-full">
+                        <div id="gradient-content" className="absolute bottom-0 text-left px-6 py-4">
+                            <p className="font-bold text-white">Latest Post</p>
+                            <p className="text-white underline decoration-customBlue text-2xl lg:text-4xl font-extrabold">{blogPosts[0].title}</p>
+                            <p className="text-black text-base text-white">{blogPosts[0].summary}</p>
+                        </div>
                     </div>
                 </Link>
             }
@@ -74,7 +76,7 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                                     />
                                 </div>
                                 <div className="mt-2 mb-5">
-                                    <h2 className="text-xl text-customBlue font-bold">{b.title}</h2>
+                                    <h2 className="text-xl lg:text-2xl text-customBlue font-bold">{b.title}</h2>
                                     <p className="font-normal">{b.summary}</p>
                                 </div>
                             </Link>
