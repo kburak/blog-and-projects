@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Footer() {
     return (
-        <footer className="relative w-full bottom-0 min-h-36 bg-blue-700">
+        <footer className="relative w-full bottom-0 min-h-36 bg-customBlue">
             <div className="absolute bottom-2 w-full">
                 <Image
                     className="text-white ml-auto mr-auto mb-1"

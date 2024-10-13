@@ -11,23 +11,32 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
 
     return (
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20">
-            <div className="mt-12 relative bg-opacity-75 h-[300px] text-center content-center">
-                <Image
-                    className="object-cover"
-                    src="https://cdn.pixabay.com/photo/2024/06/20/17/03/fishing-8842590_1280.jpg"
-                    quality={100}
-                    alt="Placeholder image"
-                    fill={true}
-                    priority={true}
-                /* You should add the priority property to the image that will be the Largest Contentful Paint (LCP) element for each page. 
-                Doing so allows Next.js to specially prioritize the image for loading (e.g. through preload tags or priority hints), leading to a meaningful boost in LCP. */
-                />
-                <div className="relative bg-white bg-opacity-75 h-auto">
-                    <p className="text-blue-700 text-4xl">Highlight TBD</p>
-                    <p className="text-blue-700 text-base">Some story about the man who went fishing.</p>
-                </div>
 
-            </div>
+            {/* Highligh section */}
+            {blogPosts && blogPosts[0] &&
+                <Link
+                    className="block mt-12 relative bg-opacity-75 h-[300px] text-center content-center"
+                    href={`/blog/${blogPosts[0].slug}`}
+                >
+                    <Image
+                        className="object-cover"
+                        src={blogPosts[0].header}
+                        quality={100}
+                        alt={blogPosts[0].title}
+                        fill={true}
+                        priority={true}
+                    /* You should add the priority property to the image that will be the Largest Contentful Paint (LCP) element for each page. 
+                    Doing so allows Next.js to specially prioritize the image for loading (e.g. through preload tags or priority hints), leading to a meaningful boost in LCP. */
+                    />
+                    <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-90 h-auto text-left px-6 py-2">
+                        <p className="font-bold">Latest Post</p>
+                        <p className="text-customBlue text-2xl font-bold">{blogPosts[0].title}</p>
+                        <p className="text-black text-base">{blogPosts[0].summary}</p>
+                    </div>
+                </Link>
+            }
+
+            {/* Blog Articles */}
             <div className="pt-8">
                 <h1 className="font-bold text-xl pl-6 pr-6 md:pl-0 md:pr-0">Blog Articles</h1>
                 <div id="blogList-Wrap" className="flex flex-wrap justify-between">
@@ -65,16 +74,9 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                                     />
                                 </div>
                                 <div className="mt-2 mb-5">
-                                    <h2 className="text-xl text-blue-700 font-bold">{b.title}</h2>
+                                    <h2 className="text-xl text-customBlue font-bold">{b.title}</h2>
                                     <p className="font-normal">{b.summary}</p>
                                 </div>
-                                {/* <div className="flex mt-2 mb-5">
-                                    <div className="flex-grow">
-                                        <h2 className="text-xl text-blue-700">{b.title}</h2>
-                                        <p>{b.summary}</p>
-                                    </div>
-                                    <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
-                                </div> */}
                             </Link>
                         })}
                     </div>

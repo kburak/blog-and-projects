@@ -27,7 +27,7 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
                         return <Link
                             id={`project-${idx}`}
                             href={`/project/${p.slug}`}
-                            className="block md:flex md:flex-row min-h-40 w-full border-blue-100 border-solid border-2 rounded-xl overflow-hidden mb-2"
+                            className="block md:flex md:flex-row min-h-40 w-full border-customBlueLight border-solid border-2 rounded-xl overflow-hidden mb-2"
                             key={`project-${p.slug}`}
                         >
                             {p.header &&
@@ -45,10 +45,10 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
                             }
                             <div id="projectContent-Wrap" className='p-2 md:p-4 flex w-full'>
                                 <div className="flex-grow relative">
-                                    <h2 className="text-xl text-blue-700 font-extrabold">{p.title}</h2>
+                                    <h2 className="text-xl text-customBlue font-extrabold">{p.title}</h2>
                                     <p className="font-normal">{p.summary.length > 70 ? p.summary.substring(0, 70) + "..." : p.summary.substring(0, 70)}</p>
                                 </div>
-                                <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-blue-700" />
+                                <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-customBlue" />
                             </div>
                         </Link>
                     })}

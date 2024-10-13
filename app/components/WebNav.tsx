@@ -47,7 +47,7 @@ export default function WebNav({ goBackLink }: { goBackLink: string }) {
 
     return (
         <div className={clsx(
-            'transition-all ease-in duration-100 bg-blue-700 flex justify-end items-center fixed w-full h-12 left-0 z-10',
+            'transition-all ease-in duration-100 bg-customBlue fixed w-full h-12 left-0 z-10',
             {
                 "top-0": showNav
             },
@@ -57,9 +57,15 @@ export default function WebNav({ goBackLink }: { goBackLink: string }) {
         )}>
             <Link
                 href={goBackLink}
-                className='absolute top-2 left-2 inline text-white w-8 z-10'
+                className='flex justify-self-start items-center h-full ml-2 text-white z-10'
             >
-                <ArrowLeftIcon />
+                <ArrowLeftIcon className='inline w-6' />
+                {
+                    goBackLink === "/project" ?
+                        <p className='font-bold inline ml-1'>All Projects</p>
+                        :
+                        <p className='font-bold inline ml-1'>All Blog Posts</p>
+                }
             </Link>
         </div>
     );
