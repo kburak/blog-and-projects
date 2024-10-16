@@ -24,14 +24,14 @@ export default function FlexTextArea({
     name: string,
     value: string,
     changeHandler: (...args: any) => void,
-    showLabel: Boolean,
+    showLabel: boolean,
     visualName: string,
     minLength: number,
     maxLength: number,
-    allowEnter: Boolean,
+    allowEnter: boolean,
     textSize: string,
     textStyle: string,
-    showInlineStyleOptions?: Boolean
+    showInlineStyleOptions?: boolean
     error: string | []
 }) {
 

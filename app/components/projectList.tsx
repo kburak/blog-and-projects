@@ -11,7 +11,7 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
     ]);
 
     return (
-        <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto mt-12">
+        <div className="md:max-w-2xl lg:max-w-3xl mb-0 ml-auto mr-auto mt-12">
             <div className="md:pl-0 md:pr-0"> {/* pl-6 pr-6 md:pl-0 md:pr-0 pt-8 */}
 
                 <div className="pt-5 md:pt-10 pl-6 pr-6">
@@ -27,14 +27,14 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
                         return <Link
                             id={`project-${idx}`}
                             href={`/project/${p.slug}`}
-                            className="block md:flex md:flex-row min-h-40 w-full border-customBlueLight border-solid border-2 rounded-xl overflow-hidden mb-2"
+                            className="block md:flex md:flex-row min-h-40 w-full border-customBlueLight border-solid border-2 rounded-xl overflow-hidden mb-4"
                             key={`project-${p.slug}`}
                         >
                             {p.header &&
                                 <div id="projectImage-Wrap" className='relative w-full h-40 md:w-48 md:min-w-48'>
                                     <Image
                                         className="object-cover"
-                                        src="https://cdn.pixabay.com/photo/2024/06/20/17/03/fishing-8842590_1280.jpg"
+                                        src={p.header}
                                         quality={75}
                                         alt="Placeholder image"
                                         fill={true}
@@ -45,7 +45,7 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
                             }
                             <div id="projectContent-Wrap" className='p-2 md:p-4 flex w-full'>
                                 <div className="flex-grow relative">
-                                    <h2 className="text-xl text-customBlue font-extrabold">{p.title}</h2>
+                                    <h2 className="text-xl lg:text-2xl text-customBlue font-bold">{p.title}</h2>
                                     <p className="font-normal">{p.summary.length > 70 ? p.summary.substring(0, 70) + "..." : p.summary.substring(0, 70)}</p>
                                 </div>
                                 <ArrowRightIcon className="w-8 h-8 min-w-8 self-center text-customBlue" />

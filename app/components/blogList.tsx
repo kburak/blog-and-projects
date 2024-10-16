@@ -45,7 +45,7 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
 
                     <div id="sticky-tag-wrap" className="w-full bg-white z-10 mb-4 sticky top-12 lg:w-1/4 lg:h-64 pt-2 pb-4 pl-6 pr-6 md:pl-0 md:pr-0">
                         <p className="text-xs mt-2 mb-1">FILTER BY</p>
-                        <TagFilter availableTags={blogTags} fullWidth={true} />
+                        <TagFilter availableTags={blogTags} fullWidth={false} />
                     </div>
 
                     {/* <TagFilter availableTags={blogTags} fullWidth={false} /> */}
@@ -76,7 +76,7 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                                     />
                                 </div>
                                 <div className="mt-2 mb-5">
-                                    <h2 className="text-xl lg:text-2xl text-customBlue font-bold">{b.title}</h2>
+                                    <h2 className="text-lg lg:text-xl text-customBlue font-bold">{b.title}</h2>
                                     <p className="font-normal">{b.summary}</p>
                                 </div>
                             </Link>

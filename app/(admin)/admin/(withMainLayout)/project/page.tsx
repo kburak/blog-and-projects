@@ -15,8 +15,7 @@ export default async function Page({ searchParams }:
 
     const searchQuery = searchParams?.query || '';
     const searchTags = searchParams?.tags?.split(',') || [];
-    const projectPosts = await getAllPosts(searchQuery, searchTags, "Project");
-    const projectTags = await getAllTags("Project");
+    const [projectPosts, projectTags] = await Promise.all([getAllPosts(searchQuery, searchTags, "Project"), getAllTags("Project")]);
 
     return (
         <div id="projectList-Posts" className="ml-auto mr-auto pl-2 pr-2 md:w-3/5 gap-4">
