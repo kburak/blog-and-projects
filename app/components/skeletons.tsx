@@ -120,7 +120,7 @@ export function BlogSkeleton() {
 
 export function ProjectListSkeleton() {
   return <div className={`${shimmer} md:max-w-2xl lg:max-w-3xl mb-0 ml-auto mr-auto mt-12 shadow-sm relative overflow-hidden pl-6 pr-6`}>
-    <div className="pl-6 pr-6 md:pl-0 md:pr-0 pt-10">
+    <div className="md:pl-0 md:pr-0 pt-10">
       {/* Header text */}
       <div className="bg-gray-100 rounded-md w-48 h-8 bg-gray-100 mb-4"></div>
       {/* Filter by */}

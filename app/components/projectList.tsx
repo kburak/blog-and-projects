@@ -11,7 +11,7 @@ export default async function ProjectList({ searchQuery, searchTags }: { searchQ
     ]);
 
     return (
-        <div className="md:max-w-2xl lg:max-w-3xl mb-0 ml-auto mr-auto mt-12">
+        <div className="md:max-w-2xl lg:max-w-3xl mb-0 ml-auto mr-auto mt-14 md:mt-12">
             <div className="md:pl-0 md:pr-0"> {/* pl-6 pr-6 md:pl-0 md:pr-0 pt-8 */}
 
                 <div className="pt-5 md:pt-10 pl-6 pr-6">
