@@ -1,10 +1,11 @@
-import { getAllPosts, getAllTags } from "@/app/lib/data";
+import { getAllPosts, getAllTags, getLatestPost } from "@/app/lib/data";
 import Link from "next/link";
 import Image from "next/image";
 import TagFilter from "./tagFilter";
 
 export default async function BlogList({ searchQuery, searchTags }: { searchQuery: string, searchTags: string[] }) {
-    const [blogPosts, blogTags] = await Promise.all([
+    const [latestPost, blogPosts, blogTags] = await Promise.all([
+        getLatestPost("Blog"),
         getAllPosts(searchQuery, searchTags, 'Blog'),
         getAllTags('Blog')
     ]);
@@ -13,16 +14,16 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
         <div className="md:max-w-2xl lg:max-w-4xl mb-0 ml-auto mr-auto md:mt-20">
 
             {/* Highligh section */}
-            {blogPosts && blogPosts[0] &&
+            {latestPost &&
                 <Link
                     className="block mt-12 relative bg-opacity-75 h-[300px] text-center content-center"
-                    href={`/blog/${blogPosts[0].slug}`}
+                    href={`/blog/${latestPost.slug}`}
                 >
                     <Image
                         className="object-cover"
-                        src={blogPosts[0].header}
+                        src={latestPost.header}
                         quality={100}
-                        alt={blogPosts[0].title}
+                        alt={latestPost.title}
                         fill={true}
                         priority={true}
                     /* You should add the priority property to the image that will be the Largest Contentful Paint (LCP) element for each page. 
@@ -31,8 +32,8 @@ export default async function BlogList({ searchQuery, searchTags }: { searchQuer
                     <div id="blog-full-gradient" className="bg-gradient-to-t from-black to-70% to-transparent absolute bottom-0 left-0 w-full h-full">
                         <div id="gradient-content" className="absolute bottom-0 text-left px-6 py-4">
                             <p className="font-bold text-white">Latest Post</p>
-                            <p className="text-white underline decoration-customBlue text-2xl lg:text-4xl font-extrabold">{blogPosts[0].title}</p>
-                            <p className="text-black text-base text-white">{blogPosts[0].summary}</p>
+                            <p className="text-white underline decoration-customBlue text-2xl lg:text-4xl font-extrabold">{latestPost.title}</p>
+                            <p className="text-black text-base text-white">{latestPost.summary}</p>
                         </div>
                     </div>
                 </Link>

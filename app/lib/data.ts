@@ -6,7 +6,7 @@ export async function getAllPosts(query: string, tags: string[], postType: Post)
     // Add noStore() here to prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
     // noStore();
-
+    console.log("+++ getAllPosts +++");
     const userId = "c74de708-5937-41c2-9600-6286993866b3";
 
     try {
@@ -227,6 +227,20 @@ export async function getPostMetadata(slug: string) {
 
 }
 
+export async function getLatestPost(postType: Post) {
+    try {
+        const latestPost = await sql`
+                SELECT 
+                * 
+                FROM post 
+                ORDER BY createdat DESC
+                LIMIT 1`;
+
+        return latestPost[0];
+    } catch (e) {
+        console.error("Couldn't get the latest post", e);
+    }
+}
 export async function getAllTags(postType?: string) {
     try {
         let tags;

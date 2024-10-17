@@ -70,7 +70,7 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
 
     function getVisibleIcons() {
 
-        console.log("+++ getVisibleIcons +++");
+        // console.log("+++ getVisibleIcons +++");
 
         if (TAGFILTER_REF.current) {
             const scrollElm = TAGFILTER_REF.current;
@@ -85,20 +85,20 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
             // Is there scrollable space to the left and right?
             if (alreadyScrolled > 0 && scrollableToRight) {
                 // LEFT and RIGHT
-                console.log("Scrollable space - YES LEFT and YES RIGHT");
+                // console.log("Scrollable space - YES LEFT and YES RIGHT");
                 return { left: true, right: true };
 
             } else if (alreadyScrolled > 0 && !scrollableToRight) {
                 // LEFT, not RIGHT?
-                console.log("Scrollable space - YES LEFT and NO RIGHT");
+                // console.log("Scrollable space - YES LEFT and NO RIGHT");
                 return { left: true, right: false };
             } else if (alreadyScrolled <= 0 && scrollableToRight) {
                 // Not LEFT, RIGHT?
-                console.log("Scrollable space - NO LEFT and YES RIGHT");
+                // console.log("Scrollable space - NO LEFT and YES RIGHT");
                 return { left: false, right: true };
             } else {
                 // Not LEFT, Not RIGHT
-                console.log("Scrollable space - NO LEFT and NO RIGHT");
+                // console.log("Scrollable space - NO LEFT and NO RIGHT");
                 return { left: false, right: false };
             }
         }
