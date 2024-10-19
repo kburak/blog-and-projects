@@ -616,7 +616,7 @@ export async function editProject(postData: string[], prevState: State | undefin
     const normalizedData = { ...normalizedPostData, tags: normalizedTagData }
 
     // Validate data
-    const validationResult = BlogSchema.safeParse(normalizedData);
+    const validationResult = ProjectSchema.safeParse(normalizedData);
 
     // Validation failed, normalize error data and return errors in state.
     if (!validationResult.success) {

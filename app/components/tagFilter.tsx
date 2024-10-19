@@ -186,7 +186,7 @@ export default function TagFilter({ availableTags, fullWidth }: { availableTags:
                             // Show selected
                             return <button
                                 key={`tag-${tag.name}-selected`}
-                                className="min-w-fit text-sm mr-1 bg-blue-900 text-white rounded-md p-1 font-bold lg:mb-1"
+                                className="min-w-fit text-sm mr-1 bg-customBlue text-white rounded-md p-1 font-bold lg:mb-1"
                                 onClick={() => { handleClick(tag.name, false) }}
                             >
                                 {tag.name}

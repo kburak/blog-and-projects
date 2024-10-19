@@ -6,6 +6,12 @@ export default function TextElement(
     { htmlStr, idx, split_idx, size, style }: { htmlStr: string, idx: number, split_idx: number, size: string, style: string }
 ) {
 
+    // Remove "\n" at the beginning and end.
+    htmlStr = htmlStr.replace(/^\n|\n$/g, "");
+
+    // Does htmlStr start with a <ul> tag?
+    const isUlTag = !!htmlStr.match(/^\s+<ul>|^<ul>/g); // !! => converts truthy/falsy to boolean.
+
     // Sanitize htmlStr
     const cleanHtmlStr = sanitizeHtml(htmlStr, {
         allowedAttributes: {
@@ -13,16 +19,38 @@ export default function TextElement(
         }
     });
 
-    // Create dom on server side and PARSE htmlStr into a p element.
-    const dom = new JSDOM(`<p>${cleanHtmlStr}</p>`);
+    let dom: JSDOM, elm;
 
-    // Find and configure p elm's attributes according to given args.
-    const p = dom.window.document.body.querySelector("p"); // <body> is implicitly created
-    if(p){
-        p.setAttribute("key", `${idx}-text-${split_idx}`);
-        p.setAttribute("className", `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-lg md:text-xl'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} leading-8 md:leading-9 pt-2 pb-2`);
-        // console.log("p.attributes array", Array.from(p.attributes));
+    // Create dom on server
+    if (isUlTag) {
+        // PARSE htmlStr without putting it into p element
+        dom = new JSDOM(`${cleanHtmlStr}`);
+
+        // Find elm in dom.
+        elm = dom.window.document.body.querySelector("ul"); // <body> is implicitly created
+        
+    } else {
+        // PARSE htmlStr into a p element.
+        dom = new JSDOM(`<p>${cleanHtmlStr}</p>`);
+
+        // Find elm in dom.
+        elm = dom.window.document.body.querySelector("p"); // <body> is implicitly created
+
     }
+
+    // Configure elm's attributes according to given args.
+    if (elm) {
+        elm.setAttribute("key", `${idx}-text-${split_idx}`);
+        elm.setAttribute("className", `${size === 'h1' && 'text-xl'} ${size === 'p' && 'text-lg md:text-xl'} ${style === 'bold' && 'font-bold'} ${style === 'italic' && 'italic'} ${style === 'normal' && 'font-normal'} leading-8 md:leading-9 pt-2 pb-2`);
+        // console.log("p.attributes array", Array.from(p.attributes));
+
+        // Add list style if <ul> tag
+        if(isUlTag){
+            const existingClassValue = elm.getAttribute("className");
+            elm.setAttribute("className", `${existingClassValue} list-inside list-disc`);
+        }
+    }
+
 
     // Convert given domElement into React Element. Iterate children recursively and resolve all to ReachElements.
     function domElmToReactElement(domElement: HTMLElement | undefined) {
@@ -65,8 +93,8 @@ export default function TextElement(
         }
     }
 
-    if(p){
-        return domElmToReactElement(p)
+    if (elm) {
+        return domElmToReactElement(elm);
     }
 
 }

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { getPost } from "@/app/lib/data";
 import imageSizeMap from '../lib/imageSizeMap';
 import TextElement from './textElement';
+import Breadcrumbs from './breadcrumbs';
 
 
 const options: RTCSetParameterOptions = {
@@ -33,9 +34,19 @@ export default async function Blog(props: { slug: string }) {
 
     return (
         <div className='p-6 md:max-w-2xl lg:max-w-3xl mt-0 mb-0 ml-auto mr-auto'>
+            <Breadcrumbs
+                breadcrumbs={[
+                    { label: 'Blog', href: '/blog/project/' },
+                    {
+                        label: title,
+                        href: `/blog/${slug}/`,
+                        active: true,
+                    },
+                ]}
+            />
             {/* Header section */}
-            <h1 className="font-bold text-3xl pb-6 pt-16 pb-10 md:pt-16 md:pb-8">{title}</h1>
-            <div id="blog-image-wrap" className="relative w-full h-96 max-h-96 pt-2 pb-2 mt-0 ml-auto mr-auto">
+            <h1 className="font-bold text-3xl pb-6 pt-8 pb-4">{title}</h1>
+            <div id="blog-image-wrap" className="relative w-full h-96 max-h-96 pb-2 mt-0 ml-auto mr-auto">
                 <Image
                     className="object-cover"
                     src={header}

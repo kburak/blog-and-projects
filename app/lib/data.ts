@@ -233,6 +233,7 @@ export async function getLatestPost(postType: Post) {
                 SELECT 
                 * 
                 FROM post 
+                WHERE posttype = ${postType}
                 ORDER BY createdat DESC
                 LIMIT 1`;
 
@@ -241,6 +242,7 @@ export async function getLatestPost(postType: Post) {
         console.error("Couldn't get the latest post", e);
     }
 }
+
 export async function getAllTags(postType?: string) {
     try {
         let tags;

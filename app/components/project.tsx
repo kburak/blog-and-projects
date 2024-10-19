@@ -6,6 +6,7 @@ import { getPost } from "@/app/lib/data";
 import imageSizeMap from '../lib/imageSizeMap';
 import { LinkIcon } from '@heroicons/react/24/outline';
 import TextElement from './textElement';
+import Breadcrumbs from "@/app/components/breadcrumbs";
 
 const options: RTCSetParameterOptions = {
     weekday: "long",
@@ -18,7 +19,7 @@ const options: RTCSetParameterOptions = {
     // timeZone: "Australia/Sydney"
 };
 
-export default async function Blog(props: { slug: string }) {
+export default async function Project(props: { slug: string }) {
 
     const { slug } = props;
 
@@ -33,10 +34,20 @@ export default async function Blog(props: { slug: string }) {
 
     return (
         <div className='p-6 md:max-w-2xl lg:max-w-3xl mt-0 mb-0 ml-auto mr-auto'>
+            <Breadcrumbs
+                breadcrumbs={[
+                    { label: 'Project', href: '/project/' },
+                    {
+                        label: title,
+                        href: `/project/${slug}/`,
+                        active: true,
+                    },
+                ]}
+            />
             {/* Header section */}
-            <h1 className="font-bold text-3xl pb-6 pt-16 pb-10 md:pt-16 md:pb-8">{title}</h1>
+            <h1 className="font-bold text-3xl pb-4 pb-10 pt-8">{title}</h1>
             {header &&
-                <div id="blog-image-wrap" className="relative w-full h-96 max-h-96 pt-2 pb-2 mt-0 ml-auto mr-auto">
+                <div id="blog-image-wrap" className="relative w-full h-96 max-h-96 pb-2 mt-0 ml-auto mr-auto">
                     <Image
                         className="object-cover"
                         src={header}
@@ -78,6 +89,7 @@ export default async function Blog(props: { slug: string }) {
                             const { size, style, word_count, content: textContent } = c.custom_attr;
                             // Split the text content with \n (empty space) and show each in a <p> element
                             return textContent.split("\r").map((tc: string, split_idx: number) => {
+                                // console.log("+++ Project +++ TextElement htmlStr: " + tc)
                                 return <TextElement
                                     htmlStr={tc}
                                     idx={idx}

@@ -187,10 +187,22 @@ export function ProjectListSkeleton() {
 }
 
 export function ProjectSkeleton() {
-  return <div className={`${shimmer} relative overflow-hidden md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
-    <div className="flex flex-col w-full items-center pl-6 pr-6">
-      <div className="w-full rounded-md h-12 bg-gray-100 mb-4"></div>
+  return <div className={`${shimmer} relative overflow-hidden md:max-w-2xl lg:max-w-3xl pt-8 mt-12 ml-auto mr-auto`}>
+    {/* BreadCrumb */}
+    <div className="flex w-full items-center pl-6 pr-6 mb-8">
+      <div className="w-20 rounded-md h-6 bg-gray-100 mr-2"></div>
+      <div className="w-2 rounded-md h-6 text-gray-300 mr-1">/</div>
+      <div className="w-32 rounded-md h-6 bg-gray-100 mr-2"></div>
     </div>
+    {/* Title */}
+    <div className="flex flex-col w-full items-center pl-6 pr-6">
+      <div className="w-full rounded-md h-10 bg-gray-100"></div>
+    </div>
+
+    <div className="flex flex-col w-full items-center pl-6 pr-6 pt-6">
+      <div className="bg-gray-100 w-full rounded-md h-96 bg-gray-100 mb-4"></div>
+    </div>
+
 
     <div className={`${shimmer} flex flex-col items-center relative overflow-hidden pl-6 pr-6 shadow-sm pb-10 md:pb-5 mt-6`}>
       <div className="bg-gray-100 w-full rounded-md h-6 bg-gray-100 mb-4"></div>

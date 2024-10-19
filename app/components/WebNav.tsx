@@ -62,9 +62,9 @@ export default function WebNav({ goBackLink }: { goBackLink: string }) {
                 <ArrowLeftIcon className='inline w-6' />
                 {
                     goBackLink === "/project" ?
-                        <p className='font-bold inline ml-1'>All Projects</p>
+                        <p className='font-bold inline ml-1'>Back to Projects</p>
                         :
-                        <p className='font-bold inline ml-1'>All Blog Posts</p>
+                        <p className='font-bold inline ml-1'>Back to Blog</p>
                 }
             </Link>
         </div>

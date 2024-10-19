@@ -20,6 +20,7 @@ export async function generateMetadata(
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
+    console.log("params: ", params);
     const { slug } = params;
 
     return (
