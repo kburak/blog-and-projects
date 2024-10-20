@@ -1,8 +1,9 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
+import React from 'react';
 
 interface Breadcrumb {
-  label: string;
+  label: string | React.ReactNode;
   href: string;
   active?: boolean;
 }
@@ -20,6 +21,7 @@ export default function Breadcrumbs({
             key={breadcrumb.href}
             aria-current={breadcrumb.active}
             className={clsx(
+              "text-sm md:text-base",
               breadcrumb.active ? 'text-gray-900' : 'text-gray-500',
             )}
           >

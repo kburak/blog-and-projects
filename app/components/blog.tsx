@@ -6,7 +6,7 @@ import { getPost } from "@/app/lib/data";
 import imageSizeMap from '../lib/imageSizeMap';
 import TextElement from './textElement';
 import Breadcrumbs from './breadcrumbs';
-
+import { HomeIcon, HomeModernIcon } from '@heroicons/react/24/outline';
 
 const options: RTCSetParameterOptions = {
     weekday: "long",
@@ -36,7 +36,8 @@ export default async function Blog(props: { slug: string }) {
         <div className='p-6 md:max-w-2xl lg:max-w-3xl mt-0 mb-0 ml-auto mr-auto'>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: 'Blog', href: '/blog/project/' },
+                    { label: <HomeIcon className='w-4 h-4 mb-1 inline-block'/>, href: '/' },
+                    { label: 'Blog', href: '/blog/' },
                     {
                         label: title,
                         href: `/blog/${slug}/`,

@@ -5,10 +5,10 @@ import Carousel from "./Carousel";
 import PostGrid from "./postGrid";
 
 export default async function HomeProjectList() {
-    const projects = (await getNumOfPosts(5, "Project")) || [];
+    const projects = (await getNumOfPosts(4, "Project")) || [];
     return (
         <div id="home-projects-list" className="p-6 md:p-0 mt-6 mb-6 md:mt-12 md:mb-12">
-            <p className="font-bold text-2xl">Projects</p>
+            <p className="font-bold text-2xl">Latest Projects</p>
             <div id="carousel-padding" className="pt-4 pb-4">
                 <div className="block md:hidden">
                     <Carousel posts={projects} postType="project" />

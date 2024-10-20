@@ -89,9 +89,21 @@ export function BlogListSkeleton() {
 
 export function BlogSkeleton() {
   return <div>
-    <div className={`${shimmer} relative overflow-hidden p-6 md:max-w-2xl lg:max-w-3xl pt-10 md:pt-12 mt-12 ml-auto mr-auto`}>
+
+    <div className={`${shimmer} relative overflow-hidden p-6 md:max-w-2xl lg:max-w-3xl pt-8 mt-12 ml-auto mr-auto`}>
+
+      {/* BreadCrumb */}
+      <div className="flex w-full items-center mb-8">
+        <div className="w-16 rounded-md h-6 bg-gray-100 mr-2"></div>
+        <div className="w-2 rounded-md h-6 text-gray-300 mr-1">/</div>
+        <div className="w-20 rounded-md h-6 bg-gray-100 mr-2"></div>
+        <div className="w-2 rounded-md h-6 text-gray-300 mr-1">/</div>
+        <div className="w-32 rounded-md h-6 bg-gray-100 mr-2"></div>
+      </div>
+
+      {/* Title and Image */}
       <div className="flex flex-col w-full items-center">
-        <div className="w-full rounded-md h-12 bg-gray-200 mb-4"></div>
+        <div className="w-full rounded-md h-10 bg-gray-200 mb-4"></div>
         <div className="w-full rounded-md h-64 bg-gray-200 mt-2"></div>
       </div>
     </div>
